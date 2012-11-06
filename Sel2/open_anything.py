@@ -19,21 +19,21 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
     def http_error_301(self, req, fp, code, msg, headers):
         result = urllib2.HTTPRedirectHandler.http_error_301(self, req, fp, code, msg, headers)
         #result.URL_1 = [headers[h] for h in headers.keys() if h == 'location']
-        result._301_URL = headers.getheader('location')
+        result._301_TO_URL = headers.getheader('location')
         result._301_STATUS = code
-        result._301_REQUEST_GET_FULL_URL = req.get_full_url()
+        result._301_FROM_REQUEST_GET_FULL_URL = req.get_full_url()
         result._301_DATE = headers.getheader('date')
-        result._301_TIMESTAMP = time.strftime()
+        result._301_TIMESTAMP = time.strftime("%b %d %Y %H:%M:%S")
         return result
     
     def http_error_302(self, req, fp, code, msg, headers):
         result = urllib2.HTTPRedirectHandler.http_error_302(self, req, fp, code, msg, headers)
         #result.URL_2 = [headers[h] for h in headers.keys() if h == 'location']
-        result._302_URL = headers.getheader('location')
+        result._302_TO_URL = headers.getheader('location')
         result._302_STATUS = code
-        result._302_REQUEST_GET_FULL_URL = req.get_full_url()
+        result._302_FROM_REQUEST_GET_FULL_URL = req.get_full_url()
         result._302_DATE = headers.getheader('date')
-        result._302_TIMESTAMP = time.strftime()
+        result._302_TIMESTAMP = time.strftime("%b %d %Y %H:%M:%S")
         return result
 
 if __name__ == '__main__':
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     request = urllib2.Request('http://www.volvopenta.com')
     f = opener.open(request)
     
-    #pprint.pprint(f.__dict__)
+    pprint.pprint(f.__dict__)
     myList = [(item,f.__dict__[item]) for item in f.__dict__.keys()\
                if re.match(r'^_[^_]|code|url|Date', item)]
     pprint.pprint(myList)
