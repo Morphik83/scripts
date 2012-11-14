@@ -1,8 +1,7 @@
 import urllib2
-import time
 
 class DefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
-    """this is were description for class goes"""
+    """this is were description for the class should go"""
         
     def http_error_default(self, req, fp, code, msg, hdrs):
         """urllib2 searches for http_error_default when error code 304 is thrown
@@ -23,7 +22,6 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
         result._301_STATUS = code
         result._301_FROM_REQUEST_GET_FULL_URL = req.get_full_url()
         result._301_DATE = headers.getheader('date')
-        #result._301_TIMESTAMP = time.strftime("%b %d %Y %H:%M:%S")
         return result
     
     def http_error_302(self, req, fp, code, msg, headers):
@@ -63,3 +61,78 @@ if __name__ == '__main__':
     #match words that starts from only one underscore - second char 
     #cannot be underscore [^_]
         
+        
+#===============================================================================
+#    example output:
+# send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+# reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+# header: Server: Microsoft-IIS/6.0
+# header: Content-Type: text/html
+# header: Content-Length: 197
+# header: Location: http://www.volvopenta.com/volvopenta/splash/en-gb
+# header: Expires: Wed, 14 Nov 2012 18:44:50 GMT
+# header: Cache-Control: max-age=0, no-cache, no-store
+# header: Pragma: no-cache
+# header: Date: Wed, 14 Nov 2012 18:44:50 GMT
+# header: Connection: close
+# send: 'GET /volvopenta/splash/en-gb HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+# reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+# header: Content-Length: 197
+# header: Content-Type: text/html
+# header: Location: http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
+# header: Server: Microsoft-IIS/6.0
+# header: Server: SEGOTN2544
+# header: X-Powered-By: ASP.NET
+# header: Expires: Wed, 14 Nov 2012 18:44:51 GMT
+# header: Cache-Control: max-age=0, no-cache, no-store
+# header: Pragma: no-cache
+# header: Date: Wed, 14 Nov 2012 18:44:51 GMT
+# header: Connection: close
+# send: 'GET /volvopenta/splash/en-gb/Pages/global_splash.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+# reply: 'HTTP/1.1 200 OK\r\n'
+# header: Server: Microsoft-IIS/6.0
+# header: Server: SEGOTN2543
+# header: X-Powered-By: ASP.NET
+# header: X-AspNet-Version: 2.0.50727
+# header: Cache-Control: private
+# header: Expires: Wed, 14 Nov 2012 18:56:25 GMT
+# header: Content-Type: text/html; charset=utf-8
+# header: Vary: Accept-Encoding
+# header: Date: Wed, 14 Nov 2012 18:44:51 GMT
+# header: Transfer-Encoding:  chunked
+# header: Connection: close
+# header: Connection: Transfer-Encoding
+# {'_301_DATE': 'Wed, 14 Nov 2012 18:44:50 GMT',
+# '_301_FROM_REQUEST_GET_FULL_URL': 'http://www.volvopenta.com',
+# '_301_STATUS': 301,
+# '_301_TO_URL': 'http://www.volvopenta.com/volvopenta/splash/en-gb',
+# '_302_DATE': 'Wed, 14 Nov 2012 18:44:51 GMT',
+# '_302_FROM_REQUEST_GET_FULL_URL': 'http://www.volvopenta.com/volvopenta/splash/en-gb',
+# '_302_STATUS': 302,
+# '_302_TO_URL': 'http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx',
+# '__iter__': <bound method _fileobject.__iter__ of <socket._fileobject object at 0x7f5a5228de50>>,
+# 'code': 200,
+# 'fileno': <bound method _fileobject.fileno of <socket._fileobject object at 0x7f5a5228de50>>,
+# 'fp': <socket._fileobject object at 0x7f5a5228de50>,
+# 'headers': <httplib.HTTPMessage instance at 0x7f5a50375050>,
+# 'msg': 'OK',
+# 'next': <bound method _fileobject.next of <socket._fileobject object at 0x7f5a5228de50>>,
+# 'read': <bound method _fileobject.read of <socket._fileobject object at 0x7f5a5228de50>>,
+# 'readline': <bound method _fileobject.readline of <socket._fileobject object at 0x7f5a5228de50>>,
+# 'readlines': <bound method _fileobject.readlines of <socket._fileobject object at 0x7f5a5228de50>>,
+# 'url': 'http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx'}
+# [('code', 200),
+# ('_302_TO_URL',
+#  'http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx'),
+# ('_301_FROM_REQUEST_GET_FULL_URL', 'http://www.volvopenta.com'),
+# ('_302_FROM_REQUEST_GET_FULL_URL',
+#  'http://www.volvopenta.com/volvopenta/splash/en-gb'),
+# ('_301_STATUS', 301),
+# ('url',
+#  'http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx'),
+# ('_302_DATE', 'Wed, 14 Nov 2012 18:44:51 GMT'),
+# ('_301_DATE', 'Wed, 14 Nov 2012 18:44:50 GMT'),
+# ('_301_TO_URL', 'http://www.volvopenta.com/volvopenta/splash/en-gb'),
+# ('_302_STATUS', 302)]
+#===============================================================================
+    
