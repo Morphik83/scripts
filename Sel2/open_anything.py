@@ -23,7 +23,7 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
         result._301_STATUS = code
         result._301_FROM_REQUEST_GET_FULL_URL = req.get_full_url()
         result._301_DATE = headers.getheader('date')
-        result._301_TIMESTAMP = time.strftime("%b %d %Y %H:%M:%S")
+        #result._301_TIMESTAMP = time.strftime("%b %d %Y %H:%M:%S")
         return result
     
     def http_error_302(self, req, fp, code, msg, headers):
@@ -33,7 +33,7 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
         result._302_STATUS = code
         result._302_FROM_REQUEST_GET_FULL_URL = req.get_full_url()
         result._302_DATE = headers.getheader('date')
-        result._302_TIMESTAMP = time.strftime("%b %d %Y %H:%M:%S")
+        #result._302_TIMESTAMP = time.strftime("%b %d %Y %H:%M:%S")
         return result
 
 if __name__ == '__main__':
@@ -47,24 +47,17 @@ if __name__ == '__main__':
     opener.handle_open['http'][0].set_http_debuglevel(1)
     request = urllib2.Request('http://www.volvopenta.com')
     f = opener.open(request)
-    
+        
     pprint.pprint(f.__dict__)
-    myList = [(item,f.__dict__[item]) for item in f.__dict__.keys()\
-               if re.match(r'^_[^_]|code|url|Date', item)]
-    pprint.pprint(myList)
-    #===========================================================================
-    # print 'from_REQ_GET_FULL_URL_1: ', f.REQUEST_GET_FULL_URL_1
-    # print 'to_URL_1: ',f.URL_1
-    # print 'STATUS_1: ', f.STATUS_1
-    # print 'STATUS_1: ', f.STATUS
-    # 
-    # print "*"*30
-    # print 'from_REQ_GET_FULL_URL_2: ', f.REQUEST_GET_FULL_URL_2
-    # print 'to_URL_2: ',f.URL_2
-    # print 'STATUS_2: ', f.STATUS_2
-    # print 'STATUS_2: ', f.STATUS
-    #===========================================================================
     
+    #===========================================================================
+    # myList = [(item,f.__dict__[item]) for item in f.__dict__.keys()\
+    #           if re.match(r'^_[^_]|code|Date|url', item)]
+    # pprint.pprint(myList)
+    # with open("redirect.log", "w+") as f_obj:
+    #    f_obj.write(str(myList))
+    #===========================================================================
+
     
     #r'^_[^_]|code|url' ---> OK: _302_URL, NOTOK: __302_URL'
     #match words that starts from only one underscore - second char 
