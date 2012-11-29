@@ -28,6 +28,10 @@ PAC file and an url as arguments, fetches the URL using the proxy as
 determined by PAC file and URL and returns the retrieved webpage.
 """
 
+"""
+This script was slightly modified to meet my needs
+urllib -> urllib2 with modified redirect error handlers (according to DiveIntoPython ->HTML)
+"""
 __author__ = 'manugarg@gmail.com (Manu Garg)'
 __copyright__ = 'Copyright (C) 2008 Manu Garg'
 __license__ = 'LGPL'
@@ -37,7 +41,7 @@ import socket
 import sys
 #import urllib
 import urllib2
-import redirect_tool as rTool
+import redirect_tool as rTool #simple_RedirectTool.py by DiveIntoPython
 import pprint
 
 
@@ -65,23 +69,23 @@ def fetchurl(pac, url):
     using urllib:
     response = urllib.urlopen(url, proxies=proxies)
     '''
-    
+
     '''
     using urllib2:
-    '''   
+    '''
     srh = rTool.SmartRedirectHandler()
     proxy = urllib2.ProxyHandler(proxies)
-    
+
     opener = urllib2.build_opener(srh, proxy)
     #handler = urllib2.HTTPHandler()
     #handler.set_http_debuglevel(1)
-    
+
     urllib2.install_opener(opener)
-    
+
     request = urllib2.Request(url)
     response = opener.open(request)
-    
-    
+
+
   except Exception, e:
     sys.stderr.write('could not fetch webpage %s using proxy %s\n' %
                      (url, proxies))
@@ -115,7 +119,7 @@ def main(url):
   # pacfile = sys.argv[1]
   # url = sys.argv[2]
   #=============================================================================
-  pacfile = 'C:\\tmp\\proxyconf_srv_volvo_com'
+  pacfile = '<here goes pac file path>'
   response = fetchurl(pacfile, url)
   if response:
     #print response.read()
@@ -125,5 +129,5 @@ def main(url):
                      (url, pacfile))
 
 if __name__ == '__main__':
-    url = 'http://volvopenta.com'
+    url = '<example url>'
     main(url)
