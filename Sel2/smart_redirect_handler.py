@@ -1,3 +1,5 @@
+#>>> this is just checking for the new branch
+
 import urllib2
 
 class DefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
@@ -47,8 +49,7 @@ if __name__ == '__main__':
     f = opener.open(request)
         
     pprint.pprint(f.__dict__)
-    
-    #->NEW BRANCH?
+
     
     #===========================================================================
     # myList = [(item,f.__dict__[item]) for item in f.__dict__.keys()\
