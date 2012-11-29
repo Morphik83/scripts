@@ -30,7 +30,7 @@ determined by PAC file and URL and returns the retrieved webpage.
 
 """
 This script was slightly modified to meet my needs
-urllib -> urllib2 with modified redirect error handlers (according to DiveIntoPython ->HTML)
+urllib -> urllib2 with modified redirect error handlers (according to DiveIntoPython ->HTTP)
 """
 __author__ = 'manugarg@gmail.com (Manu Garg)'
 __copyright__ = 'Copyright (C) 2008 Manu Garg'
@@ -41,7 +41,7 @@ import socket
 import sys
 #import urllib
 import urllib2
-import redirect_tool as rTool #simple_RedirectTool.py by DiveIntoPython
+import smart_redirect_handler as rTool #simple_RedirectTool.py by DiveIntoPython
 import pprint
 
 

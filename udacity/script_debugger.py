@@ -1,4 +1,4 @@
-from mhlib import isnumeric
+
 def remove_html_markup_FIXED(s):
     tag = False
     quote = False
@@ -20,7 +20,7 @@ def remove_html_markup_FIXED(s):
         # So, if c=='"' -> TRUE. OR returns first TRUE, so next condition(AND) is not being checked
         # and the 'quote=not quote' is executed (" is stripped in that way)
         # On the other hand, it c=="'", then second condition is executed, but 'tag' is FALSE, so 
-        # 'quote=not quote' is NOT executed, and that is why "'" is stripped from string.
+        # 'quote=not quote' is NOT executed, and that is why "'" is not stripped from string.
         # FIRST SOLUTION: elif (c == '"' or c == "'") and tag
         #
         # SECOND SOLUTION:
@@ -86,8 +86,8 @@ def remove_html_markup(s):
 #main program that runs the buggy code
 def main():
     #print "main():", remove_html_markup('xyz')
-    print "main():", remove_html_markup('"<b>foo</b>"')
-    #print remove_html_markup("'<b>foo</b>'")
+    #print "main():", remove_html_markup('"<b>foo</b>"')
+    print remove_html_markup("'<b>foo</b>'")
 
 
 #globals
