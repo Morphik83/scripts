@@ -1,5 +1,3 @@
-#>MASTER changes
-
 import urllib2
 
 class DefaultErrorHandler(urllib2.HTTPDefaultErrorHandler):
@@ -37,6 +35,7 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
         return result
 
 if __name__ == '__main__':
+    #>MASTER changes + BRANCH changes
     import pprint
     import re
     
@@ -49,8 +48,7 @@ if __name__ == '__main__':
     f = opener.open(request)
         
     pprint.pprint(f.__dict__)
-    
-    #->NEW BRANCH?
+
     
     #===========================================================================
     # myList = [(item,f.__dict__[item]) for item in f.__dict__.keys()\
