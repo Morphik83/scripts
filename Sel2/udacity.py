@@ -1,3 +1,4 @@
+from mhlib import isnumeric
 def remove_html_markup_FIXED(s):
     tag = False
     quote = False
@@ -48,17 +49,6 @@ def remove_html_markup_FIXED(s):
 # if __debug__:
 #    if not condition: raise AssertionError
 #===============================================================================
-
-def kelivinToFahrenheit(temperature):
-    assert(temperature>=0), "Colder than absolute zero!"
-    return ((temperature-273)*1.8)+32
-
-def temp_converter(var):
-    try:
-        return int(var)
-    except ValueError, e:
-        print "The argument does not contain numbers\n", e
-#=================================================================================
 #===============================================================================
 # 
 # 
@@ -95,14 +85,15 @@ def remove_html_markup(s):
 
 #main program that runs the buggy code
 def main():
-    print remove_html_markup('xyz')
-    print remove_html_markup('"<b>foo</b>"')
-    print remove_html_markup("'<b>foo</b>'")
+    #print "main():", remove_html_markup('xyz')
+    print "main():", remove_html_markup('"<b>foo</b>"')
+    #print remove_html_markup("'<b>foo</b>'")
 
 
 #globals
-breakpoints = {81: True}
+breakpoints = {71: True}
 stepping = False
+watchpoints = {'c':True}
 
 def debug(command, my_locals):
     global breakpoints
@@ -120,8 +111,30 @@ def debug(command, my_locals):
         stepping = False
         return True
     elif command.startswith('p'):       #print
-        #my code here
-        pass
+        if arg:                                #arg defined in line 112
+            if my_locals.has_key(arg):              #check if arg in my_locals
+                print arg,"=", repr(my_locals[arg])
+            else:
+                print 'No such variable:',arg
+        else:
+            print 'my_locals:',my_locals        #if print cmd has no args, 
+                                                #print out whole dict 
+           #cannot return True! If True, then (p) would also switch to the next line
+           #we do not want it! (s) is for stepping, (p) if for printing 
+           #all the local variables in the current line, and only this!  
+           #Not stepping (next line)!
+    elif command.startswith('b'):
+       if arg and int(arg) in range(71,85):          #line no.71 - script starts, 95-ends
+           breakpoints[int(arg)]=True
+           print "breakpoints:",breakpoints
+       else:
+           print 'You must supply a line number'
+    elif command.startswith('w'):
+        if arg:
+            watchpoints[arg]=True
+        else:
+            print 'You must supply a variable name' 
+            
     elif command.startswith('q'):       #quit
         sys.exit(0)
     else:
@@ -129,31 +142,50 @@ def debug(command, my_locals):
     
     return False
 
-#commands = ["p", "s", "p tag", "p foo", "q"]
-commands = ["s", "s", "q"]
-
+#commands = ["b 85", "p", "s", "p", "s", "p", "c","p","c", "q"]
+#commands = ["w out", "c"]
 def input_command():
-    #command = raw_input("(my-spider)")
-    global commands
-    command = commands.pop(0)
+    command = raw_input("(my-spider):")
+    #global commands
+    #command = commands.pop(0)
     return command
 
 def traceit(frame, event, trace_arg):
     global stepping
-    
+
     if event  == 'line':
+        print "event: ",event," ,line_No: ",frame.f_lineno
+        
+        #watchpoints on each item
+        if watchpoints.items() > 0 :
+            for item in watchpoints:
+                print "ITEM:",item
+                print "frame.f_locals:",frame.f_locals
+                if item in frame.f_locals:
+                    print "Watch:",item,"Value:",frame.f_locals[item]
+                    
         if stepping or breakpoints.has_key(frame.f_lineno):
+            print "stepping: ",stepping ,', bPoint: ',breakpoints.has_key(frame.f_lineno)
             resume = False
             while not resume:
-                print event, frame.f_lineno, frame.f_code.co_name, frame.f_locals
+                #print "inWhile: ",event, frame.f_lineno, frame.f_code.co_name, frame.f_locals
                 command = input_command()
+                print "command: ", command
                 resume = debug(command, frame.f_locals)
+                print 'resume', resume,"\n", 20*"-"
+    print ">>>>next event<<<<"
     return traceit
 
 #Using the tracer
-sys.settrace(traceit)
-main()
-sys.settrace(None)
+if __name__ == '__main__':
+    sys.settrace(traceit)
+    main()
+    sys.settrace(None)
 
+#===============================================================================
+# print breakpoints
+# debug("b 92",{'quote': False, 's': 'xyz', 'tag': False, 'c': 'b', 'out': ''})
+# print breakpoints == {81: True, 92:True}
+#===============================================================================
 
 
