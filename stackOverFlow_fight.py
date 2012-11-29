@@ -1,3 +1,8 @@
+#
+#   This script was copied from
+#   http://coreygoldberg.blogspot.com
+#
+
 #!/usr/bin/env python
 
 import urllib
