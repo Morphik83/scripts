@@ -1,6 +1,5 @@
 from fetchURL_byProxy import *
 
-
 redirects_list = ['http://volvopenta.com','http://volvopenta.com','http://volvopenta.com']
 pacfile = 'C:\\tmp\\proxyconf_srv_volvo_com'
 #url = 'http://volvopenta.com'
