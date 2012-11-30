@@ -40,6 +40,7 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
         
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     """"
     ToDo:
     -unify all the returned headers (the same name!)
@@ -47,6 +48,9 @@ if __name__ == '__main__':
     -add graph to make analyzing results easier 
     """
     
+=======
+    #>MASTER changes + BRANCH changes
+>>>>>>> f0893ab6354e0413e612c87a3dabd034202ea904
     import pprint
     import re
     import sys
