@@ -19,7 +19,7 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
     def http_error_301(self, req, fp, code, msg, headers):
         result = urllib2.HTTPRedirectHandler.http_error_301(self, req, fp, code, msg, headers)
         #result.URL_1 = [headers[h] for h in headers.keys() if h == 'location']
-        result._301_FROM_REQUEST_GET_FULL_URL = req.get_full_url()
+        result._301_FROM_URL = req.get_full_url()
         result._301_TO_URL = headers.getheader('location')
         result._301_STATUS = code
         result._301_DATE = headers.getheader('date')
@@ -28,7 +28,7 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
     def http_error_302(self, req, fp, code, msg, headers):
         result = urllib2.HTTPRedirectHandler.http_error_302(self, req, fp, code, msg, headers)
         #result.URL_2 = [headers[h] for h in headers.keys() if h == 'location']
-        result._302_FROM_REQUEST_GET_FULL_URL = req.get_full_url()
+        result._302_FROM_URL = req.get_full_url()
         result._302_TO_URL = headers.getheader  ('location')
         result._302_STATUS = code
         result._302_DATE = headers.getheader('date')
@@ -46,6 +46,7 @@ if __name__ == '__main__':
     -unify all the returned headers (the same name!)
     -add logging 
     -add graph to make analyzing results easier 
+    -parallelly write to std.out and log
     """
     
     #>MASTER changes + BRANCH changes
@@ -53,17 +54,23 @@ if __name__ == '__main__':
     import pprint
     import re
     import sys
-    sys.stdout = open("D:\\tmp\\redirect.log", "a+")
+    #sys.stdout = open("D:\\tmp\\redirect.log", "a+")
     srh = SmartRedirectHandler()
     #handler = urllib2.HTTPHandler()
     #handler.set_http_debuglevel(1)
     opener = urllib2.build_opener(srh)
     opener.handle_open['http'][0].set_http_debuglevel(1)
-    request = urllib2.Request('http://www.volvopenta.com')
-    f = opener.open(request)
+    request = urllib2.Request('http://www.volvo.com')
+    try:
+         f = opener.open(request)
+         pprint.pprint(f.__dict__)
+    except Exception, e:
+        print "There was a problem with opening URL. Error: ",e
+    finally:
+        print "This part is executed ALWAYS!"
+     
     
     
-    pprint.pprint(f.__dict__)
     
 
     
