@@ -73,12 +73,13 @@ def fetchurl(pac, url):
     '''
     using urllib2:
     '''
-    srh = rTool.SmartRedirectHandler()
+    #srh = rTool.SmartRedirectHandler()
     proxy = urllib2.ProxyHandler(proxies)
 
-    opener = urllib2.build_opener(srh, proxy)
-    #handler = urllib2.HTTPHandler()
-    #handler.set_http_debuglevel(1)
+    #opener = urllib2.build_opener(srh, proxy)
+    opener = urllib2.build_opener(proxy)
+    handler = urllib2.HTTPHandler()
+    handler.set_http_debuglevel(1)
 
     urllib2.install_opener(opener)
 
