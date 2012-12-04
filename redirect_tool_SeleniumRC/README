@@ -9,17 +9,17 @@ NOTE: To actually run this script, it is needed to start Selenium Server first:
 and install Win32 pkg to handle COM objects under Windows environment (dispatch IE browser object)
 
 Example of the REDIRECT_INPUT_FILE:
-	http://www.volvopenta.com http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
-	http://www.volvogroup.com http://www.volvogroup.com/group/global/en-gb/Pages/group_home.aspx
-	#http://www.volvotrucks.com http://www.volvotrucks.com/
+http://www.volvopenta.com http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
+http://www.volvogroup.com http://www.volvogroup.com/group/global/en-gb/Pages/group_home.aspx
+#http://www.volvotrucks.com http://www.volvotrucks.com/
 
 Example of the REDIRECT_LOG_FILE:
-	Redirects Tests Results: Tue_Dec_04_23_22_28_2011 
-	PASS: address http://www.volvopenta.com is redirected to http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
-	PASS: address http://www.volvogroup.com is redirected to http://www.volvogroup.com/group/global/en-gb/Pages/group_home.aspx
-	PASS: address http://www.volvotrucks.com is redirected to http://www.volvotrucks.com/
-	PASS: address http://www.volvoit.com is redirected to http://www.volvoit.com/volvoit/global/en-gb/Pages/Home%20page.aspx
-	PASS: address http://www.volvobuses.com is redirected to http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx
+Redirects Tests Results: Tue_Dec_04_23_22_28_2011 
+PASS: address http://www.volvopenta.com is redirected to http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
+PASS: address http://www.volvogroup.com is redirected to http://www.volvogroup.com/group/global/en-gb/Pages/group_home.aspx
+PASS: address http://www.volvotrucks.com is redirected to http://www.volvotrucks.com/
+PASS: address http://www.volvoit.com is redirected to http://www.volvoit.com/volvoit/global/en-gb/Pages/Home%20page.aspx
+PASS: address http://www.volvobuses.com is redirected to http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx
 	
 Simple html result file is generated as well:
 <html> <body><h1>Redirects Tests Results</h1> <p>Tue_Dec_04_23_16_57_2012</p></body> </html><html> <body><h1>Redirects Tests Results</h1> 
