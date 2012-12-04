@@ -1,0 +1,114 @@
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.mysupnmmnport.volov.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 302 FOUND\r\n'
+header: Server: nginx/0.8.39
+header: Date: Sat, 27 Oct 2012 15:25:14 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Connection: close
+header: Content-Length: 303
+header: Location: http://www.ownbox.com/rr/mysupnmmnport.volov.com
+send: 'GET /rr/mysupnmmnport.volov.com HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.ownbox.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 302 FOUND\r\n'
+header: Server: nginx/0.8.39
+header: Date: Sat, 27 Oct 2012 15:25:15 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Connection: close
+header: Content-Length: 273
+header: Location: http://usseek.com/geot/auto+loans
+header: Set-Cookie: session="4IiLn7FW7wWBnnTIuA5JylA/Tm4=?_expires=STEzNTQwMjk5MTUKLg==&_permanent=STAxCi4=&auto=RjEzNTEzNTE1MTUuMTY0NTMxOQou"; expires=Tue, 27-Nov-2012 15:25:15 GMT; Path=/; HttpOnly
+send: 'GET /geot/auto+loans HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: usseek.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Date: Sat, 27 Oct 2012 15:25:15 GMT
+header: Server: Apache
+header: Location: http://www.usseek.com/geot/auto+loans
+header: Content-Length: 245
+header: Connection: close
+header: Content-Type: text/html; charset=iso-8859-1
+send: 'GET /geot/auto+loans HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.usseek.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Sat, 27 Oct 2012 15:25:16 GMT
+header: Server: Apache
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=ISO-8859-1
+{'date': 'Sat, 27 Oct 2012 15:25:16 GMT', 'transfer-encoding': 'chunked', 'connection': 'close', 'content-type': 'text/html; charset=ISO-8859-1', 'server': 'Apache'} 
+
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Content-Type: text/html
+header: Content-Length: 197
+header: Location: http://www.volvopenta.com/volvopenta/splash/en-gb
+header: Expires: Sat, 27 Oct 2012 15:25:17 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 27 Oct 2012 15:25:17 GMT
+header: Connection: close
+send: 'GET /volvopenta/splash/en-gb HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 197
+header: Content-Type: text/html
+header: Location: http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 27 Oct 2012 15:25:17 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 27 Oct 2012 15:25:17 GMT
+header: Connection: close
+send: 'GET /volvopenta/splash/en-gb/Pages/global_splash.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 27 Oct 2012 15:35:41 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 27 Oct 2012 15:25:18 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+{'expires': 'Sat, 27 Oct 2012 15:35:41 GMT', 'x-aspnet-version': '2.0.50727', 'transfer-encoding': 'chunked', 'x-powered-by': 'ASP.NET', 'vary': 'Accept-Encoding', 'server': 'Microsoft-IIS/6.0, SEGOTN2544', 'connection': 'close, Transfer-Encoding', 'cache-control': 'private', 'date': 'Sat, 27 Oct 2012 15:25:18 GMT', 'content-type': 'text/html; charset=utf-8'} 
+
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Content-Type: text/html
+header: Content-Length: 183
+header: Location: http://www.volvobuses.com/bus/global/en-gb
+header: Expires: Sat, 27 Oct 2012 15:25:18 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 27 Oct 2012 15:25:18 GMT
+header: Connection: close
+send: 'GET /bus/global/en-gb HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 185
+header: Content-Type: text/html
+header: Location: http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 27 Oct 2012 15:25:18 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 27 Oct 2012 15:25:18 GMT
+header: Connection: close
+send: 'GET /bus/global/en-gb/Pages/home_new.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Python-urllib/2.7\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 27 Oct 2012 15:39:50 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 27 Oct 2012 15:25:19 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+{'expires': 'Sat, 27 Oct 2012 15:39:50 GMT', 'x-aspnet-version': '2.0.50727', 'transfer-encoding': 'chunked', 'x-powered-by': 'ASP.NET', 'vary': 'Accept-Encoding', 'server': 'Microsoft-IIS/6.0, SEGOTN2544', 'connection': 'close, Transfer-Encoding', 'cache-control': 'private', 'date': 'Sat, 27 Oct 2012 15:25:19 GMT', 'content-type': 'text/html; charset=utf-8'} 
+
