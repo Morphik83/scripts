@@ -33,3 +33,9 @@ example OUTPUT (INFO log file)
 	GET:  www.volvo.com/group/volvosplash-global/en-gb/Pages/volvo_splash.aspx
 	|
 	|STATUS:  200 OK
+	
+	##################################################
+
+	| ERROR: http://volvotruscks.com This URL does not exist! <urlopen error [Errno 11004] getaddrinfo failed> 
+
+	##################################################	
