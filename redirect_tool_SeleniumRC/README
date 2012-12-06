@@ -1,25 +1,25 @@
 Simple scripts that runs on Selenium RC and verifies if one url is correctly redirected to antoher one
 ->written ad-hoc, to handle a lot of redirects - as I did not want to check it manually ;)
-->I am aware, that it would be quicker just to check response headers (Get/Reply/Location), but I needed to check also "visually"
-if pages are displayed correctly)
-->btw. I also written script to do the same job, but headless (no browser started) - only headers are checked (see redirect_tool dir)
+->I am aware, that it would be quicker just to check response headers (Get/Reply/Location), but I needed to check also "visually" if pages are displayed correctly)
+->btw. I also written script to do the same job, but headless (no browser started) - only headers are checked 
+(see https://github.com/Morphik83/scripts/tree/rewrite_redirectTool/redirect_tool)
 
 NOTE: To actually run this script, it is needed to start Selenium Server first:
 "C:\Python27\Lib\site-packages\SeleniumLibrary\lib>java -jar selenium-server-standalone-2.25.0.jar"
 and install Win32 pkg to handle COM objects under Windows environment (dispatch IE browser object)
 
 Example of the REDIRECT_INPUT_FILE:
-	http://www.volvopenta.com http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
-	http://www.volvogroup.com http://www.volvogroup.com/group/global/en-gb/Pages/group_home.aspx
-	#http://www.volvotrucks.com http://www.volvotrucks.com/
+http://www.volvopenta.com http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
+http://www.volvogroup.com http://www.volvogroup.com/group/global/en-gb/Pages/group_home.aspx
+#http://www.volvotrucks.com http://www.volvotrucks.com/
 
 Example of the REDIRECT_LOG_FILE:
-	Redirects Tests Results: Tue_Dec_04_23_22_28_2011 
-	PASS: address http://www.volvopenta.com is redirected to http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
-	PASS: address http://www.volvogroup.com is redirected to http://www.volvogroup.com/group/global/en-gb/Pages/group_home.aspx
-	PASS: address http://www.volvotrucks.com is redirected to http://www.volvotrucks.com/
-	PASS: address http://www.volvoit.com is redirected to http://www.volvoit.com/volvoit/global/en-gb/Pages/Home%20page.aspx
-	PASS: address http://www.volvobuses.com is redirected to http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx
+Redirects Tests Results: Tue_Dec_04_23_22_28_2011 
+PASS: address http://www.volvopenta.com is redirected to http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
+PASS: address http://www.volvogroup.com is redirected to http://www.volvogroup.com/group/global/en-gb/Pages/group_home.aspx
+PASS: address http://www.volvotrucks.com is redirected to http://www.volvotrucks.com/
+PASS: address http://www.volvoit.com is redirected to http://www.volvoit.com/volvoit/global/en-gb/Pages/Home%20page.aspx
+PASS: address http://www.volvobuses.com is redirected to http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx
 	
 Simple html result file is generated as well:
 <html> <body><h1>Redirects Tests Results</h1> <p>Tue_Dec_04_23_16_57_2012</p></body> </html><html> <body><h1>Redirects Tests Results</h1> 
