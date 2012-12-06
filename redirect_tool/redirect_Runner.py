@@ -12,6 +12,9 @@ from output_parser import Output_Parser
 # -add assertions (unti tests?)
 # -(url_1 -> url_2) (but: url_1 ---> url_2 ---> url_3)| check that url_2 == urls[1]
 #===============================================================================
+#get urls!
+
+
 
 
 redirects_list = ['http://volvopenta.com','http://volvobuses.com','http://volvo.com','http://volvotrucks.com']
@@ -22,11 +25,11 @@ log = 'D:\\tmp\\Redirect_Handler.log'               #INFO log: log file, when re
 
 """
 logger obj is used to overwrite standard 'write' method of the 'sys.stdout'
-In general, 'print' statement by default runs 'write' method on 'sys.stdout' object - by overwritting
+In general, 'print' statement by default executes 'write' method on 'sys.stdout' object - by overwritting
 this method, it is possible to redirect all the data to eg. file or another obj (see Logger class for details)
 """
 logger = loggers.Logger()   #creates DefaultLog (DEBUG log) file - see in Logger obj for details
-sys.stdout = logger         #redirect all the outputs to the logger obj
+sys.stdout = logger         #redirects all the output to the logger obj
                             
                             
 """
@@ -38,15 +41,21 @@ try:
     for url in redirects_list:
         try:
             fetchurl(pacfile, url)   
-        except Exception, e:
-            print "There was a problem with opening URL. Error: ",e
- 
-    """
-    when all the URLs are already opened/redirected and all the outputs are written to logger.content
-    lets generate final log file (log)
-    """   
-    parser = Output_Parser(logger.content, log)
-    parser.generate_output()
-
+        except URLError, e:                     #invalid URL
+            print "ERROR: "+url+" This URL does not exist! " + str(e)
+        except ValueError, e:                   #url without 'http://'
+            if re.search(r'unknown url type', str(e)):
+                try:
+                    fetchurl(pacfile, 'http://'+url)
+                except URLError, e:                     #still might be invalid URL, eg.'ww.volvo.com'
+                    print "ERROR: "+url+" This URL does not exist! " + str(e)
 finally:
     sys.stdout = sys.__stdout__                 #revert sys.stdout to normal
+ 
+"""
+when all the URLs are already opened/redirected and all the outputs are written to logger.content
+lets generate final log file (log)
+"""   
+parser = Output_Parser(logger.content, log)
+parser.generate_output()
+
