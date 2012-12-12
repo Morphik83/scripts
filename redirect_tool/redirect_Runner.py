@@ -2,8 +2,25 @@
 from output_parser import *
 from config_file import *
 
+"""
+For detailed config, see config_file.py!
 
-#to verify_redirects pass only format (txt,xls) -> log generated automatically
+NOTE:
+There are four logs created (graphic AND detailed,  final OR xls), 
+but only final/xls logs give the info about PASS/FAIL !!
+graphic/detailed presents only formatted sys.stdout !!
+"""
+
+
+""""
+KNOWN ISSUES
+1. if given url is not redirected, it won't be logged in xls report file (in 'reply' there is no 'Location' header)
+ eg. http://www.volvotrucks.com http://www.volvotrucks.com/
+2. if there are two (or more) the same origin_urls, only first one will be logged to xls report 
+(dict cannot have two the same keys...)
+ eg. www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspx
+     www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspxa
+"""
 
 
 def input_data(input_file):
@@ -46,7 +63,7 @@ def fetch_url(redirects_list):
     (but we redirected that stream to 'logger', so all the data is being saved in logger.content as well) 
     """
     
-    logger = Logger(detailed_log)       #creates DefaultLog (DEBUG log) file - see in Logger obj for details
+    logger = loggers.Logger(detailed_log)       #creates DefaultLog (DEBUG log) file - see in Logger obj for details
     sys.stdout = logger                         #redirect all the outputs to the logger obj
                                 
     try:
@@ -85,6 +102,7 @@ def fetch_url(redirects_list):
     return logger.content
 
 def main():
+    
     #get list of URLs to check redirects (from input_file)
     redirects_list = input_data(input_file)
     
@@ -96,8 +114,8 @@ def main():
     parser = Output_Parser(log_content, graphic_log)
     out_dict = parser.generate_output()
     
-    #Finally, lets check if all redirects are correct and generate final_log (XLS)
-    parser.verify_redirects(redirects_list, out_dict, final_log)
+    #Finally, lets check if all redirects are correct and generate final_log (LOG or XLS)
+    parser.verify_redirects(redirects_list, out_dict, 'XLS')
     
 
 if __name__ == '__main__':
