@@ -1,11 +1,12 @@
-#!/usr/bin/env python
 import pprint
 import re
 import sys
-from loggers import Logger
+import xlwt
 import time
 import urllib2
 from urllib2 import URLError
+from config_file import *
+from loggers import Logger
 
 """
 ToDo:
@@ -13,7 +14,7 @@ ToDo:
 """
     
 class Output_Parser(Logger):
-    """OUTPUT PARSER - input: Logger.content list -> (response)
+    """Output_Parser - input: Logger.content list -> (response)
     
     response = opener.open(request)
     """
@@ -22,8 +23,8 @@ class Output_Parser(Logger):
     by creating instance of the 'Logger' class, we automatically redirect sys.stdout to self.log
     """
     def __init__(self, response, log):
-        self.response = response           #logger.content list
-        self.log = log                      #log file, when redirects will be displayed in graphical way
+        self.response = response            #logger.content list 
+        self.log = log                      #graphic_log file
         self.logger = Logger(self.log)  
         sys.stdout = self.logger
         
@@ -37,6 +38,7 @@ class Output_Parser(Logger):
             (...)
         regex patterns are used to make sure that proper line was selected (GET/HEAD/Location) 
         """
+        out_dict = {}                                   #dict to save all the pairs (origin_url: target_url)
         pattern_send = re.compile(r'^\'GET.*$')          #prepare regexp patterns 
         pattern_reply = re.compile(r'^\'HTTP.*$')
         pattern_location = re.compile(r'\bLocation\b.*$')
@@ -52,12 +54,18 @@ class Output_Parser(Logger):
         pattern_send_1 = re.compile(r'^\'GET\s(.*)\sHTTP.*Host:\s(.*)Connection')  #URL used to create GET request, HOST
         pattern_reply_1 = re.compile(r'\s(.*)$')                                   #response CODE (Status = 302/301/200/...)
         pattern_location_1 = re.compile(r'^Location:\s(.*)$')                      #target URL
+        pattern_start_request = re.compile(r'^>>>>ORIGIN_URL:(.*)$')               #this is printed to output in redirect_Runner (for each URL from url_list)
         
         #with open(log, 'a+') as f:                                                 #open log file
         try:
           for line in self.response:                                        #read line by line from foo.content (redirected sys.stdout
               try:
-                  if re.search(pattern_send, line):           
+                  if re.search(pattern_start_request, line):
+                        print "index: ",self.response.index(line)
+                        _origin_url = re.search(pattern_start_request,line)
+                        out_list = []           #anytime "index" is changed, new out_list is created
+                                                #but out_dict stays the same! out_dict={_origin_url:out_list, _origin_url:out_list,...}
+                  elif re.search(pattern_send, line):           
                       _host = pattern_send_1.search(line).group(2)[:-4]              #[:-4] to del \n\r
                       _rest = pattern_send_1.search(line).group(1)
                       #print >>f, '\nGET: ', _host, _rest                #if NO LOGGER, this print "trick" can be used to write to file ;)
@@ -66,11 +74,21 @@ class Output_Parser(Logger):
                       _status = pattern_reply_1.search(line).group(1)[:-5]
                       print '|\n|STATUS: ', _status
                       if re.match(r'\b200\b', _status):                   #if STATUS = 200, draw #*50 -> redirect reached final url
-                          print "ASSERT:"
                           print '\n','#'*50
                   elif re.search(pattern_location, line):
                       _target = pattern_location_1.search(line).group(1)
+                      _target = re.sub(r'\b\s\b','%20',_target)           #replace in url: /Home page.aspx' with /Home%20page.aspx'
+                     
                       print '|\n|--->TO: ', _target
+                      out_list.append(_target[:-1])                       #out_list: list of all the URLs that ORIGIN is redirected TO
+                      out_dict[_origin_url.group(1)]=out_list
+                      """
+                      example output:
+                      {'http://www.volvobuses.com': 
+                              ['http://www.volvobuses.com/bus/global/en-gb',
+                               'http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx'],}    
+                      """
+                      
                   elif re.search(pattern_error, line):
                       print '\n|', line, '\n\n','#'*50
                   else:
@@ -78,49 +96,101 @@ class Output_Parser(Logger):
               except AttributeError,e:                                    #AttributeError is thrown, when no MATCH for 
                   pass                                                #re.search - it means there are no redirection!
         finally:
-          sys.stdout = sys.__stdout__                                 #reset sys.stdout to normal state! Deletes redirection to logger
+            sys.stdout = sys.__stdout__                                 #reset sys.stdout to normal state! Deletes redirection to logger
+            pprint.pprint(out_dict)
             
+        return out_dict
+            
+            
+            
+    def verify_redirects(self, redirects_list, out_dict, final_log):
+        """
+        Function checks if url_2 from input_file is in list of urls generated by
+        generate_output funcion.
+        
+        Input: 
+        1.redirects_list => output from input_data(input_file)
+        2.out_dict => output from generate_output
+        3.log => log
+        
+        So, for example:
+        redirects_list[2]:
+        {'http://www.volvobuses.com' : 'http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx'}
+        
+        out_dict:
+        {'http://www.volvobuses.com': 
+                 ['http://www.volvobuses.com/bus/global/en-gb',
+                  'http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx'],}
+        Check if (value IN list):
+        redirects_list[2]['http://www.volvobuses.com'] IN out_dict['http://www.volvobuses.com'] => TRUE/FALSE
+        """
+        #create xls object
+        book = xlwt.Workbook(encoding="utf-8") 
+        sheet1 = book.add_sheet("Redirects Report")
+        
+        #define styles
+        style0 = xlwt.easyxf('font: name Times New Roman, color-index black, bold on')
+        style1 = xlwt.easyxf('font: name Times New Roman, color-index black, bold off',num_format_str='#,##0.00')
+        
+        #style for ERROR results (red background)
+        err_st = xlwt.easyxf('pattern: pattern solid')
+        err_st.pattern.pattern_fore_colour = 2 #RED
+        
+        #style for OK results (green background)
+        ok_st = xlwt.easyxf('pattern: pattern solid')
+        ok_st.pattern.pattern_fore_colour = 3 #GREEN
+        
+        #set column's width (256 * no.of chars)
+        sheet1.col(0).width = 256 * 40
+        sheet1.col(1).width = 256 * 100
+        sheet1.col(2).width = 256 * 8
+        
+        #sheet1.write(row_number, col_number, "WRITE HERE STH", set_style)
+        sheet1.write(0,0,"FROM",style0 )
+        sheet1.write(0,1,"FROM",style0 )
+        sheet1.write(0,2,"RESULT",style0 )
+        
+        #start counters
+        row = 1
+        col = 0  
+                
+        #create final_log file:
+        final_log = open(final_log, 'a+')
+        
+        #iterate over dict.keys() (origin URLs from input_file)
+        for url_key in redirects_list[2].keys():        #loop over dict (redirects_list[2], see @redirect_Runner
+            #if out_dict has the same key (=the same ORIGIN url):
+            if out_dict.has_key(url_key):
+                """
+                redirects_list[2][url_key] => value (TARGET url from input_file)           
+                out_dict[url_key] => out_dict[key] returns list of all the urls that target_url was redirected to
+                Below line checks if: out_dict[key] list HAS target_url from input file
+                """
+                final_log.write("From: %s \n" % url_key)
+                sheet1.write(row,col,url_key,style1 )
+                
+                final_log.write("To:   %s \n" % redirects_list[2][url_key])
+                sheet1.write(row, col+1, redirects_list[2][url_key], style1 )
+                
+                final_log.write("%s\n" % str(redirects_list[2][url_key] in out_dict[url_key]))
+                if redirects_list[2][url_key] in out_dict[url_key]:
+                    #if OK, use GREEN background in xls report
+                    sheet1.write(row, col+2, str(redirects_list[2][url_key] in out_dict[url_key]), ok_st)
+                else:
+                    #if NOT OK, use RED background
+                    sheet1.write(row, col+2, str(redirects_list[2][url_key] in out_dict[url_key]), err_st)
+                
+                final_log.write(50*"-"+"\n")
+                
+                #go to the next row
+                row=row+1
+                
+        #save the XLS report
+        book.save(os.path.join(PATH,'Redirects_Report_file.xls'))
+        
 
 if __name__ == '__main__':
-    import loggers
-    import sys
-    import urllib2
-    
-    foo = loggers.Logger()   #redirect all the outputs to the foo 
-    sys.stdout = foo
-    
-    url_list = ['http://volvopenta.com', 'http://volvobuses.com', 'http://volvoit.com', 
-                'http://volvo.com', 'http://volvotruscks.com', 'http://volvotrucks.com'] 
-    try:
-        
-        for url in url_list:    
-            #srh = SmartRedirectHandler(log)        #redirect handler with extra headers
-            #handler = urllib2.HTTPHandler()
-            #handler.set_http_debuglevel(1)
-            opener = urllib2.build_opener()
-            opener.handle_open['http'][0].set_http_debuglevel(1)
-            request = urllib2.Request(url)
-            try:
-                opener.open(request)
-            except URLError,e:
-                print "ERROR: "+url+" This URL does not exist! " + str(e)
-            except ValueError, e:
-                if re.search(r'unknown url type', str(e)):
-                    try:
-                        request = urllib2.Request('http://'+url)
-                        opener.open(request)
-                    except URLError,e:
-                        print "ERROR: "+url+" This URL does not exist! " + str(e)
-                
-    finally:
-        sys.stdout = sys.__stdout__
-        
-    log='D:\\tmp\\xxxxxx.log'       #detailed final log file
-    parser = Output_Parser(foo.content, log)
-    parser.generate_output()    
-        
-        
-        
+    pass
         
     #===========================================================================
     # rm = ['fileno','fp','headers','next','read','readlines',\

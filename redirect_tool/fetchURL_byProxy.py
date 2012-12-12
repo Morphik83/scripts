@@ -45,7 +45,7 @@ import smart_redirect_handler as rTool #simple_RedirectTool.py by DiveIntoPython
 import pprint
 
 
-def fetchurl(pac, url):
+def fetchurl(pac, url, headers):
   try:
     proxy_string = pacparser.just_find_proxy(pac, url)
   except:
@@ -75,15 +75,14 @@ def fetchurl(pac, url):
     '''
     #srh = rTool.SmartRedirectHandler()
     proxy = urllib2.ProxyHandler(proxies)
-
-    #opener = urllib2.build_opener(srh, proxy)
-    opener = urllib2.build_opener(proxy)
     handler = urllib2.HTTPHandler()
     handler.set_http_debuglevel(1)
-
+    cookie = urllib2.HTTPCookieProcessor()
+    
+    opener = urllib2.build_opener(handler, proxy)
     urllib2.install_opener(opener)
 
-    request = urllib2.Request(url)
+    request = urllib2.Request(url, None, headers)
     response = opener.open(request)
 
 
