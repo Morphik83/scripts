@@ -175,12 +175,13 @@ class Output_Parser(loggers.Logger):
                 """
                 sheet1.write(row,col,url_key,style1 )
                 sheet1.write(row, col+1, redirects_list[2][url_key], style1 )
-                if redirects_list[2][url_key] in out_dict[url_key]:
+                #strip() added - sometimes there is extra whitespace char at the end
+                if redirects_list[2][url_key].strip() in out_dict[url_key]:
                     #if OK, use GREEN background in xls report
-                    sheet1.write(row, col+2, str(redirects_list[2][url_key] in out_dict[url_key]), ok_st)
+                    sheet1.write(row, col+2, str(redirects_list[2][url_key].strip() in out_dict[url_key]), ok_st)
                 else:
                     #if NOT OK, use RED background
-                    sheet1.write(row, col+2, str(redirects_list[2][url_key] in out_dict[url_key]), err_st)
+                    sheet1.write(row, col+2, str(redirects_list[2][url_key].strip() in out_dict[url_key]), err_st)
                 #go to the next row
                 row=row+1
         book.save(xls_report)
@@ -192,7 +193,7 @@ class Output_Parser(loggers.Logger):
                 if out_dict.has_key(url_key):
                     f.write("From: %s \n" % url_key)
                     f.write("To:   %s \n" % redirects_list[2][url_key])
-                    f.write("%s\n" % str(redirects_list[2][url_key] in out_dict[url_key]))
+                    f.write("%s\n" % str(redirects_list[2][url_key].strip() in out_dict[url_key]))
                     f.write(50*"-"+"\n")
         
 
