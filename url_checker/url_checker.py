@@ -1,33 +1,15 @@
-"""
-1. prepare host_server files (ex. host_SEGOTN2525, host_SEGOTN2543,...)
-2. load host file (rename/substitute host <-> host_SEGOTNXX)
-3. parse input file with urls
-4. get return code (if 200:OK else LOG)
-5. 
-"""
-
-#===============================================================================
-# # SUPER class  You should probably read more about how Python classes should be used.
-# 
-# As an additional note, you'd most often want to use
-# 
-# super(InfoOT, self).__init__(parent)
-# over
-# 
-# wx.Panel.__init__(self, parent)
-#===============================================================================
 import urllib2, urlparse, socket 
 import os
 import re
 import pprint
 from config_file import *
 from urllib2 import URLError
-#import 'xlwt' module
 try:
     import xlwt
 except ImportError, e:
     print "Install 'xlwt' - python module for 'xls' file handling!\n",e
 
+#TODO: iteratively substitute original system's host file with server-oriented host files
 
 class Report(object):
     
