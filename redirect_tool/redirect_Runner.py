@@ -11,8 +11,9 @@ but only final/xls logs give the info about PASS/FAIL !!
 graphic/detailed presents only formatted sys.stdout !!
 """
 
+#todo - read input XLS file (not only LOG)
 
-""""
+"""
 KNOWN ISSUES
 1. if given url is not redirected, it won't be logged in xls report file (in 'reply' there is no 'Location' header)
  eg. http://www.volvotrucks.com http://www.volvotrucks.com/
@@ -20,6 +21,7 @@ KNOWN ISSUES
 (dict cannot have two the same keys...)
  eg. www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspx
      www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspxa
+3. if URL from input_list does not exist (code 404), it won't be logged to xls report
 """
 
 
@@ -39,14 +41,14 @@ def input_data(input_file):
         search = re.search(searchPattern, line)
         if search:
             #print "1: ",search.group(1)
-            if not re.match(r'^http://',search.group(1)):
+            if not re.match(r'^http[s]?://',search.group(1)):
                 url_in = 'http://'+search.group(1)
             else:
                 url_in = search.group(1)
             in_list.append(url_in)
             
             #print "2: ",search.group(2)
-            if not re.match(r'^http://',search.group(2)):
+            if not re.match(r'^http[s]?://',search.group(2)):
                 url_out = 'http://'+search.group(2)
             else:
                 url_out = search.group(2)

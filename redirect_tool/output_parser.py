@@ -7,12 +7,6 @@ import loggers
 from urllib2 import URLError
 from config_file import *
 
-
-"""
-ToDo:
--different output types (xml,txt??)
-"""
-    
 class Output_Parser(loggers.Logger):
     """Output_Parser - input: Logger.content list -> (response)
     
@@ -123,12 +117,12 @@ class Output_Parser(loggers.Logger):
         redirects_list[2]['http://www.volvobuses.com'] IN out_dict['http://www.volvobuses.com'] => TRUE/FALSE
         """
         
-        generate_report = getattr(self, "_generate_%s" % format, self._generate_XLS)
+        generate_report = getattr(self, "__generate_%s" % format, self.__generate_XLS)
         
         generate_report(redirects_list, out_dict)
         
         
-    def _generate_XLS(self, redirects_list, out_dict):
+    def __generate_XLS(self, redirects_list, out_dict):
         try:
             import xlwt
         except ImportError, e:
@@ -187,7 +181,7 @@ class Output_Parser(loggers.Logger):
         book.save(xls_report)
     
     
-    def _generate_LOG(self, redirects_list, out_dict):
+    def __generate_LOG(self, redirects_list, out_dict):
         with open(final_log, 'a+') as f:
             for url_key in redirects_list[2].keys():
                 if out_dict.has_key(url_key):
