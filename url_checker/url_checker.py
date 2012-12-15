@@ -69,8 +69,8 @@ class Report(object):
         """
         self.report.write("URL: %s \n" % args[0])
         self.report.write("IP_ADDR: %s \n" % args[1])
-        self.report.write("R_CODE: %s" % args[2])
-        self.report.write("\n",50*"-")
+        self.report.write("R_CODE: %s \n" % args[2])
+        self.report.write(50*"-"+"\n")
 
     def write_XLS(self, *args):
         """writes data to XLS report file
