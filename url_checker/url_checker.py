@@ -92,10 +92,10 @@ class Report(object):
         #========TO DO===============================================================
         # if args[2]=='200':
         #    #if OK, use GREEN background in xls report
-        #    self.report_object.write(row, col+2, args[2], ok_st)
+        #    self.sheet1.write(row, col+2, args[2], ok_st)
         # else:
         #    #if NOT OK, use RED background
-        #    self.report_object.write(row, col+2, args[2], err_st)
+        #    self.sheet1.write(row, col+2, args[2], err_st)
         #=======================================================================
         
         #increase row counter - go to the next row
@@ -117,7 +117,6 @@ class Report(object):
         
 class Check_URLs(Report):
     
-    #def __init__(self, report_file, file_with_urls, headers):
     def __init__(self):
         self.report = report_file
         self.file_with_urls = file_with_urls
@@ -143,13 +142,12 @@ class Check_URLs(Report):
                 return ext
             except AssertionError:
                 print "Reports' file extension must be 3 chars long!\
-                \nFor available report types see ext_accept_list in config_file"
+                \nFor available report types see ext_accept_list in config_file.py"
         else:
-            print 'Missing extenstion for report file in config_file! \n(example:CHECK_URLS.xls)'    
+            print 'Missing extenstion for report file in config_file.py! \n(example:CHECK_URLS.xls)'    
         
     def get_listOf_URLs(self):
-        """
-        Valid input file must have following format:
+        """Valid input file must have following format:
         url_1
         #url_1   #if line starts with '#' -> skip
         """    
@@ -158,7 +156,6 @@ class Check_URLs(Report):
             for url in f:
                 search = re.search(searchPattern, url)
                 if search:
-                    #print "1: ",search.group(1)
                     if not re.match(r'^http[s]?://',search.group(1)):
                         url = 'http://'+search.group(1)
                     else:
@@ -169,7 +166,7 @@ class Check_URLs(Report):
     
     def hit_server_with_urls(self):
         
-        #FIXME - assert that 'list_with_urls' is actually list
+        #create list with urls
         self.list_with_urls = self.get_listOf_URLs()
         
         #prepare request:enable logging
@@ -200,13 +197,9 @@ class Check_URLs(Report):
     
 def main():
     check = Check_URLs()
-    check.hit_server_with_urls()
-            
+    check.hit_server_with_urls()            
 
 if __name__ == '__main__':
     main()
-    
-    
-    
     
     
