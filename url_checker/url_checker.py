@@ -1,5 +1,5 @@
 import urllib2, urlparse, socket 
-import os
+import os,sys
 import re
 import pprint
 from config_file import *
@@ -36,7 +36,7 @@ class Report(object):
         style0 = xlwt.easyxf('font: name Times New Roman, color-index black, bold on')
         
         #set columns' width (256 * no.of chars)
-        self.sheet1.col(0).width = 256 * 100 #col with URL
+        self.sheet1.col(0).width = 256 * 80  #col with URL
         self.sheet1.col(1).width = 256 * 40  #col with IP_ADDRr
         self.sheet1.col(2).width = 256 * 8   #col with RETURN CODE
         
@@ -67,9 +67,16 @@ class Report(object):
     def write_LOG(self, *args):
         """writes data to LOG report file
         """
+        #url is logged always
         self.report.write("URL: %s \n" % args[0])
-        self.report.write("IP_ADDR: %s \n" % args[1])
-        self.report.write("R_CODE: %s \n" % args[2])
+        #if error occurred, log only info about error
+        if args[3]:
+            self.report.write("ERROR: %s \n" % args[3])
+        #if no error, log ip_addr & r_code
+        else:
+            self.report.write("IP_ADDR: %s \n" % args[1])
+            self.report.write("R_CODE: %s \n" % args[2])
+        
         self.report.write(50*"-"+"\n")
 
     def write_XLS(self, *args):
@@ -85,9 +92,16 @@ class Report(object):
         ok_st.pattern.pattern_fore_colour = 3 #GREEN
         
         #write data to XLS 
-        self.sheet1.write(self.row, self.col,   args[0], style1 )
-        self.sheet1.write(self.row, self.col+1, args[1], style1 )
-        self.sheet1.write(self.row, self.col+2, args[2], ok_st)
+        #url is logged always
+        self.sheet1.write(self.row, self.col,   args[0], style1)
+        #if error occurred, log only info about error (in IP_ADDR col)
+        if args[3]:
+            self.sheet1.write(self.row, self.col+1, str(args[3]), err_st)
+            self.sheet1.write(self.row, self.col+2, '', err_st)
+        #if no error, log ip_addr & r_code
+        else:
+            self.sheet1.write(self.row, self.col+1, args[1], style1)
+            self.sheet1.write(self.row, self.col+2, args[2], ok_st)
         
         #========TO DO===============================================================
         # if args[2]=='200':
@@ -143,8 +157,10 @@ class Check_URLs(Report):
             except AssertionError:
                 print "Reports' file extension must be 3 chars long!\
                 \nFor available report types see ext_accept_list in config_file.py"
+                sys.exit()
         else:
-            print 'Missing extenstion for report file in config_file.py! \n(example:CHECK_URLS.xls)'    
+            print 'Missing extension for report file in config_file.py! \n(example:CHECK_URLS.xls)'
+            sys.exit()
         
     def get_listOf_URLs(self):
         """Valid input file must have following format:
@@ -168,7 +184,6 @@ class Check_URLs(Report):
         
         #create list with urls
         self.list_with_urls = self.get_listOf_URLs()
-        
         #prepare request:enable logging
         handler = urllib2.HTTPHandler(debuglevel=1)
         #add cookie handler
@@ -182,17 +197,18 @@ class Check_URLs(Report):
             request = urllib2.Request(url, None, self.headers)
             try:
                 response = opener.open(request)
+                ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
+                r_code = response.getcode()
+                print '\nURL:',url
+                print '\nCode:',r_code
+                print '\nIP:',ip_addr
+                error =  None
             except URLError,e:
+                #if URLError occurs, log info about it to log file, but does not exit
                 print "Is this URL:",url," valid?\n",e
-                break
-            ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
-            r_code = response.getcode()
-            print '\nURL:',url
-            print '\nCode:',r_code
-            print '\nIP:',ip_addr
-            
-            self.write_to_report(self.format, url, ip_addr, r_code)
-           
+                error = e
+            finally:
+                self.write_to_report(self.format, url, ip_addr, r_code, error)
         self.save_report()
     
 def main():
