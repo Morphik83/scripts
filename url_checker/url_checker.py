@@ -4,12 +4,14 @@ import re
 import pprint
 from config_file import *
 from urllib2 import URLError
+from httplib import InvalidURL
+from os import listdir
+from os.path import isfile,join
+import shutil
 try:
     import xlwt
 except ImportError, e:
     print "Install 'xlwt' - python module for 'xls' file handling!\n",e
-
-#TODO: iteratively substitute original system's host file with server-oriented host files
 
 class Report(object):
     
@@ -59,6 +61,11 @@ class Report(object):
 
     def write_to_report(self, *args):
         """by passing specific self.format (args[0]), corresponding private function is called
+        args[0]= format
+        args[1]= URL
+        args[2]= IP_ADDR
+        args[3]= R_CODE
+        args[4]= ERROR
         """
         write_to_report = getattr(self, "write_%s" % args[0])
         args = args[1:] #we do not need self.format any more
@@ -136,14 +143,14 @@ class Check_URLs(Report):
         self.file_with_urls = file_with_urls
         self.list_with_urls = []
         self.headers = headers
-        self.format = self.__getFileExt()
+        self.format = self.getFileExt()
         #create Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
         
         #now, we should have access to methods from Report's class 
         #like, write_to_report method
         
-    def __getFileExt(self):
+    def getFileExt(self):
         #filename.ext -> pttrn for (ext)
         pttrn = re.compile(r'^.*?\.(.*)$')
         #search for pttrn in report_file
@@ -180,8 +187,8 @@ class Check_URLs(Report):
                 
         return self.list_with_urls
     
-    def hit_server_with_urls(self):
         
+    def hit_server_with_urls(self):
         #create list with urls
         self.list_with_urls = self.get_listOf_URLs()
         #prepare request:enable logging
@@ -194,28 +201,112 @@ class Check_URLs(Report):
         urllib2.install_opener(opener)
         
         for url in self.list_with_urls:
+            #print "hit_server_with_urls:",url
             request = urllib2.Request(url, None, self.headers)
             try:
                 response = opener.open(request)
                 ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
                 r_code = response.getcode()
-                print '\nURL:',url
-                print '\nCode:',r_code
-                print '\nIP:',ip_addr
+                #print '\nURL:',url
+                #print '\nCode:',r_code
+                #print '\nIP:',ip_addr
                 error =  None
-            except URLError,e:
+                self.write_to_report(self.format, url, ip_addr, r_code, error)
+            except (URLError,InvalidURL),e:
                 #if URLError occurs, log info about it to log file, but does not exit
                 print "Is this URL:",url," valid?\n",e
                 error = e
-            finally:
-                self.write_to_report(self.format, url, ip_addr, r_code, error)
-        self.save_report()
+                self.write_to_report(self.format, url, '', '', error)
+        self.list_with_urls = []
+       
     
+class Run_URL_Checks_OnServers(Check_URLs):
+    '''
+    content of the /etc:
+    >>>>
+    Server_hosts_1 
+    Server_hosts_2
+    Server_hosts_3
+    Server_hosts_4
+    hosts
+    <<<<
+    
+    1.rename host_original -> host_backUp
+    2.iteratively rename Server_hosts_X -> host_original
+        3.run URL checks
+        4.rename-back host_original -> Server_hosts_X
+    5.When all servers checked, rename host_backUp -> host_original 
+    '''
+    
+    def __init__(self):
+        #list all files from PATH_HOSTS (~/etc dir)
+        self.all_files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
+        self.end = False
+        #create instance of the Check_URLs class
+        Check_URLs.__init__(self)
+        
+    def backUp_originalHost(self):
+        #backup original host file
+        #find host file
+        if host_original in self.all_files:
+            try:
+                #create backUp of the original host file (rename)
+                os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_backUp))
+                print 'BackUp of the original HOST file: host-> %s' % host_backUp
+                return True
+            except WindowsError,e:
+                print '%s already exists!, \n%s' %(os.path.join(PATH_HOSTS,host_backUp),e)
+                return False
+        else: 
+            print 'Original host file not found in "%s"' % (PATH_HOSTS)
+            return False
+             
+    def setServerHostFile_and_RunUrlChecks(self):
+        #search for Server-Oriented host files:
+        #server_hosts_pattern defined in config_file.py
+        print "setServerHostFile_and_RunUrlChecks:self.all_files:",self.all_files
+        for host_Server in self.all_files:
+            if re.search(server_hosts_pattern, host_Server):
+                print 'using host_Server:',host_Server
+                self.write_to_report(self.format,"Host_Server:",host_Server,"####","")
+                #rename Server-Oriented host with to Windows-Oriented host (SEGOTN2525 to host)
+                os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
+                #EXECUTE URL CHECKS
+                self.hit_server_with_urls()
+                self.write_to_report(self.format,"","","","") 
+                
+                #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
+                os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
+                print '-->next....'
+        #when all the host_Server's file used, revert original host file       
+        self.end = True
+        self.save_report()
+        
+    def set_OriginalHost(self):
+        
+        #if self.end is True, revert host to original file
+        if self.end:
+            #get list of all the files in PATH_HOSTS
+            files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
+            if host_backUp in files:
+                print "self.host_backUp in files"
+                os.rename(os.path.join(PATH_HOSTS, host_backUp), os.path.join(PATH_HOSTS,host_original))
+        else:
+            print 'Not end!'
+       
+        
 def main():
-    check = Check_URLs()
-    check.hit_server_with_urls()            
+    #check = Check_URLs()
+    #check.hit_server_with_urls()
+    obj = Run_URL_Checks_OnServers()
+    
+    if obj.backUp_originalHost():
+       obj.setServerHostFile_and_RunUrlChecks()
+    obj.set_OriginalHost()
 
+    
+    
 if __name__ == '__main__':
     main()
     
-    
+        
