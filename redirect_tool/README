@@ -1,9 +1,9 @@
 Script for redirects testing. 
 
 Input: list of URLs
-Output: two log files (INFO/DEBUG) with information about redirections
+Output: four log files (GRAPHIC and DETAILED, FINAL or XLS(module xlwt)) with information about redirections
 
-example OUTPUT (INFO log file)
+Example OUTPUT (GRAPHIC log file):
 
 	###############################################
 	GET:  volvoit.com/

@@ -1,0 +1,33 @@
+This script gets on input list of urls - creates requests and send them to predefined server.
+Next, return code + IP_address of the server are logged to either log file or xls report.
+
+All settings can be done via config_file.py
+
+>> Scenario
+
+Assume that all of your webpages are hosted on 4 different server (S1,S2,S3,S4).
+Your task is to ensure, that after each deploy to production, all main pages (and servers)
+are up and running.
+You've been given a complete list of the URLs that should be validated on each server.
+-> config_file.py >> URLS.input
+
+There are four host files with appropriate list of IP addresses (and corresponding host names)
+-> Server_hosts_1, Server_hosts_2, Server_hosts_3, Server_hosts_4
+These files are iteratively switched with the original host file "C:\Windows\System32\drivers\etc\hosts" 
+(in my case, it ensures that requests actually hit proper server - bypassing proxy server)
+and all the URLS are verified on every server.
+
+Report file if saved with information about return code and eventual errors (see 'example_Input_Report' dir)
+
+'xlwt' module > to generate XLS report 
+'urllib2' module > to handle sending requests/getting responses 
+
+To run:
+1.Copy Server_hosts_X (hosts files) to "C:\Windows\System32\drivers\etc\hosts"
+2.In config_file.py define:
+-PATH (where URLS.input is stored and where reports should be saved)
+-request header
+-FILE_WITH_URLS (URLS.input)
+-PATH_HOSTS (location of your original 'hosts' file; usually "'C:\\WINDOWS\\system32\\drivers\\etc")
+-server_hosts_pattern (regex to catch all the server files, eg. re.compile(r'^SEGOTN\d{4}$'))
+3.Run url_checker.py and observe in console results.
