@@ -27,7 +27,7 @@ To run:
 2.In config_file.py define:
 -PATH (where URLS.input is stored and where reports should be saved)
 -request header
--FILE_WITH_URLS (name of the report file + valid extension -> LOG/XLS)
+-FILE_WITH_URLS (URLS.input)
 -PATH_HOSTS (location of your original 'hosts' file; usually "'C:\\WINDOWS\\system32\\drivers\\etc")
 -server_hosts_pattern (regex to catch all the server files, eg. re.compile(r'^SEGOTN\d{4}$'))
 3.Run url_checker.py and observe in console results.
