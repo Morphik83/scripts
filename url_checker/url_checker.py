@@ -224,17 +224,17 @@ class Run_URL_Checks_OnServers(Check_URLs):
     '''
     content of the /etc:
     >>>>
-    Server_hosts_1 
-    Server_hosts_2
-    Server_hosts_3
-    Server_hosts_4
+    SEGOTN2525 
+    SEGOTN2543
+    SEGOTN2553
+    SEGOTN2544
     hosts
     <<<<
     
     1.rename host_original -> host_backUp
-    2.iteratively rename Server_hosts_X -> host_original
+    2.iteratively rename SEGOTNXXXX -> host_original
         3.run URL checks
-        4.rename-back host_original -> Server_hosts_X
+        4.rename-back host_original -> SEGOTNXXXX
     5.When all servers checked, rename host_backUp -> host_original 
     '''
     

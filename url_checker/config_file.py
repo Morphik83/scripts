@@ -20,7 +20,7 @@ ext_accept_list = ['XLS','LOG']
 PATH_HOSTS = 'C:\\WINDOWS\\system32\\drivers\\etc'
 host_backUp = 'hosts_backUp'
 host_original = 'hosts'
-server_hosts_pattern = re.compile(r'^Server_hosts_\d{1}$')
+server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$')
 #===============================================================================
 # SERVER_1 = "SEGOTN2525" 
 # SERVER_2 = "SEGOTN2543"
