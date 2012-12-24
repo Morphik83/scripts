@@ -154,7 +154,7 @@ class Check_URLs(Report):
         #filename.ext -> pttrn for (ext)
         pttrn = re.compile(r'^.*?\.(.*)$')
         #search for pttrn in report_file
-        search = re.search(pttrn, self.report)
+        search = re.search(pttrn, REPORT_NAME)
         if search:
             ext = search.group(1).upper()
             try:
@@ -175,7 +175,7 @@ class Check_URLs(Report):
         #url_1   #if line starts with '#' -> skip
         """    
         with open(self.file_with_urls, 'r+') as f:
-            searchPattern = re.compile(r'(^[^\/#].*$)')  # in reg_exp ? is used for non-greedy search pattern - without ?, first match will cover whole line (up to $) due to .*
+            searchPattern = re.compile(r'(^[^#\s].*$)')
             for url in f:
                 search = re.search(searchPattern, url)
                 if search:
@@ -183,7 +183,7 @@ class Check_URLs(Report):
                         url = 'http://'+search.group(1)
                     else:
                         url = search.group(1)
-                    self.list_with_urls.append(url)
+                    self.list_with_urls.append(url.strip())
                 
         return self.list_with_urls
     
@@ -218,12 +218,19 @@ class Check_URLs(Report):
                 error = e
                 self.write_to_report(self.format, url, '', '', error)
         self.list_with_urls = []
-       
+
+class Requests():
+    """
+    creates Inet and Xnet requests; feeds CheckURLs
+    """     
+    pass
+    
     
 class Run_URL_Checks_OnServers(Check_URLs):
     '''
     content of the /etc:
     >>>>
+    AKAMAI
     SEGOTN2525 
     SEGOTN2543
     SEGOTN2553
@@ -239,7 +246,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
     '''
     
     def __init__(self):
-        #list all files from PATH_HOSTS (~/etc dir)
+        #list all the files from PATH_HOSTS (~/etc dir)
         self.all_files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
         self.end = False
         #create instance of the Check_URLs class
@@ -269,7 +276,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
             if re.search(server_hosts_pattern, host_Server):
                 print 'using host_Server:',host_Server
                 self.write_to_report(self.format,"Host_Server:",host_Server,"####","")
-                #rename Server-Oriented host with to Windows-Oriented host (SEGOTN2525 to host)
+                #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
                 os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
                 #EXECUTE URL CHECKS
                 self.hit_server_with_urls()
@@ -307,6 +314,53 @@ def main():
     
     
 if __name__ == '__main__':
-    main()
+    #main()
+    import re
+    import pprint
+    Xnet_list = []
+    Inet_list = []
+    Error_list = []
+       
+    #regexp patterns:
+    Valid_Line_Pattern = re.compile(r'(^[^#\s].*$)')
+    Xnet_Pattern = re.compile(r'(^\[X\])\s*([^\s].*)$')
+    Inet_Pattern = re.compile(r'(^\[I\])\s*([^\s].*)$')
+       
+    with open(file_with_urls, 'r+') as opened_file:
+       for line in opened_file:
+           valid_line = re.search(Valid_Line_Pattern, line)
+           if valid_line:
+               try:
+                   #print re.search(Xnet_Pattern,line).groups()
+                   url = re.search(Xnet_Pattern,line).group(2)
+                   if not re.match(r'http[s]?://',url):
+                      url = 'http://'+url
+                   Xnet_list.append(url.strip())
+               except AttributeError:
+                   try:                    
+                       #print re.search(Inet_Pattern,line).groups()
+                       url = re.search(Inet_Pattern,line).group(2)
+                       if not re.match(r'http[s]?://',url):
+                          url = 'http://'+url
+                       Inet_list.append(url.strip())
+                   except AttributeError,e:
+                       print 'ERROR: %s missing prefix [X|I] e:%s' % (url,e)
+                       Error_list.append(url.strip())
+           
+       pprint.pprint(Xnet_list)           
+       pprint.pprint(Inet_list)
+       pprint.pprint(Error_list)
     
-        
+    
+    
+    
+    
+    
+    
+       
+       
+       
+       
+       
+       
+       
