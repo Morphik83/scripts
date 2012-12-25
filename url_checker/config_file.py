@@ -25,7 +25,7 @@ host_original = 'hosts'
 server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$|^AKAMAI(.*)$')
 
 #xnet (encrypt!)
-passwd = 'passwd'
+passwd  = 'passwd'
 username = 'username'
 #===============================================================================
 # SERVER_1 = "SEGOTN2525" 
