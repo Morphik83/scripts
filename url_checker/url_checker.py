@@ -1,18 +1,24 @@
 import urllib2, urlparse, socket 
-import os,sys
-import re
+import os,sys,re
 import pprint
-from config_file import *
+import shutil                       
 from urllib2 import URLError
 from httplib import InvalidURL
 from os import listdir
 from os.path import isfile,join
-import shutil
-import mechanize
+from time import strftime
+from config_file import *
+
 try:
     import xlwt
 except ImportError, e:
-    print "Install 'xlwt' - python module for 'xls' file handling!\n",e
+    print "Install 'xlwt' - python module for 'xls' file handling!\n" \
+    "http://pypi.python.org/packages/source/x/xlwt/xlwt-0.7.4.tar.gz \n",e
+try:
+    import mechanize
+except ImportError,e:
+    print "Install 'mechanize' - programatic webBrowser \n"\
+    "http://pypi.python.org/pypi/mechanize/0.2.5 \n",e
 
 class Report(object):
     
@@ -111,15 +117,6 @@ class Report(object):
             self.sheet1.write(self.row, self.col+1, args[1], style1)
             self.sheet1.write(self.row, self.col+2, args[2], ok_st)
         
-        #========TO DO===============================================================
-        # if args[2]=='200':
-        #    #if OK, use GREEN background in xls report
-        #    self.sheet1.write(row, col+2, args[2], ok_st)
-        # else:
-        #    #if NOT OK, use RED background
-        #    self.sheet1.write(row, col+2, args[2], err_st)
-        #=======================================================================
-        
         #increase row counter - go to the next row
         self.row=self.row+1
                     
@@ -131,7 +128,7 @@ class Report(object):
     
     def save_XLS(self):
         self.book.save(self.report_file)
-        print 'XLS saved'
+        print 'XLS saved:',self.report_file
     
     def save_LOG(self):
         self.report.close()
@@ -170,28 +167,26 @@ class Check_URLs(Report,Requests):
     def __init__(self):
         self.report = report_file
         self.file_with_urls = file_with_urls
+        self.headers = headers
         self.xnet_list = []
         self.inet_list = []
         self.error_list = []
         self.lists_with_urls = []
-        self.headers = headers
-        self.format = self.getFileExt()
+        self.format = self._getFileExt()
         #create Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
         Requests.__init__(self)
-        #now, we should have access to methods from Report's class 
-        #like, write_to_report method
-        
-    def getFileExt(self):
-        #filename.ext -> pttrn for (ext)
+                
+    def _getFileExt(self):
+        #filename.ext -> pttrn for catching file's extension only! (ext)
         pttrn = re.compile(r'^.*?\.(.*)$')
-        #search for pttrn in report_file
+        #search for pttrn in REPORT_NAME
         search = re.search(pttrn, REPORT_NAME)
         if search:
-            ext = search.group(1).upper()
-            try:
-                assert len(ext) == 3
-                assert ext in ext_accept_list
+            ext = search.group(1).upper()           #(log -> LOG)
+            try:            
+                assert len(ext) == 3                #length of the extension == 3
+                assert ext in ext_accept_list       #accept only extension from ext_accept_list
                 return ext
             except AssertionError:
                 print "Reports' file extension must be 3 chars long!\
@@ -208,34 +203,34 @@ class Check_URLs(Report,Requests):
         #[X]url_1   #if line starts with '#' -> skip
         """   
         #regexp patterns:
-        Valid_Line_Pattern = re.compile(r'(^[^#\s].*$)')
-        Xnet_Pattern = re.compile(r'(^\[X\])\s*([^\s].*)$')
-        Inet_Pattern = re.compile(r'(^\[I\])\s*([^\s].*)$')
+        valid_line_pattern = re.compile(r'(^[^#\s].*$)')
+        xnet_pattern = re.compile(r'(^\[X\])\s*([^\s].*)$')
+        inet_pattern = re.compile(r'(^\[I\])\s*([^\s].*)$')
            
         with open(self.file_with_urls, 'r+') as opened_file:
            for line in opened_file:
                #print "LINE:",line
-               valid_line = re.search(Valid_Line_Pattern, line)
+               valid_line = re.search(valid_line_pattern, line)
                if valid_line:
                    try:
                        #print re.search(Xnet_Pattern,line).groups()
-                       url = re.search(Xnet_Pattern,line).group(2)
+                       url = re.search(xnet_pattern,line).group(2)
                        if not re.match(r'http[s]?://',url):
-                          url = 'http://'+url
+                          url = 'http://'+url                   #all the send urls must have 'http://' prefix
                        self.xnet_list.append(url.strip())
-                   except AttributeError:
+                   except AttributeError:                       #if no [X] urls found, check for [I] urls
                        try:                    
                            #print re.search(Inet_Pattern,line).groups()
-                           url = re.search(Inet_Pattern,line).group(2)
+                           url = re.search(inet_pattern,line).group(2)
                            if not re.match(r'http[s]?://',url):
                               url = 'http://'+url
                            self.inet_list.append(url.strip())
-                       except AttributeError,e:
+                       except AttributeError,e:                 #if no [X]|[I] are found, then check urls 
                            print 'ERROR: %s check prefix!  e:%s' % (line,e)
                            if line not in self.error_list:  #to avoid appending the same info for each server - log only once
                                self.error_list.append(line)
                
-        return self.inet_list,self.xnet_list,self.error_list
+        return self.inet_list, self.xnet_list, self.error_list        #when parsing is done, return 3 lists
     
     def hit_server_with_urls(self):
         #get lists with urls:
@@ -377,17 +372,17 @@ class Run_URL_Checks_OnServers(Check_URLs):
             #get list of all the files in PATH_HOSTS
             files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
             if host_backUp in files:
-                print "self.host_backUp in files"
+                print "renaming host_backUp to original hosts file"
                 os.rename(os.path.join(PATH_HOSTS, host_backUp), os.path.join(PATH_HOSTS,host_original))
         else:
-            print 'Not end!'
+            print 'Problem with setting original host!'
        
         
 def main():
     #check = Check_URLs()
     #check.hit_server_with_urls()
     obj = Run_URL_Checks_OnServers()
-    
+
     if obj.backUp_originalHost():
        obj.setServerHostFile_and_RunUrlChecks()
     obj.set_OriginalHost()
