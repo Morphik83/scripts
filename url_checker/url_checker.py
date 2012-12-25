@@ -1,17 +1,24 @@
 import urllib2, urlparse, socket 
-import os,sys
-import re
+import os,sys,re
 import pprint
-from config_file import *
+import shutil                       
 from urllib2 import URLError
 from httplib import InvalidURL
 from os import listdir
 from os.path import isfile,join
-import shutil
+from time import strftime
+from config_file import *
+
 try:
     import xlwt
 except ImportError, e:
-    print "Install 'xlwt' - python module for 'xls' file handling!\n",e
+    print "Install 'xlwt' - python module for 'xls' file handling!\n" \
+    "http://pypi.python.org/packages/source/x/xlwt/xlwt-0.7.4.tar.gz \n",e
+try:
+    import mechanize
+except ImportError,e:
+    print "Install 'mechanize' - programatic webBrowser \n"\
+    "http://pypi.python.org/pypi/mechanize/0.2.5 \n",e
 
 class Report(object):
     
@@ -110,15 +117,6 @@ class Report(object):
             self.sheet1.write(self.row, self.col+1, args[1], style1)
             self.sheet1.write(self.row, self.col+2, args[2], ok_st)
         
-        #========TO DO===============================================================
-        # if args[2]=='200':
-        #    #if OK, use GREEN background in xls report
-        #    self.sheet1.write(row, col+2, args[2], ok_st)
-        # else:
-        #    #if NOT OK, use RED background
-        #    self.sheet1.write(row, col+2, args[2], err_st)
-        #=======================================================================
-        
         #increase row counter - go to the next row
         self.row=self.row+1
                     
@@ -130,67 +128,21 @@ class Report(object):
     
     def save_XLS(self):
         self.book.save(self.report_file)
-        print 'XLS saved'
+        print 'XLS saved:',self.report_file
     
     def save_LOG(self):
         self.report.close()
         print 'LOG saved'
-        
-class Check_URLs(Report):
-    
+
+class Requests():
+    """
+    creates Inet and Xnet requests; feeds CheckURLs
+    """     
     def __init__(self):
-        self.report = report_file
-        self.file_with_urls = file_with_urls
-        self.list_with_urls = []
-        self.headers = headers
-        self.format = self.getFileExt()
-        #create Report Object (dependently on given file format)
-        Report.__init__(self, self.format, self.report)
+        self.inet_opener = self.inet_request()
+        self.xnet_opener = self.xnet_request()
         
-        #now, we should have access to methods from Report's class 
-        #like, write_to_report method
-        
-    def getFileExt(self):
-        #filename.ext -> pttrn for (ext)
-        pttrn = re.compile(r'^.*?\.(.*)$')
-        #search for pttrn in report_file
-        search = re.search(pttrn, self.report)
-        if search:
-            ext = search.group(1).upper()
-            try:
-                assert len(ext) == 3
-                assert ext in ext_accept_list
-                return ext
-            except AssertionError:
-                print "Reports' file extension must be 3 chars long!\
-                \nFor available report types see ext_accept_list in config_file.py"
-                sys.exit()
-        else:
-            print 'Missing extension for report file in config_file.py! \n(example:CHECK_URLS.xls)'
-            sys.exit()
-        
-    def get_listOf_URLs(self):
-        """Valid input file must have following format:
-        url_1
-        #url_1   #if line starts with '#' -> skip
-        """    
-        with open(self.file_with_urls, 'r+') as f:
-            searchPattern = re.compile(r'(^[^\/#].*$)')  # in reg_exp ? is used for non-greedy search pattern - without ?, first match will cover whole line (up to $) due to .*
-            for url in f:
-                search = re.search(searchPattern, url)
-                if search:
-                    if not re.match(r'^http[s]?://',search.group(1)):
-                        url = 'http://'+search.group(1)
-                    else:
-                        url = search.group(1)
-                    self.list_with_urls.append(url)
-                
-        return self.list_with_urls
-    
-        
-    def hit_server_with_urls(self):
-        #create list with urls
-        self.list_with_urls = self.get_listOf_URLs()
+    def inet_request(self):
         #prepare request:enable logging
         handler = urllib2.HTTPHandler(debuglevel=1)
         #add cookie handler
@@ -199,12 +151,94 @@ class Check_URLs(Report):
         opener = urllib2.build_opener(handler, cookie)
         #install opener
         urllib2.install_opener(opener)
-        
-        for url in self.list_with_urls:
-            #print "hit_server_with_urls:",url
+        return opener
+    
+    def xnet_request(self):
+        browser = mechanize.Browser()
+        browser.set_debug_http(True)
+        browser.set_handle_robots(False)
+        browser.set_debug_redirects(True)
+        browser.set_debug_responses(True)
+        browser.addheaders=[mechanize_headers]
+        return browser
+    
+class Check_URLs(Report,Requests):
+    
+    def __init__(self):
+        self.report = report_file
+        self.file_with_urls = file_with_urls
+        self.headers = headers
+        self.xnet_list = []
+        self.inet_list = []
+        self.error_list = []
+        self.lists_with_urls = []
+        self.format = self._getFileExt()
+        #create Report Object (dependently on given file format)
+        Report.__init__(self, self.format, self.report)
+        Requests.__init__(self)
+                
+    def _getFileExt(self):
+        #filename.ext -> pttrn for catching file's extension only! (ext)
+        pttrn = re.compile(r'^.*?\.(.*)$')
+        #search for pttrn in REPORT_NAME
+        search = re.search(pttrn, REPORT_NAME)
+        if search:
+            ext = search.group(1).upper()           #(log -> LOG)
+            try:            
+                assert len(ext) == 3                #length of the extension == 3
+                assert ext in ext_accept_list       #accept only extension from ext_accept_list
+                return ext
+            except AssertionError:
+                print "Reports' file extension must be 3 chars long!\
+                \nFor available report types see ext_accept_list in config_file.py"
+                sys.exit()
+        else:
+            print 'Missing extension for report file in config_file.py! \n(example:CHECK_URLS.xls)'
+            sys.exit()
+    
+    def get_listOf_URLs(self):
+        """Valid input file must have following format:
+        [X]url_1
+        [I] url_1
+        #[X]url_1   #if line starts with '#' -> skip
+        """   
+        #regexp patterns:
+        valid_line_pattern = re.compile(r'(^[^#\s].*$)')
+        xnet_pattern = re.compile(r'(^\[X\])\s*([^\s].*)$')
+        inet_pattern = re.compile(r'(^\[I\])\s*([^\s].*)$')
+           
+        with open(self.file_with_urls, 'r+') as opened_file:
+           for line in opened_file:
+               #print "LINE:",line
+               valid_line = re.search(valid_line_pattern, line)
+               if valid_line:
+                   try:
+                       #print re.search(Xnet_Pattern,line).groups()
+                       url = re.search(xnet_pattern,line).group(2)
+                       if not re.match(r'http[s]?://',url):
+                          url = 'http://'+url                   #all the send urls must have 'http://' prefix
+                       self.xnet_list.append(url.strip())
+                   except AttributeError:                       #if no [X] urls found, check for [I] urls
+                       try:                    
+                           #print re.search(Inet_Pattern,line).groups()
+                           url = re.search(inet_pattern,line).group(2)
+                           if not re.match(r'http[s]?://',url):
+                              url = 'http://'+url
+                           self.inet_list.append(url.strip())
+                       except AttributeError,e:                 #if no [X]|[I] are found, then check urls 
+                           print 'ERROR: %s check prefix!  e:%s' % (line,e)
+                           if line not in self.error_list:  #to avoid appending the same info for each server - log only once
+                               self.error_list.append(line)
+               
+        return self.inet_list, self.xnet_list, self.error_list        #when parsing is done, return 3 lists
+    
+    def hit_server_with_urls(self):
+        #get lists with urls:
+        self.get_listOf_URLs()
+        for url in self.inet_list:
             request = urllib2.Request(url, None, self.headers)
             try:
-                response = opener.open(request)
+                response = self.inet_opener.open(request)
                 ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
                 r_code = response.getcode()
                 #print '\nURL:',url
@@ -217,29 +251,78 @@ class Check_URLs(Report):
                 print "Is this URL:",url," valid?\n",e
                 error = e
                 self.write_to_report(self.format, url, '', '', error)
-        self.list_with_urls = []
-       
+        self.inet_list = []      
+                
+                
+        for url in self.xnet_list:
+            try:
+                r = self.xnet_opener.open(url)
+                #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
+                #print self.xnet_opener.response().code #or alternatively: print r.code 
+              
+                self.xnet_opener.select_form(nr=0)
+                self.xnet_opener["ctl00$BodyContent$login$UserName"]=username
+                self.xnet_opener["ctl00$BodyContent$login$Password"]=passwd
+                self.xnet_opener.submit(name='ctl00$BodyContent$login$LoginButton')
+                #print dir(b)
+                #print 'URL:',b.geturl()
+                #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
+                r_code = r.code
+                ip_addr = socket.gethostbyname(urlparse.urlparse(r.geturl()).netloc)
+                error =  None
+                self.write_to_report(self.format, url, ip_addr, r_code, error)
+            except mechanize.ControlNotFoundError,e:
+                """
+                ControlNotFoundError occurs when no Login/Pass forms are located on the page -> it might be that 
+                the user is already logged in, so that is why the return code (200) is checked. 
+                """
+                try:
+                    assert r.code == 200
+                    print 'Return Code is 200'
+                    ip_addr = socket.gethostbyname(urlparse.urlparse(r.geturl()).netloc)
+                    r_code = r.code
+                    error = None
+                    self.write_to_report(self.format, url, ip_addr, r_code, error)
+                except AssertionError,e:
+                    print 'Return code is not 200! It is: ',e
+                    error = e
+                    self.write_to_report(self.format, url, '', '', error)
+                    
+            except (NameError,mechanize.FormNotFoundError),e:
+                print 'FIXME:',url,e
+                error = e
+                self.write_to_report(self.format, url, '', '', error)
+            except (URLError,InvalidURL),e:
+                    #if URLError occurs, log info about it to log file, but does not exit
+                    print "Is this URL:",url," valid?\n",e
+                    error = e
+                    self.write_to_report(self.format, url, '', '', error)
+                    
+        self.xnet_list = []
+        self.xnet_opener.clear_history()       
+        print 'This URLs were not verified: ',self.error_list
     
 class Run_URL_Checks_OnServers(Check_URLs):
     '''
     content of the /etc:
     >>>>
-    Server_hosts_1 
-    Server_hosts_2
-    Server_hosts_3
-    Server_hosts_4
+    AKAMAI
+    SEGOTN2525 
+    SEGOTN2543
+    SEGOTN2553
+    SEGOTN2544
     hosts
     <<<<
     
     1.rename host_original -> host_backUp
-    2.iteratively rename Server_hosts_X -> host_original
+    2.iteratively rename SEGOTNXXXX -> host_original
         3.run URL checks
-        4.rename-back host_original -> Server_hosts_X
+        4.rename-back host_original -> SEGOTNXXXX
     5.When all servers checked, rename host_backUp -> host_original 
     '''
     
     def __init__(self):
-        #list all files from PATH_HOSTS (~/etc dir)
+        #list all the files from PATH_HOSTS (~/etc dir)
         self.all_files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
         self.end = False
         #create instance of the Check_URLs class
@@ -269,7 +352,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
             if re.search(server_hosts_pattern, host_Server):
                 print 'using host_Server:',host_Server
                 self.write_to_report(self.format,"Host_Server:",host_Server,"####","")
-                #rename Server-Oriented host with to Windows-Oriented host (SEGOTN2525 to host)
+                #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
                 os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
                 #EXECUTE URL CHECKS
                 self.hit_server_with_urls()
@@ -289,17 +372,17 @@ class Run_URL_Checks_OnServers(Check_URLs):
             #get list of all the files in PATH_HOSTS
             files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
             if host_backUp in files:
-                print "self.host_backUp in files"
+                print "renaming host_backUp to original hosts file"
                 os.rename(os.path.join(PATH_HOSTS, host_backUp), os.path.join(PATH_HOSTS,host_original))
         else:
-            print 'Not end!'
+            print 'Problem with setting original host!'
        
         
 def main():
     #check = Check_URLs()
     #check.hit_server_with_urls()
     obj = Run_URL_Checks_OnServers()
-    
+
     if obj.backUp_originalHost():
        obj.setServerHostFile_and_RunUrlChecks()
     obj.set_OriginalHost()
@@ -308,5 +391,17 @@ def main():
     
 if __name__ == '__main__':
     main()
+
     
-        
+    
+    
+    
+    
+    
+       
+       
+       
+       
+       
+       
+       
