@@ -132,7 +132,7 @@ class Report(object):
     
     def save_LOG(self):
         self.report.close()
-        print 'LOG saved'
+        print 'LOG saved:',self.report_file
 
 class Requests():
     """
@@ -300,7 +300,7 @@ class Check_URLs(Report,Requests):
                     
         self.xnet_list = []
         self.xnet_opener.clear_history()       
-        print 'This URLs were not verified: ',self.error_list
+        print 'This URLs were not verified (= are not included in the report): ',self.error_list
     
 class Run_URL_Checks_OnServers(Check_URLs):
     '''

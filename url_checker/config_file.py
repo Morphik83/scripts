@@ -12,7 +12,7 @@ file_with_urls = os.path.join(PATH,FILE_WITH_URLS)
 cur_date = strftime( "%y-%m-%d_%H_%M_%S_")
 
 #filename of the report - always with extension!!
-REPORT_NAME = 'CHECK_URLS.log'
+REPORT_NAME = 'CHECK_URLS.xls'
 report_file = os.path.join(PATH,cur_date+REPORT_NAME)
 
 #list of acceptable report types (report file extension)

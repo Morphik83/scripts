@@ -41,17 +41,15 @@ def input_data(input_file):
         search = re.search(searchPattern, line)
         if search:
             #print "1: ",search.group(1)
+            url_in = search.group(1)
             if not re.match(r'^http[s]?://',search.group(1)):
                 url_in = 'http://'+search.group(1)
-            else:
-                url_in = search.group(1)
             in_list.append(url_in)
             
             #print "2: ",search.group(2)
+            url_out = search.group(2)
             if not re.match(r'^http[s]?://',search.group(2)):
                 url_out = 'http://'+search.group(2)
-            else:
-                url_out = search.group(2)
             out_list.append(url_out)
             
             redirect_dict[url_in] = url_out
@@ -117,7 +115,7 @@ def main():
     out_dict = parser.generate_output()
     
     #Finally, lets check if all redirects are correct and generate final_log (LOG or XLS)
-    parser.verify_redirects(redirects_list, out_dict, 'XLS')
+    parser.verify_redirects(redirects_list, out_dict, 'xls')
     
 
 if __name__ == '__main__':

@@ -32,49 +32,52 @@ class Output_Parser(loggers.Logger):
             (...)
         regex patterns are used to make sure that proper line was selected (GET/HEAD/Location) 
         """
-        out_dict = {}                                   #dict to save all the pairs (origin_url: target_url)
-        pattern_send = re.compile(r'^\'GET.*$')          #prepare regexp patterns 
-        pattern_reply = re.compile(r'^\'HTTP.*$')
-        pattern_location = re.compile(r'\bLocation\b.*$')
-        pattern_error = re.compile(r'ERROR\:')          #sometimes open.opener(request) returns <urlopen error [Errno 11004] getaddrinfo failed> 
-                                                        #when URL is not valid - this is caught by try: (URLError) and logged.
         
         """
-        when proper line is already selected, next step is to extract relevant info, like:
+        select proper line and extract relevant info, like:
         -HOST, URL used to create GET request,
         -response CODE (Status = 302/301/200/...)
         -target URL 
         """
-        pattern_send_1 = re.compile(r'^\'GET\s(.*)\sHTTP.*Host:\s(.*)Connection')  #URL used to create GET request, HOST
-        pattern_reply_1 = re.compile(r'\s(.*)$')                                   #response CODE (Status = 302/301/200/...)
-        pattern_location_1 = re.compile(r'^Location:\s(.*)$')                      #target URL
-        pattern_start_request = re.compile(r'^>>>>ORIGIN_URL:(.*)$')               #this is printed to output in redirect_Runner (for each URL from url_list)
-        
-        #with open(log, 'a+') as f:                                                 #open log file
+        #dict to save all the pairs (origin_url: target_url)
+        out_dict = {}                                                            
+        #URL used to create GET request, HOST
+        pttrn_send = re.compile(r'^\'GET\s(.*)\sHTTP.*Host:\s(.*)Connection')  
+        #response CODE (Status = 302/301/200/...)
+        pttrn_reply = re.compile(r'^\'HTTP.*?\s(.*)$')                         
+        #target URL
+        pttrn_location = re.compile(r'^Location:\s(.*)$')                      
+        #this is printed to output in redirect_Runner (for each URL from url_list)
+        pttrn_start_request = re.compile(r'^>>>>ORIGIN_URL:(.*)$')             
+        #sometimes open.opener(request) returns <urlopen error [Errno 11004] getaddrinfo failed>
+        #when URL is not valid - this is caught by try: (URLError) and logged.
+        pttrn_error = re.compile(r'ERROR\:')                                    
+                                                                                 
         try:
-          for line in self.response:                                        #read line by line from foo.content (redirected sys.stdout
+          #read line by line from foo.content (redirected sys.stdout)
+          for line in self.response:                                             
               try:
-                  if re.search(pattern_start_request, line):
+                  if re.search(pttrn_start_request, line):
                         print "index: ",self.response.index(line)
-                        _origin_url = re.search(pattern_start_request,line)
+                        _origin_url = re.search(pttrn_start_request,line)
                         out_list = []           #anytime "index" is changed, new out_list is created
                                                 #but out_dict stays the same! out_dict={_origin_url:out_list, _origin_url:out_list,...}
-                  elif re.search(pattern_send, line):           
-                      _host = pattern_send_1.search(line).group(2)[:-4]              #[:-4] to del \n\r
-                      _rest = pattern_send_1.search(line).group(1)
-                      #print >>f, '\nGET: ', _host, _rest                #if NO LOGGER, this print "trick" can be used to write to file ;)
-                      print '\nGET: ', ''.join(_host+_rest)              #www.volvopenta.com / --> www.volvopenta.com/
-                  elif re.search(pattern_reply, line):
-                      _status = pattern_reply_1.search(line).group(1)[:-5]
+                  elif re.search(pttrn_send, line):           
+                      _host = pttrn_send.search(line).group(2)[:-4]            #[:-4] to del \n\r
+                      _rest = pttrn_send.search(line).group(1)
+                      #print >>f, '\nGET: ', _host, _rest                        #if NO LOGGER, this print "trick" can be used to write to file ;)
+                      print '\nGET: ', ''.join(_host+_rest)                      #www.volvopenta.com / --> www.volvopenta.com/
+                  elif re.search(pttrn_reply, line):
+                      _status = pttrn_reply.search(line).group(1)[:-5]
                       print '|\n|STATUS: ', _status
-                      if re.match(r'\b200\b', _status):                   #if STATUS = 200, draw #*50 -> redirect reached final url
+                      if re.match(r'\b200\b', _status):                          #if STATUS = 200, draw #*50 -> redirect reached final url
                           print '\n','#'*50
-                  elif re.search(pattern_location, line):
-                      _target = pattern_location_1.search(line).group(1)
-                      _target = re.sub(r'\b\s\b','%20',_target)           #replace in url: /Home page.aspx' with /Home%20page.aspx'
+                  elif re.search(pttrn_location, line):
+                      _target = pttrn_location.search(line).group(1)
+                      _target = re.sub(r'\b\s\b','%20',_target)                  #replace in url: /Home page.aspx' with /Home%20page.aspx'
                      
                       print '|\n|--->TO: ', _target
-                      out_list.append(_target[:-1])                       #out_list: list of all the URLs that ORIGIN is redirected TO
+                      out_list.append(_target[:-1])                              #out_list: list of all the URLs that ORIGIN is redirected TO
                       out_dict[_origin_url.group(1)]=out_list
                       """
                       example output:
@@ -83,14 +86,14 @@ class Output_Parser(loggers.Logger):
                                'http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx'],}    
                       """
                       
-                  elif re.search(pattern_error, line):
+                  elif re.search(pttrn_error, line):
                       print '\n|', line, '\n\n','#'*50
                   else:
                       pass
-              except AttributeError,e:                                    #AttributeError is thrown, when no MATCH for 
-                  pass                                                #re.search - it means there are no redirection!
+              except AttributeError,e:                                           #AttributeError is thrown, when no MATCH for 
+                  pass                                                           #re.search - it means there are no redirection!
         finally:
-            sys.stdout = sys.__stdout__                                 #reset sys.stdout to normal state! Deletes redirection to logger
+            sys.stdout = sys.__stdout__                                          #reset sys.stdout to normal state! Deletes redirection to logger
             pprint.pprint(out_dict)
             
         return out_dict
@@ -103,7 +106,7 @@ class Output_Parser(loggers.Logger):
         Input: 
         1.redirects_list => output from input_data(input_file)
         2.out_dict => output from generate_output
-        3.format => (XLS/LOG) if None, XLS will be generated by default
+        3.format => (XLS/LOG), if None XLS will be generated by default
         
         So, for example:
         redirects_list[2]:
@@ -117,12 +120,12 @@ class Output_Parser(loggers.Logger):
         redirects_list[2]['http://www.volvobuses.com'] IN out_dict['http://www.volvobuses.com'] => TRUE/FALSE
         """
         
-        generate_report = getattr(self, "__generate_%s" % format, self.__generate_XLS)
+        generate_report = getattr(self, "_generate_%s" % format.upper(), self._generate_XLS)
         
         generate_report(redirects_list, out_dict)
         
         
-    def __generate_XLS(self, redirects_list, out_dict):
+    def _generate_XLS(self, redirects_list, out_dict):
         try:
             import xlwt
         except ImportError, e:
@@ -151,7 +154,7 @@ class Output_Parser(loggers.Logger):
         
         #sheet1.write(row_number, col_number, "WRITE HERE STH", set_style)
         sheet1.write(0,0,"FROM",style0 )
-        sheet1.write(0,1,"FROM",style0 )
+        sheet1.write(0,1,"TO",style0 )
         sheet1.write(0,2,"RESULT",style0 )
         
         #start counters
@@ -159,7 +162,7 @@ class Output_Parser(loggers.Logger):
         col = 0  
     
         #iterate over dict.keys() (origin URLs from input_file)
-        for url_key in redirects_list[2].keys():        #loop over dict (redirects_list[2], see @redirect_Runner
+        for url_key in redirects_list[2].keys():        #loop over dict (redirects_list[2], see in redirect_Runner
             #if out_dict has the same key (=the same ORIGIN url):
             if out_dict.has_key(url_key):
                 """
@@ -179,9 +182,9 @@ class Output_Parser(loggers.Logger):
                 #go to the next row
                 row=row+1
         book.save(xls_report)
+        print xls_report," saved"
     
-    
-    def __generate_LOG(self, redirects_list, out_dict):
+    def _generate_LOG(self, redirects_list, out_dict):
         with open(final_log, 'a+') as f:
             for url_key in redirects_list[2].keys():
                 if out_dict.has_key(url_key):
@@ -190,6 +193,7 @@ class Output_Parser(loggers.Logger):
                     f.write("%s\n" % str(redirects_list[2][url_key].strip() in out_dict[url_key]))
                     f.write(50*"-"+"\n")
         
+        print final_log," saved"
 
 if __name__ == '__main__':
     pass
