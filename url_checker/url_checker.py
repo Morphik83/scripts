@@ -28,7 +28,7 @@ except ImportError,e:
 
 
 class Report(object):
-    """initializes Reporrt
+    """initializes Report object
     """
     
     def __init__(self, format, report_file):
@@ -244,6 +244,9 @@ class Check_URLs(Report,Get_Browser):
             self.test_list = self.xnet_list
             self.__check_url(check_all_subPages, xnet_login=True)
         
+        #clear lists content:
+        self.inet_list = []
+        self.xnet_list = []
         #close browser instance:
         self._opener.close()   
         print 'Check these URLs: ',self.error_list    
