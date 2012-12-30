@@ -145,7 +145,7 @@ class Report(object):
 
 class Get_Browser():
     """
-    creates a browser's instance; feeds CheckURLs
+    creates browser's instance; feeds CheckURLs
     """     
     def __init__(self):
         self._opener = self._browser()
@@ -230,7 +230,6 @@ class Check_URLs(Report,Get_Browser):
                
         return self.inet_list, self.xnet_list, self.error_list        #when parsing is done, return 3 lists
     
-    
     def hit_server_with_urls(self):
         #get lists with urls:
         self.get_listOf_URLs()
@@ -278,75 +277,7 @@ class Check_URLs(Report,Get_Browser):
                 self.write_to_report(self.format, url, ip_addr, r_code, error)
                 
                 if check_all_subPages:
-                    link_list = []
-                    final_list = []
-                    for link in self._opener.links(url_regex="/*"):
-                       if link.url.startswith('http') or link.url.startswith('/') :
-                           link_list.append(link.url.lower()) 
-                           #.lower() since URLs are case.insensitive!
-                           #'/TDP/MACK-CA/EN-MC/TRAINING/PAGES/TRAINING.ASPX'
-                           #is the same as:
-                           #'/tdp/mack-ca/en-mc/training/pages/training.aspx'
-                    
-                    #make every URL unique: -> create final_list using list comprehension
-                    [final_list.append(link) for link in link_list if link not in final_list]
-                    #=====equivalent to the above:==============================================================
-                    # for link in link_list:
-                    #  if link not in final_list:
-                    #      final_list.append(link)
-                    #===================================================================
-                    pprint.pprint(final_list)
-                    print "1:",str(len(link_list))
-                    print "2:",str(len(final_list))
-                    
-                    for url in final_list:
-                        try:
-                            response = self._opener.open_novisit(url) 
-                            #r = self.xnet_opener.open(url)
-                            url = response.geturl()
-                            r_code = response.code
-                            ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
-                            print "(hostname/aliases/IPlist):",ip_addr
-                            ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
-                            error = None
-                            self.write_to_report(self.format, url, ip_addr, r_code, error)
-                          
-                        except (URLError,InvalidURL),e:  
-                            #sometimes links on the page redirects to some other hosts - we have one browser instance, that is 
-                            #following every link on the page (send Requests are created 'on the fly', so if page redirects
-                            #to other host, then HEADER in our browser's request is updated to the new host name.
-                            #Due to that, next links are send with improper(changed) HOSTNAME -> which results in 'HTTP 404 Page Not Found'
-                            #FIX: when '404' occurs, we are going back 2 pages (it may be different on diff sites...), to the page
-                            #when HOSTNAME was correct, and then we try to re-open the failing URL
-                            #I am aware, this is VERY error prone (IDEA: maybe counter in the loop - back n=1 ->check ->FAIL back n=2->
-                            #check ->FAIL back n=3... Up to predefined eg.n=5)
-                            #Other FIX is to use b.open_novisit(url) instead of b.open(url). In this case, browser state is unchanged
-                            #but it somehow closes the door for scraping deeper (eg.cannot get links from such page - so I cannot 
-                            #check them)
-                            self.write_to_report(self.format, url, '', '', str(e))
-                            #=========================================================
-                            # try:
-                            #    self.write_to_report(self.format, url, '', '', str(e))
-                            #    self.xnet_opener.back(n=2)
-                            #    r = self.xnet_opener.open(url)
-                            #    self.write_to_report(self.format, '', '', '', 'Probably Hostname was changed! BACK 2 pages...')
-                            #    ip_addr = socket.gethostbyaddr(urlparse.urlparse(r.geturl()).netloc)
-                            #    ip_addr = str(ip_addr[0])+"/"+str(ip_addr[2][0])
-                            #    self.write_to_report(self.format, r.geturl(), ip_addr, r.code, None)
-                            # except (URLError,InvalidURL),e:
-                            #    self.write_to_report(self.format, url, '', '', str(e))
-                            #=========================================================
-                        except socket.error,e:
-                           self.write_to_report(self.format, url, '', '', str(e))
-                              
-                    #=============================================================
-                    #--> this does not occur when b.open_novisit(url) is used!
-                    # except mechanize._mechanize.BrowserStateError,e:
-                    #    #this error occurs, when 'Error 118 (net::ERR_CONNECTION_TIMED_OUT): The operation timed out.'
-                    #    #Page is not available. Eg. Open Inet page (eg.www.volvobuses.com), get all the links from that page
-                    #    #among other, there is XNET link (https://vbos.volvo.com/)
-                    #=============================================================
-                      
+                    self.__check_all_subPages()
                     
             except mechanize.ControlNotFoundError,e:
                 """
@@ -356,10 +287,13 @@ class Check_URLs(Report,Get_Browser):
                 try:
                     assert response.code == 200
                     print 'Return Code is 200'
-                    ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
+                    ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
+                    ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
                     r_code = response.code
                     error = None
                     self.write_to_report(self.format, response.geturl(), ip_addr, r_code, error)
+                    if check_all_subPages:
+                        self.__check_all_subPages()
                 except AssertionError,e:
                     print 'Return code is not 200! It is: ',e
                     error = e
@@ -375,12 +309,9 @@ class Check_URLs(Report,Get_Browser):
                     error = e
                     self.write_to_report(self.format, url, '', '', error)
                     self.error_list.append([url,error])
-        
         #clear list:            
         self.test_list = []
         
-    
-
         #=======================================================================
         #--> this is how we can check urls with bare urllib2
         # for url in self.inet_list:
@@ -403,7 +334,76 @@ class Check_URLs(Report,Get_Browser):
         # self.inet_list = []      
         #=======================================================================
                 
+    def __check_all_subPages(self):
+        link_list = []
+        final_list = []
+        for link in self._opener.links(url_regex="/*"):
+           if link.url.startswith('http') or link.url.startswith('/') :
+               link_list.append(link.url.lower()) 
+               #.lower() since URLs are case.insensitive!
+               #'/TDP/MACK-CA/EN-MC/TRAINING/PAGES/TRAINING.ASPX'
+               #is the same as:
+               #'/tdp/mack-ca/en-mc/training/pages/training.aspx'
         
+        #make every URL unique: -> create final_list using list comprehension
+        [final_list.append(link) for link in link_list if link not in final_list]
+        #=====equivalent to the above:==============================================================
+        # for link in link_list:
+        #  if link not in final_list:
+        #      final_list.append(link)
+        #===================================================================
+        pprint.pprint(final_list)
+        print "1:",str(len(link_list))
+        print "2:",str(len(final_list))
+        
+        for url in final_list:
+            try:
+                response = self._opener.open_novisit(url) 
+                #r = self.xnet_opener.open(url)
+                url = response.geturl()
+                r_code = response.code
+                ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
+                print "(hostname/aliases/IPlist):",ip_addr
+                ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
+                error = None
+                self.write_to_report(self.format, url, ip_addr, r_code, error)
+              
+            except (URLError,InvalidURL),e:  
+                #sometimes links on the page redirects to some other hosts - we have one browser instance, that is 
+                #following every link on the page (send Requests are created 'on the fly', so if page redirects
+                #to other host, then HEADER in our browser's request is updated to the new host name.
+                #Due to that, next links are send with improper(changed) HOSTNAME -> which results in 'HTTP 404 Page Not Found'
+                #FIX: when '404' occurs, we are going back 2 pages (it may be different on diff sites...), to the page
+                #when HOSTNAME was correct, and then we try to re-open the failing URL
+                #I am aware, this is VERY error prone (IDEA: maybe counter in the loop - back n=1 ->check ->FAIL back n=2->
+                #check ->FAIL back n=3... Up to predefined eg.n=5)
+                #Other FIX is to use b.open_novisit(url) instead of b.open(url). In this case, browser state is unchanged
+                #but it somehow closes the door for scraping deeper (eg.cannot get links from such page - so I cannot 
+                #check them)
+                self.write_to_report(self.format, url, '', '', str(e))
+                #=========================================================
+                # try:
+                #    self.write_to_report(self.format, url, '', '', str(e))
+                #    self.xnet_opener.back(n=2)
+                #    r = self.xnet_opener.open(url)
+                #    self.write_to_report(self.format, '', '', '', 'Probably Hostname was changed! BACK 2 pages...')
+                #    ip_addr = socket.gethostbyaddr(urlparse.urlparse(r.geturl()).netloc)
+                #    ip_addr = str(ip_addr[0])+"/"+str(ip_addr[2][0])
+                #    self.write_to_report(self.format, r.geturl(), ip_addr, r.code, None)
+                # except (URLError,InvalidURL),e:
+                #    self.write_to_report(self.format, url, '', '', str(e))
+                #=========================================================
+            except socket.error,e:
+               self.write_to_report(self.format, url, '', '', str(e))
+                              
+                    #=============================================================
+                    #--> this does not occur when b.open_novisit(url) is used!
+                    # except mechanize._mechanize.BrowserStateError,e:
+                    #    #this error occurs, when 'Error 118 (net::ERR_CONNECTION_TIMED_OUT): The operation timed out.'
+                    #    #Page is not available. Eg. Open Inet page (eg.www.volvobuses.com), get all the links from that page
+                    #    #among other, there is XNET link (https://vbos.volvo.com/)
+                    #=============================================================
+                           
         
 class Run_URL_Checks_OnServers(Check_URLs):
     '''
@@ -430,7 +430,6 @@ class Run_URL_Checks_OnServers(Check_URLs):
         self.end = False
         #create instance of the Check_URLs class
         Check_URLs.__init__(self)
-        
         
     def backUp_originalHost(self):
         #backup original host file
@@ -473,8 +472,8 @@ class Run_URL_Checks_OnServers(Check_URLs):
         self.save_report()
         
     def set_OriginalHost(self):
-        
-        #if self.end is True, revert host to original file
+        """if self.end is True, revert host to original file
+        """
         if self.end:
             #get list of all the files in PATH_HOSTS
             files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
@@ -483,8 +482,6 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 os.rename(os.path.join(PATH_HOSTS, host_backUp), os.path.join(PATH_HOSTS,host_original))
         else:
             print 'Problem with reverting to original host file!'
-       
-
     
 def main():
     #check = Check_URLs()
@@ -492,23 +489,8 @@ def main():
     obj = Run_URL_Checks_OnServers()
 
     if obj.backUp_originalHost():
-       obj.setServerHostFile_and_RunUrlChecks()
+        obj.setServerHostFile_and_RunUrlChecks()
     obj.set_OriginalHost()    
-    
+
 if __name__ == '__main__':
     main()
-
-
-    
-    
-    
-    
-    
-    
-       
-       
-       
-       
-       
-       
-       
