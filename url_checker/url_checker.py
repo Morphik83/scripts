@@ -1,13 +1,17 @@
-import urllib2, urlparse, socket 
-import os,sys,re
+import urllib2
+import urlparse
+import socket 
+import os
+import sys
+import re
 import pprint
-import shutil                       
+import shutil
+import time                       
 from urllib2 import URLError
 from httplib import InvalidURL
 from os import listdir
 from os.path import isfile,join
 from time import strftime
-import time
 from config_file import *
 from __mechanize._mechanize import BrowserStateError
 
@@ -22,7 +26,10 @@ except ImportError,e:
     print "Install 'mechanize' - programatic webBrowser \n"\
     "http://pypi.python.org/pypi/mechanize/0.2.5 \n",e
 
+
 class Report(object):
+    """initializes Reporrt
+    """
     
     def __init__(self, format, report_file):
         self.format = format
@@ -108,7 +115,7 @@ class Report(object):
         ok_st.pattern.pattern_fore_colour = 3 #GREEN
         
         #write data to XLS 
-        #url is logged always
+        #url is always logged 
         self.sheet1.write(self.row, self.col,   args[0], style1)
         #if error occurred, log only info about error (in IP_ADDR col)
         if args[3]:
@@ -151,15 +158,15 @@ class Get_Browser():
         browser.set_debug_responses(True)
         browser.addheaders=[mechanize_headers]
         return browser
-   
-   
     
 class Check_URLs(Report,Get_Browser):
+    """defines methods that create lists with valid URLs, also 'hitsServerWithURLS'
+    """
     
     def __init__(self):
         self.report = report_file
         self.file_with_urls = file_with_urls
-        self.headers = headers
+        #self.headers = headers
         self.xnet_list = []
         self.inet_list = []
         self.error_list = []
@@ -167,7 +174,6 @@ class Check_URLs(Report,Get_Browser):
         self.format = self._getFileExt()
         #create Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
-        
                 
     def _getFileExt(self):
         #filename.ext -> pttrn for catching file's extension only! (ext)

@@ -1,17 +1,17 @@
-This script gets on input list of urls - creates requests and send them to predefined server.
-Next, return code + IP_address of the server are logged to either log file or xls report.
+Script gets on the input, list of urls then creates requests and send them to predefined server.
+Next, return code + IP_address of the actual host are logged to either log file or xls report.
 
-All settings can be done via config_file.py
+Settings can be done via config_file.py
 
 >> Scenario
 
-Assume that all of your webpages are hosted on 4 different server (S1,S2,S3,S4).
-Your task is to ensure, that after each deploy to production, all main pages (and servers)
-are up and running.
+Assume that all of your webpages are hosted on a couple of different servers (eg.S1,S2,S3,S4).
+Your task is to ensure, that after each deploy, all the most important pages (and servers)
+are up and running (you do not have direct access to the backend)
 You've been given a complete list of the URLs that should be validated on each server.
 -> config_file.py >> URLS.input
 
-There are four host files with appropriate list of IP addresses (and corresponding host names)
+So, lets say that there are four host files with appropriate list of IP addresses (and corresponding host names)
 -> Server_hosts_1, Server_hosts_2, Server_hosts_3, Server_hosts_4
 These files are iteratively switched with the original host file "C:\Windows\System32\drivers\etc\hosts" 
 (in my case, it ensures that requests actually hit proper server - bypassing proxy server)
@@ -20,14 +20,28 @@ and all the URLS are verified on every server.
 Report file if saved with information about return code and eventual errors (see 'example_Input_Report' dir)
 
 'xlwt' module > to generate XLS report 
-'urllib2' module > to handle sending requests/getting responses 
+'mechanize' module > to handle sending requests/getting responses (it forks urllib2 library)
 
 To run:
-1.Copy Server_hosts_X (hosts files) to "C:\Windows\System32\drivers\etc\hosts"
-2.In config_file.py define:
--PATH (where URLS.input is stored and where reports should be saved)
--request header
--FILE_WITH_URLS (URLS.input)
--PATH_HOSTS (location of your original 'hosts' file; usually "'C:\\WINDOWS\\system32\\drivers\\etc")
--server_hosts_pattern (regex to catch all the server files, eg. re.compile(r'^SEGOTN\d{4}$'))
-3.Run url_checker.py and observe in console results.
+1.copy url_checker.py + config_file.py to any location on your system (LOCATION)
+2.for safety reasons make a copy of the original 'hosts' file by yourself (eg. hosts_COPY)
+3.edit config_file.py
+  |->ensure, that in PATH_HOSTS (C:\\WINDOWS\\system32\\drivers\\etc) there are proper server_host files
+     example content of the PATH_HOST dir:
+	  hosts
+	  SEGOTN2543
+	  SEGOTN2525
+	  SEGOTN2523
+	  hosts_COPY
+  |->enter PATH (location where reports will be saved and URLS.input must be placed!) 
+  |->create URLS.input file and place it in the PATH (example attached)
+  |->decide what type or Report should be created (.xls or .log) by setting the REPORT_NAME
+  |->if Xnet pages will be checked, then provide valid login/pass, otherwise not needed (for Inet pages)
+4.run script from CLI (python url_checker.py)
+ 
+How script is actually running?
+FOR EACH SERVER_FILE:
+	'hosts' file -> renamed to 'hosts_backUp'
+	SEGOTNXX -> renamed to 'hosts'
+	urls from URLS.input are checked and results are saved to the report file
+	'hosts_BackUp' -> renamed to 'hosts' 
