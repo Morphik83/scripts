@@ -7,7 +7,9 @@ from httplib import InvalidURL
 from os import listdir
 from os.path import isfile,join
 from time import strftime
+import time
 from config_file import *
+from __mechanize._mechanize import BrowserStateError
 
 try:
     import xlwt
@@ -45,13 +47,13 @@ class Report(object):
         style0 = xlwt.easyxf('font: name Times New Roman, color-index black, bold on')
         
         #set columns' width (256 * no.of chars)
-        self.sheet1.col(0).width = 256 * 80  #col with URL
+        self.sheet1.col(0).width = 256 * 110  #col with URL
         self.sheet1.col(1).width = 256 * 40  #col with IP_ADDRr
         self.sheet1.col(2).width = 256 * 8   #col with RETURN CODE
         
         #sheet1.write(row_number, col_number, "WRITE HERE STH", set_style)
         self.sheet1.write(0,0,"URL",style0 )
-        self.sheet1.write(0,1,"IP_ADDR",style0 )
+        self.sheet1.write(0,1,"HOST / IP_ADDR",style0 )
         self.sheet1.write(0,2,"R_CODE",style0 )
         
         #start rows/columns counters 
@@ -134,26 +136,14 @@ class Report(object):
         self.report.close()
         print 'LOG saved:',self.report_file
 
-class Requests():
+class Get_Browser():
     """
-    creates Inet and Xnet requests; feeds CheckURLs
+    creates a browser's instance; feeds CheckURLs
     """     
     def __init__(self):
-        self.inet_opener = self.inet_request()
-        self.xnet_opener = self.xnet_request()
-        
-    def inet_request(self):
-        #prepare request:enable logging
-        handler = urllib2.HTTPHandler(debuglevel=1)
-        #add cookie handler
-        cookie = urllib2.HTTPCookieProcessor()
-        #build opener
-        opener = urllib2.build_opener(handler, cookie)
-        #install opener
-        urllib2.install_opener(opener)
-        return opener
-    
-    def xnet_request(self):
+        self._opener = self._browser()
+  
+    def _browser(self):
         browser = mechanize.Browser()
         browser.set_debug_http(True)
         browser.set_handle_robots(False)
@@ -161,8 +151,10 @@ class Requests():
         browser.set_debug_responses(True)
         browser.addheaders=[mechanize_headers]
         return browser
+   
+   
     
-class Check_URLs(Report,Requests):
+class Check_URLs(Report,Get_Browser):
     
     def __init__(self):
         self.report = report_file
@@ -175,7 +167,7 @@ class Check_URLs(Report,Requests):
         self.format = self._getFileExt()
         #create Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
-        Requests.__init__(self)
+        
                 
     def _getFileExt(self):
         #filename.ext -> pttrn for catching file's extension only! (ext)
@@ -232,57 +224,133 @@ class Check_URLs(Report,Requests):
                
         return self.inet_list, self.xnet_list, self.error_list        #when parsing is done, return 3 lists
     
+    
     def hit_server_with_urls(self):
         #get lists with urls:
         self.get_listOf_URLs()
-        for url in self.inet_list:
-            request = urllib2.Request(url, None, self.headers)
+        #create request (browser instance -> self._opener obj:
+        Get_Browser.__init__(self)
+        
+        if self.inet_list:
+            self.test_list = self.inet_list 
+            self.__check_url(check_all_subPages, xnet_login=False)
+        if self.xnet_list:
+            self.test_list = self.xnet_list
+            self.__check_url(check_all_subPages, xnet_login=True)
+        
+        #close browser instance:
+        self._opener.close()   
+        print 'Check these URLs: ',self.error_list    
+            
+    def __check_url(self, check_all_subPages, xnet_login):
+        for url in self.test_list:
             try:
-                response = self.inet_opener.open(request)
-                ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
-                r_code = response.getcode()
-                #print '\nURL:',url
-                #print '\nCode:',r_code
-                #print '\nIP:',ip_addr
-                error =  None
-                self.write_to_report(self.format, url, ip_addr, r_code, error)
-            except (URLError,InvalidURL),e:
-                #if URLError occurs, log info about it to log file, but does not exit
-                print "Is this URL:",url," valid?\n",e
-                error = e
-                self.write_to_report(self.format, url, '', '', error)
-        self.inet_list = []      
-                
-                
-        for url in self.xnet_list:
-            try:
-                r = self.xnet_opener.open(url)
+                response = self._opener.open(url)
                 #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
                 #print self.xnet_opener.response().code #or alternatively: print r.code 
-              
-                self.xnet_opener.select_form(nr=0)
-                self.xnet_opener["ctl00$BodyContent$login$UserName"]=username
-                self.xnet_opener["ctl00$BodyContent$login$Password"]=passwd
-                self.xnet_opener.submit(name='ctl00$BodyContent$login$LoginButton')
+                
+                if xnet_login:
+                    #LOGIN:
+                    self._opener.select_form(nr=0)
+                    self._opener["ctl00$BodyContent$login$UserName"]=username
+                    self._opener["ctl00$BodyContent$login$Password"]=passwd
+                    self._opener.submit(name='ctl00$BodyContent$login$LoginButton')
                 #print dir(b)
                 #print 'URL:',b.geturl()
                 #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
-                r_code = r.code
-                ip_addr = socket.gethostbyname(urlparse.urlparse(r.geturl()).netloc)
-                error =  None
+                
+                #GET STATUS:
+                r_code = response.code
+                #ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
+                ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
+                ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
+                #url = r.geturl()
+                error = None
                 self.write_to_report(self.format, url, ip_addr, r_code, error)
+                
+                if check_all_subPages:
+                    link_list = []
+                    final_list = []
+                    for link in self._opener.links(url_regex="/*"):
+                       if link.url.startswith('http') or link.url.startswith('/') :
+                           link_list.append(link.url.lower()) 
+                           #.lower() since URLs are case.insensitive!
+                           #'/TDP/MACK-CA/EN-MC/TRAINING/PAGES/TRAINING.ASPX'
+                           #is the same as:
+                           #'/tdp/mack-ca/en-mc/training/pages/training.aspx'
+                    
+                    #make every URL unique: -> create final_list using list comprehension
+                    [final_list.append(link) for link in link_list if link not in final_list]
+                    #=====equivalent to the above:==============================================================
+                    # for link in link_list:
+                    #  if link not in final_list:
+                    #      final_list.append(link)
+                    #===================================================================
+                    pprint.pprint(final_list)
+                    print "1:",str(len(link_list))
+                    print "2:",str(len(final_list))
+                    
+                    for url in final_list:
+                        try:
+                            response = self._opener.open_novisit(url) 
+                            #r = self.xnet_opener.open(url)
+                            url = response.geturl()
+                            r_code = response.code
+                            ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
+                            print "(hostname/aliases/IPlist):",ip_addr
+                            ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
+                            error = None
+                            self.write_to_report(self.format, url, ip_addr, r_code, error)
+                          
+                        except (URLError,InvalidURL),e:  
+                            #sometimes links on the page redirects to some other hosts - we have one browser instance, that is 
+                            #following every link on the page (send Requests are created 'on the fly', so if page redirects
+                            #to other host, then HEADER in our browser's request is updated to the new host name.
+                            #Due to that, next links are send with improper(changed) HOSTNAME -> which results in 'HTTP 404 Page Not Found'
+                            #FIX: when '404' occurs, we are going back 2 pages (it may be different on diff sites...), to the page
+                            #when HOSTNAME was correct, and then we try to re-open the failing URL
+                            #I am aware, this is VERY error prone (IDEA: maybe counter in the loop - back n=1 ->check ->FAIL back n=2->
+                            #check ->FAIL back n=3... Up to predefined eg.n=5)
+                            #Other FIX is to use b.open_novisit(url) instead of b.open(url). In this case, browser state is unchanged
+                            #but it somehow closes the door for scraping deeper (eg.cannot get links from such page - so I cannot 
+                            #check them)
+                            self.write_to_report(self.format, url, '', '', str(e))
+                            #=========================================================
+                            # try:
+                            #    self.write_to_report(self.format, url, '', '', str(e))
+                            #    self.xnet_opener.back(n=2)
+                            #    r = self.xnet_opener.open(url)
+                            #    self.write_to_report(self.format, '', '', '', 'Probably Hostname was changed! BACK 2 pages...')
+                            #    ip_addr = socket.gethostbyaddr(urlparse.urlparse(r.geturl()).netloc)
+                            #    ip_addr = str(ip_addr[0])+"/"+str(ip_addr[2][0])
+                            #    self.write_to_report(self.format, r.geturl(), ip_addr, r.code, None)
+                            # except (URLError,InvalidURL),e:
+                            #    self.write_to_report(self.format, url, '', '', str(e))
+                            #=========================================================
+                        except socket.error,e:
+                           self.write_to_report(self.format, url, '', '', str(e))
+                              
+                    #=============================================================
+                    #--> this does not occur when b.open_novisit(url) is used!
+                    # except mechanize._mechanize.BrowserStateError,e:
+                    #    #this error occurs, when 'Error 118 (net::ERR_CONNECTION_TIMED_OUT): The operation timed out.'
+                    #    #Page is not available. Eg. Open Inet page (eg.www.volvobuses.com), get all the links from that page
+                    #    #among other, there is XNET link (https://vbos.volvo.com/)
+                    #=============================================================
+                      
+                    
             except mechanize.ControlNotFoundError,e:
                 """
                 ControlNotFoundError occurs when no Login/Pass forms are located on the page -> it might be that 
                 the user is already logged in, so that is why the return code (200) is checked. 
                 """
                 try:
-                    assert r.code == 200
+                    assert response.code == 200
                     print 'Return Code is 200'
-                    ip_addr = socket.gethostbyname(urlparse.urlparse(r.geturl()).netloc)
-                    r_code = r.code
+                    ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
+                    r_code = response.code
                     error = None
-                    self.write_to_report(self.format, url, ip_addr, r_code, error)
+                    self.write_to_report(self.format, response.geturl(), ip_addr, r_code, error)
                 except AssertionError,e:
                     print 'Return code is not 200! It is: ',e
                     error = e
@@ -297,11 +365,37 @@ class Check_URLs(Report,Requests):
                     print "Is this URL:",url," valid?\n",e
                     error = e
                     self.write_to_report(self.format, url, '', '', error)
-                    
-        self.xnet_list = []
-        self.xnet_opener.clear_history()       
-        print 'This URLs were not verified (= are not included in the report): ',self.error_list
+                    self.error_list.append([url,error])
+        
+        #clear list:            
+        self.test_list = []
+        
     
+
+        #=======================================================================
+        #--> this is how we can check urls with bare urllib2
+        # for url in self.inet_list:
+        #    request = urllib2.Request(url, None, self.headers)
+        #    try:
+        #        response = self.inet_opener.open(request)
+        #        #ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
+        #        ip_addr = socket.gethostbyaddr(urlparse.urlparse(r.geturl()).netloc)
+        #        r_code = response.getcode()
+        #        #print '\nURL:',url
+        #        #print '\nCode:',r_code
+        #        #print '\nIP:',ip_addr
+        #        error =  None
+        #        self.write_to_report(self.format, url, ip_addr, r_code, error)
+        #    except (URLError,InvalidURL),e:
+        #        #if URLError occurs, log info about it to log file, but does not exit
+        #        print "Is this URL:",url," valid?\n",e
+        #        error = e
+        #        self.write_to_report(self.format, url, '', '', error)
+        # self.inet_list = []      
+        #=======================================================================
+                
+        
+        
 class Run_URL_Checks_OnServers(Check_URLs):
     '''
     content of the /etc:
@@ -328,6 +422,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
         #create instance of the Check_URLs class
         Check_URLs.__init__(self)
         
+        
     def backUp_originalHost(self):
         #backup original host file
         #find host file
@@ -351,12 +446,15 @@ class Run_URL_Checks_OnServers(Check_URLs):
         for host_Server in self.all_files:
             if re.search(server_hosts_pattern, host_Server):
                 print 'using host_Server:',host_Server
-                self.write_to_report(self.format,"Host_Server:",host_Server,"####","")
+                self.write_to_report(self.format,"Host_Server:",host_Server,"","")
                 #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
                 os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
                 #EXECUTE URL CHECKS
+                t0 = time.clock()
                 self.hit_server_with_urls()
-                self.write_to_report(self.format,"","","","") 
+                overall_time = time.clock()-t0
+                self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(overall_time),"","")
+                self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
                 
                 #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
                 os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
@@ -375,9 +473,10 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 print "renaming host_backUp to original hosts file"
                 os.rename(os.path.join(PATH_HOSTS, host_backUp), os.path.join(PATH_HOSTS,host_original))
         else:
-            print 'Problem with setting original host!'
+            print 'Problem with reverting to original host file!'
        
-        
+
+    
 def main():
     #check = Check_URLs()
     #check.hit_server_with_urls()
@@ -385,12 +484,11 @@ def main():
 
     if obj.backUp_originalHost():
        obj.setServerHostFile_and_RunUrlChecks()
-    obj.set_OriginalHost()
-
-    
+    obj.set_OriginalHost()    
     
 if __name__ == '__main__':
     main()
+
 
     
     

@@ -22,11 +22,15 @@ ext_accept_list = ['XLS','LOG']
 PATH_HOSTS = 'C:\\WINDOWS\\system32\\drivers\\etc'
 host_backUp = 'hosts_backUp'
 host_original = 'hosts'
-server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$|^AKAMAI(.*)$')
+server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$|^AKAMAI(.*)$|^PROXY(.*)$')
+run_URL_checks_through_PROXY = False
+check_all_subPages = True
 
 #xnet (encrypt!)
-passwd  = 'passwd'
-username = 'username'
+username  = '******'
+passwd = '*****'
+
+
 #===============================================================================
 # SERVER_1 = "SEGOTN2525" 
 # SERVER_2 = "SEGOTN2543"
