@@ -14,6 +14,7 @@ from os.path import isfile,join
 from time import strftime
 from config_file import *
 from __mechanize._mechanize import BrowserStateError
+#import get_PROXY
 
 try:
     import xlwt
@@ -172,6 +173,7 @@ class Check_URLs(Report,Get_Browser):
         self.error_list = []
         self.lists_with_urls = []
         self.format = self._getFileExt()
+        self.run_proxy = run_URL_checks_through_PROXY
         #create Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
                 
@@ -253,6 +255,10 @@ class Check_URLs(Report,Get_Browser):
     def __check_url(self, check_all_subPages, xnet_login):
         for url in self.test_list:
             try:
+                if self.run_proxy:
+                    proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
+                    self._opener.set_proxies(proxies)
+                
                 response = self._opener.open(url)
                 #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
                 #print self.xnet_opener.response().code #or alternatively: print r.code 
@@ -403,7 +409,22 @@ class Check_URLs(Report,Get_Browser):
                     #    #Page is not available. Eg. Open Inet page (eg.www.volvobuses.com), get all the links from that page
                     #    #among other, there is XNET link (https://vbos.volvo.com/)
                     #=============================================================
-                           
+                    
+class Run_URL_Checks_Through_Proxy(Check_URLs):
+    
+    def __init__(self):
+        Check_URLs.__init__(self)
+        
+    def check_urls(self):
+        if self.run_proxy:
+            print 'Checking URLs through PROXY'
+            self.write_to_report(self.format,"Host_Server:","PROXY","","")
+            t0 = time.clock()
+            self.hit_server_with_urls()    #there is switcher inside method (PROXY/NoProxy)
+            overall_time = time.clock()-t0
+            self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(overall_time),"","")
+            self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
+            self.save_report()      
         
 class Run_URL_Checks_OnServers(Check_URLs):
     '''
@@ -486,11 +507,15 @@ class Run_URL_Checks_OnServers(Check_URLs):
 def main():
     #check = Check_URLs()
     #check.hit_server_with_urls()
-    obj = Run_URL_Checks_OnServers()
-
-    if obj.backUp_originalHost():
-        obj.setServerHostFile_and_RunUrlChecks()
-    obj.set_OriginalHost()    
+    if run_URL_checks_through_PROXY:
+        obj = Run_URL_Checks_Through_Proxy
+        obj.hit_server_with_urls()
+    else:
+        obj = Run_URL_Checks_OnServers()
+    
+        if obj.backUp_originalHost():
+            obj.setServerHostFile_and_RunUrlChecks()
+        obj.set_OriginalHost()    
 
 if __name__ == '__main__':
     main()

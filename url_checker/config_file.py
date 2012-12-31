@@ -12,6 +12,9 @@ PATH = 'D:\\tmp\\web_redirect_tool'
 #headers = { 'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3)'}
 mechanize_headers = ('User-Agent','Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3')
 
+#PAC proxy file
+pacfile = 'C:\\tmp\\proxyconf_srv_volvo_com'                          
+
 #file with the list of urls to be checked
 FILE_WITH_URLS = 'URLS.input'
 file_with_urls = os.path.join(PATH,FILE_WITH_URLS)
@@ -36,13 +39,12 @@ server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$|^AKAMAI(.*)$|^PROXY(.*)$')
 #set TRUE  if all the links from given page should be checked as well 
 #    (eg. http://volovit.com -> any link that exists on that page will be checked) 
 #set FALSE if only pages from URLS.input file should be checked
-check_all_subPages = True
+check_all_subPages = False
 
-#Not implemented yet!
-#run_URL_checks_through_PROXY = False
-
+#set TRUE to check URLs only through PROXY
+run_URL_checks_through_PROXY = False
 
 #provide login/pass for xnet pages:
-username  = '******'
+username  = '****'
 passwd = '*****'
 
