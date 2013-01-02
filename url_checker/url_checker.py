@@ -13,7 +13,6 @@ from os import listdir
 from os.path import isfile,join
 from time import strftime
 from config_file import *
-from __mechanize._mechanize import BrowserStateError
 #import get_PROXY
 
 try:
@@ -23,6 +22,7 @@ except ImportError, e:
     "http://pypi.python.org/packages/source/x/xlwt/xlwt-0.7.4.tar.gz \n",e
 try:
     import mechanize
+    from mechanize._mechanize import BrowserStateError
 except ImportError,e:
     print "Install 'mechanize' - programatic webBrowser \n"\
     "http://pypi.python.org/pypi/mechanize/0.2.5 \n",e
