@@ -256,6 +256,7 @@ class Check_URLs(Report,Get_Browser):
         for url in self.test_list:
             try:
                 if self.run_proxy:
+                    print 'GETTING PROXY...'
                     proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
                     self._opener.set_proxies(proxies)
                 
@@ -276,8 +277,13 @@ class Check_URLs(Report,Get_Browser):
                 #GET STATUS:
                 r_code = response.code
                 #ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
-                ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
-                ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
+                if self.run_proxy:
+                    ip_addr = proxies['http']
+                    print "(proxy):",proxies['http']
+                else:
+                    ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
+                    ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
+                    print "(hostname/aliases/IPlist):",ip_addr
                 #url = r.geturl()
                 error = None
                 self.write_to_report(self.format, url, ip_addr, r_code, error)
