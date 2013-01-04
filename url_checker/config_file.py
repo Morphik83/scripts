@@ -21,7 +21,10 @@ file_with_urls = os.path.join(PATH,FILE_WITH_URLS)
 
 #filename of the report - always with extension!!
 REPORT_NAME = 'CHECK_URLS.xls'
-report_file = os.path.join(PATH,cur_date+REPORT_NAME)
+log_dir = os.path.join(PATH, 'logs')
+#ensure that log dir exists:
+not os.path.exists(log_dir) and os.makedirs(log_dir)
+report_file = os.path.join(log_dir,cur_date+REPORT_NAME)
 
 #DO NOT MODIFY ext_accept_list!
 #list of acceptable report types (report file extension)
