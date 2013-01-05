@@ -167,14 +167,13 @@ class Check_URLs(Report,Get_Browser):
     def __init__(self):
         self.report = report_file
         self.file_with_urls = file_with_urls
-        #self.headers = headers
         self.xnet_list = []
         self.inet_list = []
         self.error_list = []
         self.lists_with_urls = []
         self.format = self._getFileExt()
         self.run_proxy = run_URL_checks_through_PROXY
-        #create Report Object (dependently on given file format)
+        #creates Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
                 
     def _getFileExt(self):
@@ -225,8 +224,8 @@ class Check_URLs(Report,Get_Browser):
                            if not re.match(r'http[s]?://',url):
                               url = 'http://'+url
                            self.inet_list.append(url.strip())
-                       except AttributeError,e:                 #if no [X]|[I] are found, then check urls 
-                           print 'ERROR: %s check prefix!  e:%s' % (line,e)
+                       except AttributeError,e:                 #if no [X]|[I] are found, then verify urls 
+                           print 'ERROR: %s verify prefix!  e:%s' % (line,e)
                            if line not in self.error_list:  #to avoid appending the same info for each server - log only once
                                self.error_list.append(line)
                
@@ -238,8 +237,9 @@ class Check_URLs(Report,Get_Browser):
         #create request (browser instance -> self._opener obj:
         Get_Browser.__init__(self)
         
+        #self.test_list defined, since __check_url is used for both inet & xnet
         if self.inet_list:
-            self.test_list = self.inet_list 
+            self.test_list = self.inet_list      
             self.__check_url(check_all_subPages, xnet_login=False)
         if self.xnet_list:
             self.test_list = self.xnet_list
@@ -254,7 +254,7 @@ class Check_URLs(Report,Get_Browser):
             
     def __check_url(self, check_all_subPages, xnet_login):
         for url in self.test_list:
-            try:
+            try:    
                 if self.run_proxy:
                     print 'GETTING PROXY...'
                     proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
@@ -270,11 +270,9 @@ class Check_URLs(Report,Get_Browser):
                     self._opener["ctl00$BodyContent$login$UserName"]=username
                     self._opener["ctl00$BodyContent$login$Password"]=passwd
                     self._opener.submit(name='ctl00$BodyContent$login$LoginButton')
-                #print dir(b)
-                #print 'URL:',b.geturl()
                 #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
                 
-                #GET STATUS:
+                #get status:
                 r_code = response.code
                 #ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
                 if self.run_proxy:
@@ -494,12 +492,12 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
                 os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
                 print '-->next....'
-        #when all the host_Server's file used, revert original host file       
+        #when all the host_Server's file used, revert to the original host file       
         self.end = True
         self.save_report()
         
     def set_OriginalHost(self):
-        """if self.end is True, revert host to original file
+        """if self.end is True, revert host to the original host file
         """
         if self.end:
             #get list of all the files in PATH_HOSTS

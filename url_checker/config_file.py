@@ -20,7 +20,7 @@ FILE_WITH_URLS = 'URLS.input'
 file_with_urls = os.path.join(PATH,FILE_WITH_URLS)
 
 #filename of the report - always with extension!!
-REPORT_NAME = 'CHECK_URLS.xls'
+REPORT_NAME = 'CHECK_URLS.log'
 log_dir = os.path.join(PATH, 'logs')
 #ensure that log dir exists:
 not os.path.exists(log_dir) and os.makedirs(log_dir)
@@ -36,7 +36,7 @@ host_backUp = 'hosts_backUp'
 host_original = 'hosts'     #this filename should correspond with actual 'host' filename 
 
 #DO NOT MODIFY server pattern!
-server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$|^AKAMAI(.*)$|^PROXY(.*)$')
+server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$|^AKAMAI(.*)$')
 
 #set True/False wheather you want to check all the subpages on given page
 #set TRUE  if all the links from given page should be checked as well 
@@ -48,6 +48,6 @@ check_all_subPages = False
 run_URL_checks_through_PROXY = False
 
 #provide login/pass for xnet pages:
-username  = '****'
-passwd = '*****'
+username  = '*****'
+passwd = '******'
 

@@ -21,6 +21,7 @@ Report file if saved with information about return code and eventual errors (see
 
 'xlwt' module > to generate XLS report 
 'mechanize' module > to handle sending requests/getting responses (it forks urllib2 library)
+'pacparser' module > to parse PAC Proxy file 
 
 To run:
 1.copy url_checker.py + config_file.py to any location on your system (LOCATION)
