@@ -20,7 +20,7 @@ FILE_WITH_URLS = 'URLS.input'
 file_with_urls = os.path.join(PATH,FILE_WITH_URLS)
 
 #filename of the report - always with extension!!
-REPORT_NAME = 'CHECK_URLS.log'
+REPORT_NAME = 'CHECK_URLS.xls'
 log_dir = os.path.join(PATH, 'logs')
 #ensure that log dir exists:
 not os.path.exists(log_dir) and os.makedirs(log_dir)
