@@ -38,16 +38,10 @@ host_original = 'hosts'     #this filename should correspond with actual 'host' 
 #DO NOT MODIFY server pattern!
 server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$|^AKAMAI(.*)$')
 
-#set True/False wheather you want to check all the subpages on given page
-#set TRUE  if all the links from given page should be checked as well 
-#    (eg. http://volovit.com -> any link that exists on that page will be checked) 
-#set FALSE if only pages from URLS.input file should be checked
-check_all_subPages = False
-
 #set TRUE to check URLs only through PROXY
 run_URL_checks_through_PROXY = False
 
 #provide login/pass for xnet pages:
-username  = '*****'
+username  = '******'
 passwd = '******'
 

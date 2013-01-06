@@ -6,7 +6,8 @@ import sys
 import re
 import pprint
 import shutil
-import time                       
+import time
+from _root import RootClass                       
 from urllib2 import URLError
 from httplib import InvalidURL
 from os import listdir
@@ -28,7 +29,7 @@ except ImportError,e:
     "http://pypi.python.org/pypi/mechanize/0.2.5 \n",e
 
 
-class Report(object):
+class Report(RootClass,object):
     """initializes Report object
     """
     
@@ -138,13 +139,129 @@ class Report(object):
     
     def save_XLS(self):
         self.book.save(self.report_file)
-        print 'XLS saved:',self.report_file
+        print '\n'
+        self._info('XLS saved:[',self.report_file,']')
     
     def save_LOG(self):
         self.report.close()
-        print 'LOG saved:',self.report_file
+        print '\n'
+        self._info('LOG saved:',self.report_file)
 
-class Get_Browser():
+class Menu(RootClass,object):
+    '''simple menu with basic selection of the host files and switcher for 
+    verifying all the subpages
+    '''
+    
+    def __init__(self):
+        self.host_list = []
+        self.checklist=[]
+        self.menu()
+        
+    def menu(self):
+        def _menu_check_subPages(self):
+            """set True/False whether you want to check all the subpages on the given page
+            set TRUE  if all the links from given page should be checked as well 
+            (eg. http://volovit.com -> any link that exists on that page will be checked) 
+            set FALSE if only pages from URLS.input file should be checked
+            """
+            check = raw_input('Do you want to verify sub_pages? [y/n]: ')
+            if re.search(r'\b[yY]\b|\byes\b|\bYES\b',check):
+                self.check_all_subPages = True
+                self._info('check_all_subPages: TRUE')
+                return self.check_all_subPages
+            elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',check):
+                self.check_all_subPages = False
+                self._info('check_all_subPages: FALSE')
+                return self.check_all_subPages
+            else:
+                self._warn('Not valid answer! Valid: [y/n]')
+                _menu_check_subPages(self)
+                
+        def _menu_add_servers(self):
+            def _for_host_server(self):
+                for host_server in self.host_list:
+                    msg = ''.join(['Add [',host_server,'] to checklist? [y/n]: '])
+                    yes_no = raw_input(msg)
+                    if re.search(r'\b[yY]\b|\byes\b|\bYES\b',yes_no):
+                        #del host_server from self.host_list
+                        self._info(self.host_list.pop(self.host_list.index(host_server))\
+                                   ,' added to current checklist')
+                        #print all the still available servers:
+                        self._info('Still available/Not used servers: ',self.host_list)
+                        #add host_server to current checklist:
+                        self.checklist.append(host_server)
+                        #print all the servers added to checklist:
+                        self._info('Current checklist: ',self.checklist,'\n')
+                        #start again 'for' loop with updated self.host_list from the index[0]
+                        _for_host_server(self)
+                        return
+                    elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',yes_no):
+                        self._info('Skipping [',host_server,']...')
+                        #del host_server from self.host_list
+                        self.host_list.pop(self.host_list.index(host_server))
+                        #print all the still available servers:
+                        self._info('Still available/Not used servers: ',self.host_list)
+                        #print current checklist:
+                        self._info('Current checklist: ',self.checklist,'\n')
+                        #start again 'for' loop with updated self.host_list from the index[0]
+                        _for_host_server(self)
+                        return
+                    else:
+                        self._warn('Not valid answer! Valid: [y/n]\n')
+                        _menu_add_servers(self)
+                        '''Why do I need 'return' statement in the 'else'?
+                        Due to: method call inside method's own body in 'for' loop
+                        ->call_1|else:
+                                |->call_2|else:
+                                         |->call_3->OK|
+                                   backTo:Else(call_2)|
+                              finish'Else':.return|<--|
+                               backTo:Else(call_1)|
+                          finish'Else':.return|<--|
+                                         OK <-|
+                        '''
+                        return
+                    
+            #present all the valid/available HOST files
+            self.host_list = []
+            for host_server in self.all_files:
+                if re.search(server_hosts_pattern, host_server):
+                    self.host_list.append(host_server)
+                    
+            #self._info('Available server-host files: ',self.host_list)
+            self._info('Select servers:')
+            self._info('Available server-host files: ',self.host_list,'\n')
+            _for_host_server(self)
+            
+            if len(self.checklist)==0:
+                self._warn('Current checklist is empty!\nNo servers selected!\nStart again...')
+                sys.exit()
+            else:
+                self._info('>>>>>>CURRENT  CONFIGURATION:')
+                self._info('URLs from %s will be verified on the following servers: ' % file_with_urls)
+                self._info(self.checklist)
+                if self.check_all_subPages:
+                    self._info('Check subpages: True')
+                else:    
+                    self._info('Check subpages: False')
+                self._info('Report file will be saved here: ',report_file)
+                go = raw_input("Run ? [y/n] ")
+                if re.search(r'\b[yY]\b|\byes\b|\bYES\b',go):
+                    
+                    pass
+                else:
+                    self._info('Exiting...\nStart program again')
+                    sys.exit()
+                    
+        #sets check_all_subPages=True/False
+        _menu_check_subPages(self)
+        
+        #select server_host files
+        _menu_add_servers(self)
+          
+        #run the script on the selected only servers
+
+class Get_Browser(object):
     """
     creates browser's instance; feeds CheckURLs
     """     
@@ -160,7 +277,7 @@ class Get_Browser():
         browser.addheaders=[mechanize_headers]
         return browser
     
-class Check_URLs(Report,Get_Browser):
+class Check_URLs(Report,Get_Browser,Menu):
     """defines methods that create lists with valid URLs, also 'hitsServerWithURLS'
     """
     
@@ -175,6 +292,8 @@ class Check_URLs(Report,Get_Browser):
         self.run_proxy = run_URL_checks_through_PROXY
         #creates Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
+        #start simple menu
+        Menu.__init__(self)
                 
     def _getFileExt(self):
         #filename.ext -> pttrn for catching file's extension only! (ext)
@@ -188,11 +307,11 @@ class Check_URLs(Report,Get_Browser):
                 assert ext in ext_accept_list       #accept only extension from ext_accept_list
                 return ext
             except AssertionError:
-                print "Reports' file extension must be 3 chars long!\
-                \nFor available report types see ext_accept_list in config_file.py"
+                self._warn("Reports' file extension must be 3 chars long!\
+                \nFor available report types see ext_accept_list in config_file.py")
                 sys.exit()
         else:
-            print 'Missing extension for report file in config_file.py! \n(example:CHECK_URLS.xls)'
+            self._warn('Missing extension for report file in config_file.py! \n(example:CHECK_URLS.xls)')
             sys.exit()
     
     def get_listOf_URLs(self):
@@ -225,7 +344,7 @@ class Check_URLs(Report,Get_Browser):
                               url = 'http://'+url
                            self.inet_list.append(url.strip())
                        except AttributeError,e:                 #if no [X]|[I] are found, then verify urls 
-                           print 'ERROR: %s verify prefix!  e:%s' % (line,e)
+                           self._warn('ERROR: %s verify prefix!  e:%s' % (line,e))
                            if line not in self.error_list:  #to avoid appending the same info for each server - log only once
                                self.error_list.append(line)
                
@@ -240,23 +359,23 @@ class Check_URLs(Report,Get_Browser):
         #self.test_list defined, since __check_url is used for both inet & xnet
         if self.inet_list:
             self.test_list = self.inet_list      
-            self.__check_url(check_all_subPages, xnet_login=False)
+            self.__check_url(self.check_all_subPages, xnet_login=False)
         if self.xnet_list:
             self.test_list = self.xnet_list
-            self.__check_url(check_all_subPages, xnet_login=True)
+            self.__check_url(self.check_all_subPages, xnet_login=True)
         
         #clear lists content:
         self.inet_list = []
         self.xnet_list = []
         #close browser instance:
         self._opener.close()   
-        print 'Check these URLs: ',self.error_list    
+        self._warn('Check these URLs: ',self.error_list)    
             
     def __check_url(self, check_all_subPages, xnet_login):
         for url in self.test_list:
             try:    
                 if self.run_proxy:
-                    print 'GETTING PROXY...'
+                    self._info('GETTING PROXY...')
                     proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
                     self._opener.set_proxies(proxies)
                 
@@ -277,11 +396,11 @@ class Check_URLs(Report,Get_Browser):
                 #ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
                 if self.run_proxy:
                     ip_addr = proxies['http']
-                    print "(proxy):",proxies['http']
+                    self._info("(proxy):",proxies['http'])
                 else:
                     ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
                     ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
-                    print "(hostname/aliases/IPlist):",ip_addr
+                    self._info("(hostname/aliases/IPlist):",ip_addr)
                 #url = r.geturl()
                 error = None
                 self.write_to_report(self.format, url, ip_addr, r_code, error)
@@ -296,7 +415,7 @@ class Check_URLs(Report,Get_Browser):
                 """
                 try:
                     assert response.code == 200
-                    print 'Return Code is 200'
+                    self._info('Return Code is 200')
                     ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
                     ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
                     r_code = response.code
@@ -305,17 +424,17 @@ class Check_URLs(Report,Get_Browser):
                     if check_all_subPages:
                         self.__check_all_subPages()
                 except AssertionError,e:
-                    print 'Return code is not 200! It is: ',e
+                    self._warn('Return code is not 200! It is: ',e)
                     error = e
                     self.write_to_report(self.format, url, '', '', error)
                     
             except (NameError,mechanize.FormNotFoundError),e:
-                print 'FIXME:',url,e
+                self._warn('FIXME:',url,e)
                 error = e
                 self.write_to_report(self.format, url, '', '', error)
             except (URLError,InvalidURL),e:
                     #if URLError occurs, log info about it to log file, but does not exit
-                    print "Is this URL:",url," valid?\n",e
+                    self._warn("Is this URL:",url," valid?\n",e)
                     error = e
                     self.write_to_report(self.format, url, '', '', error)
                     self.error_list.append([url,error])
@@ -363,8 +482,8 @@ class Check_URLs(Report,Get_Browser):
         #      final_list.append(link)
         #===================================================================
         pprint.pprint(final_list)
-        print "1:",str(len(link_list))
-        print "2:",str(len(final_list))
+        self._info("1:",str(len(link_list)))
+        self._info("2:",str(len(final_list)))
         
         for url in final_list:
             try:
@@ -373,7 +492,7 @@ class Check_URLs(Report,Get_Browser):
                 url = response.geturl()
                 r_code = response.code
                 ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
-                print "(hostname/aliases/IPlist):",ip_addr
+                self._info("(hostname/aliases/IPlist):",ip_addr)
                 ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
                 error = None
                 self.write_to_report(self.format, url, ip_addr, r_code, error)
@@ -421,7 +540,7 @@ class Run_URL_Checks_Through_Proxy(Check_URLs):
         
     def check_urls(self):
         if self.run_proxy:
-            print 'Checking URLs through PROXY'
+            self._info('Checking URLs through PROXY')
             self.write_to_report(self.format,"Host_Server:","PROXY","","")
             t0 = time.clock()
             self.hit_server_with_urls()    #there is switcher inside method (PROXY/NoProxy)
@@ -463,22 +582,23 @@ class Run_URL_Checks_OnServers(Check_URLs):
             try:
                 #create backUp of the original host file (rename)
                 os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_backUp))
-                print 'BackUp of the original HOST file: host-> %s' % host_backUp
+                self._info('BackUp of the original HOST file: host-> %s' % host_backUp)
                 return True
             except WindowsError,e:
-                print '%s already exists!, \n%s' %(os.path.join(PATH_HOSTS,host_backUp),e)
+                self._info('%s already exists!, \n%s' %(os.path.join(PATH_HOSTS,host_backUp),e))
                 return False
         else: 
-            print 'Original host file not found in "%s"' % (PATH_HOSTS)
+            self._warn('Original host file not found in "%s"' % (PATH_HOSTS))
             return False
              
     def setServerHostFile_and_RunUrlChecks(self):
         #search for Server-Oriented host files:
         #server_hosts_pattern defined in config_file.py
-        print "setServerHostFile_and_RunUrlChecks:self.all_files:",self.all_files
+        self.all_files = self.checklist
+        self._info("setServerHostFile_and_RunUrlChecks:self.all_files:",self.all_files)
         for host_Server in self.all_files:
             if re.search(server_hosts_pattern, host_Server):
-                print 'using host_Server:',host_Server
+                self._info('using host_Server:',host_Server)
                 self.write_to_report(self.format,"Host_Server:",host_Server,"","")
                 #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
                 os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
@@ -491,7 +611,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 
                 #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
                 os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
-                print '-->next....'
+                self._info('-->next....')
         #when all the host_Server's file used, revert to the original host file       
         self.end = True
         self.save_report()
@@ -503,11 +623,13 @@ class Run_URL_Checks_OnServers(Check_URLs):
             #get list of all the files in PATH_HOSTS
             files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
             if host_backUp in files:
-                print "renaming host_backUp to original hosts file"
+                self._info("renaming host_backUp to original hosts file...")
                 os.rename(os.path.join(PATH_HOSTS, host_backUp), os.path.join(PATH_HOSTS,host_original))
+                self._info('Done')
+                sys.exit()
         else:
-            print 'Problem with reverting to original host file!'
-    
+            self._warn('Problem with reverting to original host file!')
+
 def main():
     #check = Check_URLs()
     #check.hit_server_with_urls()
@@ -516,7 +638,7 @@ def main():
         obj.hit_server_with_urls()
     else:
         obj = Run_URL_Checks_OnServers()
-    
+        
         if obj.backUp_originalHost():
             obj.setServerHostFile_and_RunUrlChecks()
         obj.set_OriginalHost()    
