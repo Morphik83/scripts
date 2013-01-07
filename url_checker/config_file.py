@@ -7,13 +7,12 @@ from time import strftime
 cur_date = strftime( "%y-%m-%d_%H_%M_%S_")
 
 #log dir/ input file location
-PATH = 'D:\\tmp\\web_redirect_tool'
+PATH = 'D:\\tmp\\url_checker'
 
-#headers = { 'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3)'}
-mechanize_headers = ('User-Agent','Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3')
+mechanize_headers = ('User-Agent','Mozilla/4.0')
 
 #PAC proxy file
-pacfile = 'C:\\tmp\\proxyconf_srv_volvo_com'                          
+pacfile = '<yout PAC file here>'                          
 
 #file with the list of urls to be checked
 FILE_WITH_URLS = 'URLS.input'
@@ -36,7 +35,7 @@ host_backUp = 'hosts_backUp'
 host_original = 'hosts'     #this filename should correspond with actual 'host' filename 
 
 #DO NOT MODIFY server pattern!
-server_hosts_pattern = re.compile(r'^SEGOTN\d{4}$|^AKAMAI(.*)$')
+server_hosts_pattern = re.compile(r'^Server_hosts_\d{1}$')
 
 #set TRUE to check URLs only through PROXY
 run_URL_checks_through_PROXY = False
