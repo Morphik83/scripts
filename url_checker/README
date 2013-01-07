@@ -1,8 +1,10 @@
-Script gets on the input, list of urls then creates requests and send them to predefined server.
+>>>>>>URL_Checker<<<<<<<
+
+Script gets on the input list of urls, then creates requests and send them to predefined server.
 Next, return code + IP_address of the actual host are logged to either log file or xls report.
 
 Settings can be done via config_file.py
-
+######################################################
 >> Scenario
 
 Assume that all of your webpages are hosted on a couple of different servers (eg.S1,S2,S3,S4).
@@ -12,37 +14,213 @@ You've been given a complete list of the URLs that should be validated on each s
 -> config_file.py >> URLS.input
 
 So, lets say that there are four host files with appropriate list of IP addresses (and corresponding host names)
--> Server_hosts_1, Server_hosts_2, Server_hosts_3, Server_hosts_4
-These files are iteratively switched with the original host file "C:\Windows\System32\drivers\etc\hosts" 
+-> see 'hosts' dir
+These files are iteratively replaces with the original host file [C:\Windows\System32\drivers\etc\hosts]
 (in my case, it ensures that requests actually hit proper server - bypassing proxy server)
 and all the URLS are verified on every server.
 
-Report file if saved with information about return code and eventual errors (see 'example_Input_Report' dir)
+Report file is saved with information about return code and eventual errors (see 'example_Input_Report' dir)
 
-'xlwt' module > to generate XLS report 
-'mechanize' module > to handle sending requests/getting responses (it forks urllib2 library)
-'pacparser' module > to parse PAC Proxy file 
-
+######################################################
 To run:
-1.copy url_checker.py + config_file.py to any location on your system (LOCATION)
-2.for safety reasons make a copy of the original 'hosts' file by yourself (eg. hosts_COPY)
-3.edit config_file.py
+
+(!)install and configure Python according to installation instruction presented below
+
+1. Copy 'url_checker' dir to your workspace (any location...)
+2. Copy all the files from 'hosts' dir to PATH_HOSTS (usually [C:\WINDOWS\system32\drivers\etc])
+(!)for safety reasons make a copy of the original 'hosts' file by yourself (eg. hosts_COPY)
+3. Edit config_file.py (with Python Shell)
   |->ensure, that in PATH_HOSTS (C:\\WINDOWS\\system32\\drivers\\etc) there are proper server_host files
      example content of the PATH_HOST dir:
 	  hosts
-	  SEGOTN2543
-	  SEGOTN2525
-	  SEGOTN2523
+	  Server_hosts_1
+	  Server_hosts_2
+	  Server_hosts_3
+	  Server_hosts_4
 	  hosts_COPY
   |->enter PATH (location where reports will be saved and URLS.input must be placed!) 
-  |->create URLS.input file and place it in the PATH (example attached)
-  |->decide what type or Report should be created (.xls or .log) by setting the REPORT_NAME
+  |->create URLS.input file and place it in the PATH (or use attached example file)
   |->if Xnet pages will be checked, then provide valid login/pass, otherwise not needed (for Inet pages)
-4.run script from CLI (python url_checker.py)
- 
+4. Run script from CMD (python url_checker.py)
+5. Scroll down for the example script output !
+	
+###################################################### 
 How script is actually running?
 FOR EACH SERVER_FILE:
 	'hosts' file -> renamed to 'hosts_backUp'
 	SEGOTNXX -> renamed to 'hosts'
 	urls from URLS.input are checked and results are saved to the report file
 	'hosts_BackUp' -> renamed to 'hosts' 
+	
+######################################################
+How to install Python and required libraries?
+1.Install Python (v.2.7) - remember to add [\Scripts,\Python27,\Lib\site-packages] 
+  dirs to PATH (System Variables)
+  (eg. C:\Python27\;C:\Python27\Scripts;C:\Python27\Lib\site-packages;)
+2.To verify if Python is installed correctly, start CMD and type: python
+  Interpreter should be started
+3.Go to required_modules dir -> copy 'mechanize' and 'xlwt' to 
+  'C:\Python27\Lib\site-packages\'
+  (or just use PIP to install modules)
+4.To verify if modules are 'visible' to Python, start Python and type:
+  import mechanize,xlwt
+  If no errors appeared -> modules are imported.
+
+5.To start url_checker.py, start CMD -> cd to location where scripts are located -> type: python url_checker.py
+  (eg. 'C:\Python_Scripts\workspace\url_checker>python url_checker.py')
+
+  
+NOTE:
+3rd party modules:
+'xlwt' module > to generate XLS report 
+'mechanize' module > to handle sending requests/getting responses (it forks urllib2 library)
+'pacparser' module > to parse PAC Proxy file (win32 only)
+
+######################################################
+>>>>>>>>EXAMPLE SCRIP OUTPUT
+In my URLS.input there was only one valid link (not commented one):
+	#[I]volvobuses.com																
+	#[I]volvobuses.com
+	[I]http://www.volvobuses.com/bus/global/en-gb/products_services/Pages/default.aspx
+	#I]http://www.volvobuses.com/bus/global/en-gb/newsmedia/pressreleases/Pages/pressleleases.aspx
+	#[I] www.volvoce.com																	
+	#[I] volvoce.com
+	#(logging to Xnet pages is done automatically if valid credentials are passed!)
+
+When script is started it asks you a couple of configuration questions:
+
+	*INFO* >>Urls_Checker<<
+
+	Configuration:
+	Do you want to verify sub_pages? [y/n]:y           #if [y] it verifies current page and all the links on that page as well
+	*INFO* check_all_subPages: TRUE
+	*INFO* Reading [C:\WINDOWS\system32\drivers\etc]...			
+	*INFO* Available server-host files: ['Server_hosts_1', 'Server_hosts_2', 'Server_hosts_3', 'Server_hosts_4']
+
+	Add all to checklist? [y/n] y					    #if [y], all the valid URLs from URLS.input will be checked on every server
+	*INFO* Adding all servers to checklist...
+	
+	*INFO* >>>>>>CURRENT  CONFIGURATION:
+	*INFO* URLs from [C:\Priv\eclipse_workspace\Sel_2\url_checker\URLS.input] will be verified on the following servers: 
+	*INFO* ['Server_hosts_1', 'Server_hosts_2', 'Server_hosts_3', 'Server_hosts_4']
+	*INFO* Check subpages: True
+	*INFO* Report file will be saved here: [C:\Priv\eclipse_workspace\Sel_2\url_checker\logs\13-01-07_10_43_29_CHECK_URLS.xls]
+	Run ? [y/n] 
+	*INFO* BackUp of the original HOST file: host-> hosts_backUp
+	*INFO* setServerHostFile_and_RunUrlChecks:self.all_files:['Server_hosts_1', 'Server_hosts_2', 'Server_hosts_3', 'Server_hosts_4']
+	*INFO* using host_Server:Server_hosts_1
+	send: 'GET /bus/global/en-gb/products_services/Pages/default.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 	3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3\r\n\r\n'
+	reply: 'HTTP/1.1 200 OK\r\n'
+	header: Connection: close
+	header: Date: Mon, 07 Jan 2013 09:51:10 GMT
+	header: Server: Microsoft-IIS/6.0
+	header: MicrosoftSharePointTeamServices: 12.0.0.6535
+	header: X-Powered-By: ASP.NET
+	header: X-AspNet-Version: 2.0.50727
+	header: Cache-Control: private
+	header: Expires: Mon, 07 Jan 2013 09:55:58 GMT
+	header: Vary: *
+	header: Content-Type: text/html; charset=utf-8
+	header: Content-Length: 33011
+	header: X-RBT-Optimized-By: vit-pl-wro-iO-02 (RiOS 6.5.5) SC
+	*INFO* (hostname/aliases/IPlist):www.volvobuses.com / <host_ip_addr>
+	*WARN* Check these URLs: []
+	*INFO* -->next....
+	*INFO* using host_Server:Server_hosts_2
+	send: 'GET /bus/global/en-gb/products_services/Pages/default.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 	3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3\r\n\r\n'
+	reply: 'HTTP/1.1 200 OK\r\n'
+	header: Connection: close
+	header: Date: Mon, 07 Jan 2013 09:51:19 GMT
+	header: Server: Microsoft-IIS/6.0
+	header: X-Powered-By: ASP.NET
+	header: X-AspNet-Version: 2.0.50727
+	header: Cache-Control: private
+	header: Expires: Mon, 07 Jan 2013 10:06:19 GMT
+	header: Vary: *
+	header: Content-Type: text/html; charset=utf-8
+	header: Content-Length: 33066
+	header: X-RBT-Optimized-By: vit-pl-wro-iO-02 (RiOS 6.5.5) SC
+	*INFO* (hostname/aliases/IPlist):www.volvoaero.com / <host_ip_addr>
+	*WARN* Check these URLs: []
+	*INFO* -->next....
+	*INFO* using host_Server:Server_hosts_3
+	send: 'GET /bus/global/en-gb/products_services/Pages/default.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 	3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3\r\n\r\n'
+	reply: 'HTTP/1.1 200 OK\r\n'
+	header: Connection: close
+	header: Date: Mon, 07 Jan 2013 09:51:20 GMT
+	header: Server: Microsoft-IIS/6.0
+	header: MicrosoftSharePointTeamServices: 12.0.0.6535
+	header: X-Powered-By: ASP.NET
+	header: X-AspNet-Version: 2.0.50727
+	header: Cache-Control: private
+	header: Expires: Mon, 07 Jan 2013 09:55:58 GMT
+	header: Vary: *
+	header: Content-Type: text/html; charset=utf-8
+	header: Content-Length: 33011
+	header: X-RBT-Optimized-By: vit-pl-wro-iO-02 (RiOS 6.5.5) SC
+	*INFO* (hostname/aliases/IPlist):www.volvoaero.com / <host_ip_addr>
+	*WARN* Check these URLs: []
+	*INFO* -->next....
+	*INFO* using host_Server:Server_hosts_4
+	send: 'GET /bus/global/en-gb/products_services/Pages/default.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3\r\n\r\n'
+	reply: 'HTTP/1.1 200 OK\r\n'
+	header: Connection: close
+	header: Date: Mon, 07 Jan 2013 09:51:20 GMT
+	header: Server: Microsoft-IIS/6.0
+	header: X-Powered-By: ASP.NET
+	header: X-AspNet-Version: 2.0.50727
+	header: Cache-Control: private
+	header: Expires: Mon, 07 Jan 2013 10:00:06 GMT
+	header: Vary: *
+	header: Content-Type: text/html; charset=utf-8
+	header: Content-Length: 33011
+	header: X-RBT-Optimized-By: vit-pl-wro-iO-02 (RiOS 6.5.5) SC
+	*INFO* (hostname/aliases/IPlist):www.volvoaero.com / <host_ip_addr>
+	*WARN* Check these URLs: []
+	*INFO* -->next....
+
+	*INFO* XLS saved:[C:\Priv\eclipse_workspace\Sel_2\url_checker\logs\13-01-07_10_50_53_CHECK_URLS.xls]    
+	*INFO* renaming host_backUp to original hosts file...
+	*INFO* Done
+	
+	
+>>>>ANOTHER CONFIGURATION:  Not all the servers are selected!
+	*INFO* >>Urls_Checker<<
+
+	Configuration:
+	Do you want to verify sub_pages? [y/n]: n
+	*INFO* check_all_subPages: FALSE
+	*INFO* Reading [C:\WINDOWS\system32\drivers\etc]...
+	*INFO* Available server-host files: ['Server_hosts_1', 'Server_hosts_2', 'Server_hosts_3', 'Server_hosts_4']
+
+	Add all to checklist? [y/n] n
+	*INFO* Add servers to checklist:
+	Add [Server_hosts_1] to checklist? [y/n]: y
+	*INFO* Server_hosts_1 added to current checklist
+	*INFO* Still available/Not used servers: ['Server_hosts_2', 'Server_hosts_3', 'Server_hosts_4']
+	*INFO* Current checklist: ['Server_hosts_1']
+
+	Add [Server_hosts_2] to checklist? [y/n]: n
+	*INFO* Skipping [Server_hosts_2]...
+	*INFO* Still available/Not used servers: ['Server_hosts_3', 'Server_hosts_4']
+	*INFO* Current checklist: ['Server_hosts_1']
+
+	Add [Server_hosts_3] to checklist? [y/n]: y
+	*INFO* Server_hosts_3 added to current checklist
+	*INFO* Still available/Not used servers: ['Server_hosts_4']
+	*INFO* Current checklist: ['Server_hosts_1', 'Server_hosts_3']
+
+	Add [Server_hosts_4] to checklist? [y/n]: y
+	*INFO* Server_hosts_4 added to current checklist
+	*INFO* Still available/Not used servers: []
+	*INFO* Current checklist: ['Server_hosts_1', 'Server_hosts_3', 'Server_hosts_4']
+
+
+	*INFO* >>>>>>CURRENT  CONFIGURATION:
+	*INFO* URLs from [C:\Priv\eclipse_workspace\Sel_2\url_checker\URLS.input] will be verified on the following servers: 
+	*INFO* ['Server_hosts_1', 'Server_hosts_3', 'Server_hosts_4']
+	*INFO* Check subpages: False
+	*INFO* Report file will be saved here: [C:\Priv\eclipse_workspace\Sel_2\url_checker\logs\13-01-07_10_58_09_CHECK_URLS.xls]
+	Run ? [y/n] 
+	(...)
+	
