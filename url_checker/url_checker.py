@@ -164,6 +164,7 @@ class Menu(RootClass,object):
             (eg. http://volovit.com -> any link that exists on that page will be checked) 
             set FALSE if only pages from URLS.input file should be checked
             """
+            self._info('>>CWP_Urls_Checker<<\n\nConfiguration:')
             check = raw_input('Do you want to verify sub_pages? [y/n]: ')
             if re.search(r'\b[yY]\b|\byes\b|\bYES\b',check):
                 self.check_all_subPages = True
@@ -174,10 +175,11 @@ class Menu(RootClass,object):
                 self._info('check_all_subPages: FALSE')
                 return self.check_all_subPages
             else:
-                self._warn('Not valid answer! Valid: [y/n]')
+                self._warn('Not valid answer! Valid: [y/n]\nStarting again...\n')
                 _menu_check_subPages(self)
                 
         def _menu_add_servers(self):
+            
             def _for_host_server(self):
                 for host_server in self.host_list:
                     msg = ''.join(['Add [',host_server,'] to checklist? [y/n]: '])
@@ -207,7 +209,9 @@ class Menu(RootClass,object):
                         _for_host_server(self)
                         return
                     else:
-                        self._warn('Not valid answer! Valid: [y/n]\n')
+                        self._warn('Not valid answer! Valid: [y/n]\nStarting again...\n')
+                        #erase all the content from self.checklist
+                        self.checklist = []
                         _menu_add_servers(self)
                         '''Why do I need 'return' statement in the 'else'?
                         Due to: method call inside method's own body in 'for' loop
@@ -229,22 +233,32 @@ class Menu(RootClass,object):
                     self.host_list.append(host_server)
                     
             #self._info('Available server-host files: ',self.host_list)
-            self._info('Select servers:')
-            self._info('Available server-host files: ',self.host_list,'\n')
-            _for_host_server(self)
+            self._info('Reading [%s]' % PATH_HOSTS,'...')
+            if len(self.host_list) >0:
+                self._info('Available server-host files: ',self.host_list,'\n')
+                resp = raw_input('Add all to checklist? [y/n] ')
+                if re.search(r'\b[yY]\b|\byes\b|\bYES\b',resp):
+                    self._info('Adding all servers to checklist...\n')
+                    self.checklist = self.host_list[:]
+                elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',resp):
+                    self._info('Add servers to checklist:')
+                    _for_host_server(self)
+                else:
+                    self._warn('Not valid answer! Valid: [y/n]\nStarting again...\n')
+            
             
             if len(self.checklist)==0:
                 self._warn('Current checklist is empty!\nNo servers selected!\nStart again...')
                 sys.exit()
             else:
                 self._info('>>>>>>CURRENT  CONFIGURATION:')
-                self._info('URLs from %s will be verified on the following servers: ' % file_with_urls)
+                self._info('URLs from [%s] will be verified on the following servers: ' % file_with_urls)
                 self._info(self.checklist)
                 if self.check_all_subPages:
                     self._info('Check subpages: True')
                 else:    
                     self._info('Check subpages: False')
-                self._info('Report file will be saved here: ',report_file)
+                self._info('Report file will be saved here: [%s]' %report_file)
                 go = raw_input("Run ? [y/n] ")
                 if re.search(r'\b[yY]\b|\byes\b|\bYES\b',go):
                     
@@ -293,7 +307,8 @@ class Check_URLs(Report,Get_Browser,Menu):
         #creates Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
         #start simple menu
-        Menu.__init__(self)
+        if not self.run_proxy:
+            Menu.__init__(self) 
                 
     def _getFileExt(self):
         #filename.ext -> pttrn for catching file's extension only! (ext)
@@ -634,7 +649,7 @@ def main():
     #check = Check_URLs()
     #check.hit_server_with_urls()
     if run_URL_checks_through_PROXY:
-        obj = Run_URL_Checks_Through_Proxy
+        obj = Run_URL_Checks_Through_Proxy()
         obj.hit_server_with_urls()
     else:
         obj = Run_URL_Checks_OnServers()
