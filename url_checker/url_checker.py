@@ -614,6 +614,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
         #server_hosts_pattern defined in config_file.py
         self.all_files = self.checklist
         self._info("setServerHostFile_and_RunUrlChecks:self.all_files:",self.all_files)
+        t0 = time.clock()
         for host_Server in self.all_files:
             self.host_Server = host_Server
             if re.search(server_hosts_pattern, host_Server):
@@ -623,14 +624,15 @@ class Run_URL_Checks_OnServers(Check_URLs):
                     #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
                     os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
                     #EXECUTE URL CHECKS
-                    t0 = time.clock()
+                    t1 = time.clock()
                     self.hit_server_with_urls()
-                    overall_time = time.clock()-t0
-                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(overall_time),"","")
+                    after_time = time.clock()-t1
+                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
                     self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
                 except KeyboardInterrupt:
                     print '\n'
                     self._warn('Stopped by user! Reverting to the original hosts...')
+                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
                     self.write_to_report(self.format, 'Stopped by user!', '', '', 'Keyboard Interrupt')
                     self.save_report()
                     #revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
@@ -642,6 +644,12 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
                 os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
                 self._info('-->next....')
+        #log overall time:
+        overall_time = time.clock()-t0
+        if overall_time>60:
+            self.write_to_report(self.format,"","RUN_TIME_OVERALL: %d[m]%d[s]"%(overall_time/60,overall_time%60),"","")
+        else:
+            self.write_to_report(self.format,"","RUN_TIME_OVERALL: %.01f [s]"%(overall_time),"","")
         #when all the host_Server's file used, revert to the original host file       
         self.end = True
         self.save_report()
