@@ -153,10 +153,14 @@ class Menu(RootClass,object):
     '''
     
     def __init__(self):
-        self.host_list = []
         self.checklist=[]
         self.menu()
         
+    def _get_host_list(self):
+            self.host_list = []     
+            for host_server in self.all_files:
+                if re.search(server_hosts_pattern, host_server):
+                    self.host_list.append(host_server)    
     def menu(self):
         def _menu_check_subPages(self):
             """set True/False whether you want to check all the subpages on the given page
@@ -225,15 +229,14 @@ class Menu(RootClass,object):
                                          OK <-|
                         '''
                         return
-                    
-            #present all the valid/available HOST files
-            self.host_list = []
-            for host_server in self.all_files:
-                if re.search(server_hosts_pattern, host_server):
-                    self.host_list.append(host_server)
-                    
-            #self._info('Available server-host files: ',self.host_list)
+
+            #present all the valid/available HOST files                    
             self._info('Reading [%s]' % PATH_HOSTS,'...')
+            #any time _menu_add_servers is called - create new list 
+            #(avoid appending to already existing list)
+            self._get_host_list()
+            #create backUp list -> enables reverting to the original state
+            self.host_list_backUp = self.host_list[:]
             if len(self.host_list) >0:
                 self._info('Available server-host files: ',self.host_list,'\n')
                 resp = raw_input('Add all to checklist? [y/n] ')
@@ -245,7 +248,7 @@ class Menu(RootClass,object):
                     _for_host_server(self)
                 else:
                     self._warn('Not valid answer! Valid: [y/n]\nStarting again...\n')
-            
+                    _menu_add_servers(self)
             
             if len(self.checklist)==0:
                 self._warn('Current checklist is empty!\nNo servers selected!\nStart again...')
@@ -261,10 +264,9 @@ class Menu(RootClass,object):
                 self._info('Report file will be saved here: [%s]' %report_file)
                 go = raw_input("Run ? [y/n] ")
                 if re.search(r'\b[yY]\b|\byes\b|\bYES\b',go):
-                    
                     pass
                 else:
-                    self._info('Exiting...\nStart program again')
+                    self._info('Exiting...\n')
                     sys.exit()
                     
         #sets check_all_subPages=True/False
@@ -307,7 +309,7 @@ class Check_URLs(Report,Get_Browser,Menu):
         #creates Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
         #start simple menu
-        if not self.run_proxy:
+        if not self.run_proxy:    #TODO: add Proxy handling to Menu 
             Menu.__init__(self) 
                 
     def _getFileExt(self):
@@ -598,6 +600,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 #create backUp of the original host file (rename)
                 os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_backUp))
                 self._info('BackUp of the original HOST file: host-> %s' % host_backUp)
+                
                 return True
             except WindowsError,e:
                 self._info('%s already exists!, \n%s' %(os.path.join(PATH_HOSTS,host_backUp),e))
@@ -612,17 +615,29 @@ class Run_URL_Checks_OnServers(Check_URLs):
         self.all_files = self.checklist
         self._info("setServerHostFile_and_RunUrlChecks:self.all_files:",self.all_files)
         for host_Server in self.all_files:
+            self.host_Server = host_Server
             if re.search(server_hosts_pattern, host_Server):
                 self._info('using host_Server:',host_Server)
                 self.write_to_report(self.format,"Host_Server:",host_Server,"","")
-                #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
-                os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
-                #EXECUTE URL CHECKS
-                t0 = time.clock()
-                self.hit_server_with_urls()
-                overall_time = time.clock()-t0
-                self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(overall_time),"","")
-                self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
+                try:
+                    #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
+                    os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
+                    #EXECUTE URL CHECKS
+                    t0 = time.clock()
+                    self.hit_server_with_urls()
+                    overall_time = time.clock()-t0
+                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(overall_time),"","")
+                    self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
+                except KeyboardInterrupt:
+                    print '\n'
+                    self._warn('Stopped by user! Reverting to the original hosts...')
+                    self.write_to_report(self.format, 'Stopped by user!', '', '', 'Keyboard Interrupt')
+                    self.save_report()
+                    #revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
+                    os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
+                    self.end = True
+                    self.set_OriginalHost()
+                    sys.exit()
                 
                 #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
                 os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
@@ -644,7 +659,12 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 sys.exit()
         else:
             self._warn('Problem with reverting to original host file!')
-
+        
+def _main():
+    obj = Run_URL_Checks_OnServers()
+    obj.revert_hosts_onKeyboard_Interrupt()        
+    obj.all_files
+        
 def main():
     #check = Check_URLs()
     #check.hit_server_with_urls()
@@ -653,10 +673,9 @@ def main():
         obj.hit_server_with_urls()
     else:
         obj = Run_URL_Checks_OnServers()
-        
         if obj.backUp_originalHost():
             obj.setServerHostFile_and_RunUrlChecks()
         obj.set_OriginalHost()    
-
+        
 if __name__ == '__main__':
     main()
