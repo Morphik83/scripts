@@ -246,7 +246,7 @@ class Menu(RootClass,object):
                 elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',resp):
                     self._info('Add servers to checklist:')
                     _for_host_server(self)
-                    return
+                    #return
                 else:
                     self._warn('Not valid answer! Valid: [y/n]\nStarting again...\n')
                     _menu_add_servers(self)
