@@ -246,10 +246,12 @@ class Menu(RootClass,object):
                 elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',resp):
                     self._info('Add servers to checklist:')
                     _for_host_server(self)
+                    return
                 else:
                     self._warn('Not valid answer! Valid: [y/n]\nStarting again...\n')
                     _menu_add_servers(self)
-            
+                    return
+                
             if len(self.checklist)==0:
                 self._warn('Current checklist is empty!\nNo servers selected!\nStart again...')
                 sys.exit()
@@ -268,12 +270,17 @@ class Menu(RootClass,object):
                 else:
                     self._info('Exiting...\n')
                     sys.exit()
-                    
-        #sets check_all_subPages=True/False
-        _menu_check_subPages(self)
         
-        #select server_host files
-        _menu_add_servers(self)
+        try:            
+            #sets check_all_subPages=True/False
+            _menu_check_subPages(self)
+            
+            #select server_host files
+            _menu_add_servers(self)
+        except KeyboardInterrupt:
+            print '\n'
+            self._warn('Stopped by user!')
+            sys.exit()
           
         #run the script on the selected only servers
 
@@ -570,18 +577,17 @@ class Run_URL_Checks_OnServers(Check_URLs):
     '''
     content of the /etc:
     >>>>
-    AKAMAI
-    SEGOTN2525 
-    SEGOTN2543
-    SEGOTN2553
-    SEGOTN2544
+    Server_hosts_1
+    Server_hosts_2 
+    Server_hosts_3
+    Server_hosts_4
     hosts
     <<<<
     
     1.rename host_original -> host_backUp
-    2.iteratively rename SEGOTNXXXX -> host_original
+    2.iteratively rename Server_hosts_X -> host_original
         3.run URL checks
-        4.rename-back host_original -> SEGOTNXXXX
+        4.rename-back host_original -> Server_hosts_X
     5.When all servers checked, rename host_backUp -> host_original 
     '''
     
@@ -632,7 +638,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 except KeyboardInterrupt:
                     print '\n'
                     self._warn('Stopped by user! Reverting to the original hosts...')
-                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
+                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(time.clock()-t1),"","")
                     self.write_to_report(self.format, 'Stopped by user!', '', '', 'Keyboard Interrupt')
                     self.save_report()
                     #revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
@@ -667,12 +673,7 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 sys.exit()
         else:
             self._warn('Problem with reverting to original host file!')
-        
-def _main():
-    obj = Run_URL_Checks_OnServers()
-    obj.revert_hosts_onKeyboard_Interrupt()        
-    obj.all_files
-        
+
 def main():
     #check = Check_URLs()
     #check.hit_server_with_urls()
