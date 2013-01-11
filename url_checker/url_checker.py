@@ -246,7 +246,7 @@ class Menu(RootClass,object):
                 elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',resp):
                     self._info('Add servers to checklist:')
                     _for_host_server(self)
-                    return
+                    #return
                 else:
                     self._warn('Not valid answer! Valid: [y/n]\nStarting again...\n')
                     _menu_add_servers(self)
@@ -310,7 +310,7 @@ class Check_URLs(Report,Get_Browser,Menu):
         self.xnet_list = []
         self.inet_list = []
         self.error_list = []
-        self.lists_with_urls = []
+        self.skipped_list = []
         self.format = self._getFileExt()
         self.run_proxy = run_URL_checks_through_PROXY
         #creates Report Object (dependently on given file format)
@@ -337,6 +337,14 @@ class Check_URLs(Report,Get_Browser,Menu):
         else:
             self._warn('Missing extension for report file in config_file.py! \n(example:CHECK_URLS.xls)')
             sys.exit()
+    
+    def _get_url_host(self, url):
+        parsed = urlparse.urlparse(url)
+        if parsed.scheme and parsed.netloc:
+            self.url_host = parsed.scheme + '://' + parsed.netloc
+            return self.url_host
+        else:
+            self._warn('_get_url_host: Cannot find hostname in given url!',url)
     
     def get_listOf_URLs(self):
         """Valid input file must have following format:
@@ -374,6 +382,21 @@ class Check_URLs(Report,Get_Browser,Menu):
                
         return self.inet_list, self.xnet_list, self.error_list        #when parsing is done, return 3 lists
     
+    def _check_url_for_error(self, url):
+        print '\n'
+        
+        response = self._opener.response()
+        self._info("Parsing opened page...")
+        the_page = response.read()
+        #print 'chars_onPage:',len(the_page)
+        self._info("Checking [%s] for errors..." %url)
+        search = re.search('(not available)|(error)', the_page)
+        if search:
+            self._warn('CHECK THIS URL [%s] !\n' %url)
+            self.error_list.append(['_check_url_for_error:',url])
+        else:
+            self._info('No errors noticed\n')
+            
     def hit_server_with_urls(self):
         #get lists with urls:
         self.get_listOf_URLs()
@@ -393,7 +416,10 @@ class Check_URLs(Report,Get_Browser,Menu):
         self.xnet_list = []
         #close browser instance:
         self._opener.close()   
-        self._warn('Check these URLs: ',self.error_list)    
+        self._warn('Check these URLs: ')
+        pprint.pprint(self.error_list) 
+        self._warn('Skipped URLs: ')
+        pprint.pprint(self.skipped_list)   
             
     def __check_url(self, check_all_subPages, xnet_login):
         for url in self.test_list:
@@ -403,6 +429,8 @@ class Check_URLs(Report,Get_Browser,Menu):
                     proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
                     self._opener.set_proxies(proxies)
                 
+                self._get_url_host(url)
+                self._info('URL_HOST:',self.url_host)
                 response = self._opener.open(url)
                 #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
                 #print self.xnet_opener.response().code #or alternatively: print r.code 
@@ -415,6 +443,7 @@ class Check_URLs(Report,Get_Browser,Menu):
                     self._opener.submit(name='ctl00$BodyContent$login$LoginButton')
                 #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
                 
+                self._check_url_for_error(url)
                 #get status:
                 r_code = response.code
                 #ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
@@ -440,6 +469,8 @@ class Check_URLs(Report,Get_Browser,Menu):
                 try:
                     assert response.code == 200
                     self._info('Return Code is 200')
+                    #check for error
+                    self._check_url_for_error(url)
                     ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
                     ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
                     r_code = response.code
@@ -490,6 +521,8 @@ class Check_URLs(Report,Get_Browser,Menu):
     def __check_all_subPages(self):
         link_list = []
         final_list = []
+        
+        self.main_url_host = self.url_host
         for link in self._opener.links(url_regex="/*"):
            if link.url.startswith('http') or link.url.startswith('/') :
                link_list.append(link.url.lower()) 
@@ -510,17 +543,44 @@ class Check_URLs(Report,Get_Browser,Menu):
         self._info("2:",str(len(final_list)))
         
         for url in final_list:
+            #get url_hostname (current self.url_host)
+            self._get_url_host(url)
             try:
-                response = self._opener.open_novisit(url) 
-                #r = self.xnet_opener.open(url)
-                url = response.geturl()
-                r_code = response.code
-                ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
-                self._info("(hostname/aliases/IPlist):",ip_addr)
-                ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
-                error = None
-                self.write_to_report(self.format, url, ip_addr, r_code, error)
-              
+                #with this url we stay in the same hostname area:
+                if url.startswith('/') or self.url_host == self.main_url_host:
+                    #response = self._opener.open_novisit(url) 
+                    response = self._opener.open(url)
+                    url = response.geturl()
+                    r_code = response.code
+                    ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
+                    self._info("(hostname/aliases/IPlist):",ip_addr)
+                    ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
+                    error = None
+                    self.write_to_report(self.format, url, ip_addr, r_code, error)
+                    #check for the errors:
+                    self._check_url_for_error(url)
+                    #===============================================================
+                else:
+                    print '\n'
+                    self._info('Skipping [%s] due to diff domain\n'%url)
+                    self.skipped_list.append(url)
+                #if url hostname (domain) is different from the main page, then use ->open.no_vist
+                #===============================================================
+                # else:
+                #    response = self._opener.open_novisit(url) 
+                #    url = response.geturl()
+                #    r_code = response.code
+                #    ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
+                #    self._info("(hostname/aliases/IPlist):",ip_addr)
+                #    ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
+                #    error = None
+                #    self.write_to_report(self.format, url, ip_addr, r_code, error)
+                #    #===============================================================
+                #    # DOES NOT WORK - .open_novisit(url)->self.opener points to main
+                #    #self._check_url_for_error(url)
+                #    #===============================================================
+                #===============================================================
+                          
             except (URLError,InvalidURL),e:  
                 #sometimes links on the page redirects to some other hosts - we have one browser instance, that is 
                 #following every link on the page (send Requests are created 'on the fly', so if page redirects
