@@ -43,4 +43,3 @@ run_URL_checks_through_PROXY = False
 #provide login/pass for xnet pages:
 username  = '******'
 passwd = '******'
-
