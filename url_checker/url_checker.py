@@ -344,7 +344,7 @@ class Check_URLs(Report,Get_Browser,Menu):
             self.url_host = parsed.scheme + '://' + parsed.netloc
             return self.url_host
         else:
-            self._warn('_get_url_host: Cannot find hostname in given url!',url)
+            self._warn('_get_url_host: Cannot find hostname in given url! [',url,']')
     
     def get_listOf_URLs(self):
         """Valid input file must have following format:
@@ -524,7 +524,7 @@ class Check_URLs(Report,Get_Browser,Menu):
         
         self.main_url_host = self.url_host
         for link in self._opener.links(url_regex="/*"):
-           if link.url.startswith('http') or link.url.startswith('/') :
+           if link.url.startswith('http') or link.url.startswith('/'):
                link_list.append(link.url.lower()) 
                #.lower() since URLs are case.insensitive!
                #'/TDP/MACK-CA/EN-MC/TRAINING/PAGES/TRAINING.ASPX'
