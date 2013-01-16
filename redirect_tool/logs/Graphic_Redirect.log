@@ -1,0 +1,32 @@
+index:  0
+
+GET:  http://volvoit.com
+|
+|STATUS:  301 Moved Permanently
+|
+|--->TO:  http://www.volvoit.com/volvoit/global/en-gb/
+
+GET:  http://www.volvoit.com/volvoit/global/en-gb/
+|
+|STATUS:  302 Moved Temporarily
+|
+|--->TO:  http://www.volvoit.com/volvoit/global/en-gb/Pages/Home%20page.aspx
+
+GET:  http://www.volvoit.com/volvoit/global/en-gb/Pages/Home%20page.aspx
+|
+|STATUS:  200 OK
+
+##################################################
+index:  108
+
+GET:  http://volvo.com
+|
+|STATUS:  301 Moved Permanently
+|
+|--->TO:  http://www.volvo.com/group/volvosplash-global/en-gb/Pages/volvo_splash.aspx
+
+GET:  http://www.volvo.com/group/volvosplash-global/en-gb/Pages/volvo_splash.aspx
+|
+|STATUS:  200 OK
+
+##################################################

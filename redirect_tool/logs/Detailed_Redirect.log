@@ -1,0 +1,60 @@
+>>>>ORIGIN_URL:http://volvoit.com
+
+send: 'GET http://volvoit.com HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3)\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Date: Wed, 16 Jan 2013 13:57:20 GMT
+header: Server: Microsoft-IIS/6.0
+header: Pragma: no-cache
+header: Cache-Control: no-cache
+header: Content-Type: text/html
+header: Location: http://www.volvoit.com/volvoit/global/en-gb/
+header: Content-Length: 187
+header: Connection: close
+send: 'GET http://www.volvoit.com/volvoit/global/en-gb/ HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3)\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Type: text/html
+header: Location: http://www.volvoit.com/volvoit/global/en-gb/Pages/Home page.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2543
+header: X-Powered-By: ASP.NET
+header: Date: Wed, 16 Jan 2013 13:57:20 GMT
+header: Content-Length: 187
+header: Connection: close
+send: 'GET http://www.volvoit.com/volvoit/global/en-gb/Pages/Home%20page.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3)\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: MicrosoftSharePointTeamServices: 12.0.0.6535
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Wed, 16 Jan 2013 14:12:21 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Wed, 16 Jan 2013 13:57:22 GMT
+header: Transfer-Encoding: chunked
+header: Connection: close
+>>>>ORIGIN_URL:http://volvo.com
+
+send: 'GET http://volvo.com HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: volvo.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3)\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Date: Wed, 16 Jan 2013 13:57:23 GMT
+header: Server: Microsoft-IIS/6.0
+header: Pragma: no-cache
+header: Cache-Control: no-cache
+header: Content-Type: text/html
+header: Location: http://www.volvo.com/group/volvosplash-global/en-gb/Pages/volvo_splash.aspx
+header: Content-Length: 249
+header: Connection: close
+send: 'GET http://www.volvo.com/group/volvosplash-global/en-gb/Pages/volvo_splash.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvo.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3)\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Cache-Control: public
+header: Content-Type: text/html; charset=utf-8
+header: Expires: Wed, 16 Jan 2013 14:03:30 GMT
+header: Vary: *
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Date: Wed, 16 Jan 2013 13:57:22 GMT
+header: Content-Length: 112432
+header: Connection: close
