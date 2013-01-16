@@ -15,13 +15,10 @@ graphic/detailed presents only formatted sys.stdout !!
 
 """
 KNOWN ISSUES
-1. if given url is not redirected, it won't be logged in xls report file (in 'reply' there is no 'Location' header)
- eg. http://www.volvotrucks.com http://www.volvotrucks.com/
-2. if there are two (or more) the same origin_urls, only first one will be logged to xls report 
+1. if there are two (or more) the same origin_urls, only first one will be logged to xls report 
 (dict cannot have two the same keys...)
  eg. www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspx
      www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspxa
-3. if URL from input_list does not exist (code 404), it won't be logged to xls report
 """
 
 
