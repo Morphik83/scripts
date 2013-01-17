@@ -4,7 +4,7 @@ from httplib import InvalidURL
 import pprint
 import re
 import sys
-
+import os
 
 """
 start_url = ''
@@ -29,12 +29,17 @@ In that way, urls_to_follow should start to shrink eventually
 """
 
 
-host_url = 'http://<host_name>'
-start_url = 'http://host_name>/<rest_of_the_address>'
+#host_url = 'http://online.renault-trucks-qa.volvo.com'
+host_url = 'http://volvogroup.com/group/global/en-gb'
+start_url = 'http://volvogroup.com/group/global/en-gb/Pages/group_home.aspx'
+#start_url = 'http://online.renault-trucks-qa.volvo.com'
 headers = ('User-Agent','Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3')
 
+crawler_log_path = os.path.join(os.getcwd(),'logs')
+crawler_log = os.path.join(crawler_log_path, 'CRAWLER.log')
+
 username = '****'
-passwd = '*****'
+passwd = '******'
 
 b = mechanize.Browser()
 b.set_debug_http(True)
@@ -47,7 +52,7 @@ visited_urls = []
 links_to_follow = []
 
 def main():
-    with open(os.path.join('D:\\tmp\\logs','CRAWLER.log'),'a+') as f:
+    with open(crawler_log,'a+') as f:
         #open start_url
         f.write('##OPEN %s \n' % start_url)
         b.open(start_url)
@@ -70,8 +75,8 @@ def main():
             f.write('START: len of links_to_follow: [%d]\n' % len(links_to_follow))
             pprint.pprint(links_to_follow)
         
-        try:
-            while links_to_follow:
+        while links_to_follow:
+            try:
                 url = links_to_follow[0]
                 f.write('####NEXT URL: %s \n' % url)
                 b.open(url)
@@ -93,21 +98,44 @@ def main():
                 f.write('After_POP: len of links_to_follow: [%d]\n' % len(links_to_follow))
                 f.write('--------------------------------------->NEXT\n')
                 print '\n----->LEN: %d\n' % len(links_to_follow)
-        except NameError,e:
-            print >>f, 'FIXME:',url,e
-            sys.exc_clear()
-        except mechanize.FormNotFoundError,e:
-            print >>f, 'FIXME:',url,e
-            sys.exc_clear()
+                
+            except NameError,e:
+                print >>f, 'FIXME:',url,e
+                sys.exc_clear()
+                pass
+            except mechanize.FormNotFoundError,e:
+                print >>f, 'FIXME:',url,e
+                sys.exc_clear()
+                pass
+            except mechanize.BrowserStateError,e:
+                assert str(e)== 'not viewing HTML'
+                print >>f, 'URL points to document! [',url,']'
+                #before getting next url from list, update:
+                f.write('**VISITED_URLS: %s \n' % url)
+                visited_urls.append(url)
+                f.write('Before_POP: len of links_to_follow: [%d]\n' % len(links_to_follow))
+                f.write('Pop: %s \n' % url)
+                links_to_follow.pop(links_to_follow.index(url))
+                f.write('After_POP: len of links_to_follow: [%d]\n' % len(links_to_follow))
+                f.write('--------------------------------------->NEXT\n')
+                print '\n----->LEN: %d\n' % len(links_to_follow)
+                pass
+            except (URLError,InvalidURL,IndexError),e:
+                print >>f, "Is this URL:",str(url)," valid?\n",str(e)
+                #sys.exc_clear()
+                #before getting next url from list, update:
+                f.write('**VISITED_URLS: %s \n' % url)
+                visited_urls.append(url)
+                f.write('Before_POP: len of links_to_follow: [%d]\n' % len(links_to_follow))
+                f.write('Pop: %s \n' % url)
+                links_to_follow.pop(links_to_follow.index(url))
+                f.write('After_POP: len of links_to_follow: [%d]\n' % len(links_to_follow))
+                f.write('--------------------------------------->NEXT\n')
+                print '\n----->LEN: %d\n' % len(links_to_follow)
         
-        #PROBLEM: Http404 closes connection - which terminates script from going further
-        except (URLError,InvalidURL),e:
-            print >>f, "Is this URL:",str(url)," valid?\n",str(e)
-            #sys.exc_clear()
-            #b.back(n=1)
-            pass
-            #or http://stackoverflow.com/questions/574730/python-how-to-ignore-an-exception-and-proceed
-            
+        print >>f, '>>>>>>>>>>>>>>>SCRIPT IS DONE\n'
+        print >>f, 'Len of Visited_Links list: [%d] \n' % len(visited_urls)
+                
 def check_url_for_error(url,f):
         print '\n'
         response = b.response()
