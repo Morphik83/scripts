@@ -38,10 +38,10 @@ To run:
 	  Server_hosts_3
 	  Server_hosts_4
 	  hosts_COPY
-  |->enter PATH (location where reports will be saved and URLS.input must be placed!) 
-  |->create URLS.input file and place it in the PATH (or use attached example file)
-  |->if Xnet pages will be checked, then provide valid login/pass, otherwise not needed (for Inet pages)
+  |->create URLS.input file and place it in the 'input' dir (or use attached example file)
+  |->if password-protected pages will be checked, then provide valid login/pass, otherwise not needed
 4. Run script from CMD (python url_checker.py)
+(or use attached url_check.bat ->provide valid path to url_checker module!)
 5. Scroll down for the example script output !
 	
 ###################################################### 
