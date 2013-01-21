@@ -695,7 +695,8 @@ class Run_URL_Checks_OnServers(Check_URLs):
                     after_time = time.clock()-t1
                     self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
                     self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
-                except KeyboardInterrupt:
+                except KeyboardInterrupt, ValueError:
+                    #ValueError occurs when there are too many values to write to XLS (>4096)
                     print '\n'
                     self._warn('Stopped by user! Reverting to the original hosts...')
                     self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(time.clock()-t1),"","")
