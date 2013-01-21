@@ -8,8 +8,9 @@ import os
 import _root
 import urlparse
 from _root import RootClass
-from config__file import *
+import config_file
 
+from config_file import *
 """
 start_url = ''
 urls_to_follow = []
@@ -83,26 +84,30 @@ class Crawler(Get_Browser, Logs):
         else:
             self._warn('_get_url_host: Cannot find hostname in given url! [',url,']')
     
-    def check_url_for_error(self, url, f, e):
+    def check_url_for_error(self, url, f, er):
         print type(f)
-        print type(e)
+        print f
+        print type(er)
+        print er
+        
+        er.write('FGHJKLJHVGCVBNM')
         print '\n'
         response = self._opener.response()
-        print "Parsing opened page..."
-        f.write("Parsing opened page...")
+        self._info("Parsing opened page...")
+        f.write("Parsing opened page...\n")
         the_page = response.read()
-        print "Checking [%s] for errors... len(the_page): [%d]\n" %(url,len(the_page))
+        self._info("--->Checking [%s] for errors... len(the_page): [%d]\n" %(url,len(the_page)))
         f.write("Checking [%s] for errors... \n" %url)
         search = re.search(r'(\w+\sis not available)|(is not available)|(Technical information is available in the error log)', the_page)
-        e.write('!!!!!!!!!!!!!!!!!!!!!!')
+        er.write(url)
         if search:
             print 'CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1))
-            e.write('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
+            er.write('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
             self.error_list.append(url)
         else:
             print 'No errors noticed\n'
             f.write('No errors noticed\n')
-
+            
     def run_crawler(self):
         
         def _update_visited_urls(self, url):
@@ -113,10 +118,10 @@ class Crawler(Get_Browser, Logs):
             self.links_to_follow.pop(self.links_to_follow.index(url))
             
         
-        with self.crawler_log as f:
-            with self.error_log as e:
+        with self.crawler_log:
+            with self.error_log:
                 #open start_url
-                f.write('##OPEN %s \n' % self.start_url)
+                self.crawler_log.write('##OPEN %s \n' % self.start_url)
                 self._opener.open(start_url)
                 #login to xnet
                 try:
@@ -126,44 +131,43 @@ class Crawler(Get_Browser, Logs):
                 #get all valid links
                 finally:
                     #check start_url for errors:
-                    self.check_url_for_error(start_url, f, e)
+                    self.check_url_for_error(start_url, self.crawler_log, self.error_log)
                     for link in self._opener.links():
                         if link.url.startswith(self.host_url) or link.url.startswith('/') :
                             if link.url not in self.links_to_follow:
                                 if link.url not in self.visited_urls:
-                                    f.write('--->links_to_follow.append: %s \n' % link.url)
+                                    self.crawler_log.write('--->links_to_follow.append: %s \n' % link.url)
                                     _update_links_to_follow(self, link.url)
                                 else:
-                                    f.write('--->skipping: %s \n' % link.url)
+                                    self.crawler_log.write('--->skipping: %s \n' % link.url)
                                     
                     _update_visited_urls(self, self.start_url)
-                    f.write('START: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
+                    self.crawler_log.write('START: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
                     pprint.pprint(self.links_to_follow)
                 
                 while self.links_to_follow:
                     try:
                         url = self.links_to_follow[0]
-                        f.write('####NEXT URL: %s \n' % url)
+                        self.crawler_log.write('####NEXT URL: opening [%s] \n' % url)
                         self._opener.open(url)
-                        f.write('--->Checking for errors [%s]<---\n' %url)
-                        self._info('--->Checking for errors [%s]<---\n' %url)
-                        self.check_url_for_error(url, f, e)
+                        #check for error:
+                        self.check_url_for_error(url, self.crawler_log, self.error_log)
                         for link in self._opener.links():
                             if link.url.startswith(self.host_url) or link.url.startswith('/') :
                                 if link.url not in self.links_to_follow:
                                     if link.url not in self.visited_urls:
-                                        f.write('--->links_to_follow.append: %s \n' % link.url)
+                                        self.crawler_log.write('--->links_to_follow.append: %s \n' % link.url)
                                         _update_links_to_follow(self, link.url)
                                     else:
-                                        f.write('--->skipping: %s \n' % link.url)
+                                        self.crawler_log.write('--->skipping: %s \n' % link.url)
                         #before getting next url from list, update:
-                        f.write('**VISITED_URLS: %s \n' % url)
+                        self.crawler_log.write('**VISITED_URLS: %s \n' % url)
                         _update_visited_urls(self, url)
-                        f.write('Before_POP: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
-                        f.write('Pop: %s \n' % url)
+                        self.crawler_log.write('Before_POP: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
+                        self.crawler_log.write('Pop: %s \n' % url)
                         _delete_url_from_links_to_follow(self, url)
-                        f.write('After_POP: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
-                        f.write('--------------------------------------->NEXT\n')
+                        self.crawler_log.write('After_POP: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
+                        self.crawler_log.write('--------------------------------------->NEXT\n')
                         print '\n----->LEN: %d\n' % len(self.links_to_follow)
                         
                     #===============================================================
@@ -198,23 +202,23 @@ class Crawler(Get_Browser, Logs):
                         try:
                             assert str(e)== 'not viewing HTML'
                             self._info('URL points to document! [',url,']')
-                            f.write('URL points to document! [',url,']')
+                            self.crawler_log.write('URL points to document! ['+url+']')
                         finally:
                             self._info("Is this URL:",str(url)," valid?\n",str(e))
-                            f.write("Is this URL:",str(url)," valid?\n",str(e))
+                            self.crawler_log.write("Is this URL:"+str(url)+" valid?\n"+str(e))
                         #before getting next url from list, update:
-                        f.write('**VISITED_URLS: %s \n' % url)
+                        self.crawler_log.write('**VISITED_URLS: %s \n' % url)
                         _update_visited_list(self, url)
-                        f.write('Before_POP: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
-                        f.write('Pop: %s \n' % url)
+                        self.crawler_log.write('Before_POP: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
+                        self.crawler_log.write('Pop: %s \n' % url)
                         _delete_url_from_links_to_follow(self, url)
-                        f.write('After_POP: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
-                        f.write('--------------------------------------->NEXT\n')
+                        self.crawler_log.write('After_POP: len of links_to_follow: [%d]\n' % len(self.links_to_follow))
+                        self.crawler_log.write('--------------------------------------->NEXT\n')
                         print '\n----->LEN: %d\n' % len(self.links_to_follow)
             
-            f.write('>>>>>>>>>>>>>>>SCRIPT IS DONE\n')
+            self.crawler_log.write('>>>>>>>>>>>>>>>SCRIPT IS DONE\n')
             self._info('>>>>>>>>>>>>>>>SCRIPT IS DONE\n')
-            f.write('Len of Visited_Links list: [%d] \n' % len(self.visited_urls))
+            self.crawler_log.write('Len of Visited_Links list: [%d] \n' % len(self.visited_urls))
             self._info('Len of Visited_Links list: [%d] \n' % len(self.visited_urls))
                 
 
