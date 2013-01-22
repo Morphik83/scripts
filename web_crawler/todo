@@ -1,3 +1,0 @@
-	
-todo:
->>if program exists due to uncaught  exception -> pickle (visited_links, links_to_follow)
