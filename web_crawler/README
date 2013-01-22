@@ -12,14 +12,14 @@ How is this script working?
    are appended to links_to_follow = [] (so the same list that script is iterating)
    Of course, every url before appended to links_to_follow=[] is checked if not exists in links_to_follow or 
    visited_links already to avoid checking page again!
-8. opened link is deleted from links_to_follow and appended to visited_links
-7. additionally, every opened page is checked for errors (see check_url_for_error method)
+7. opened link is deleted from links_to_follow and appended to visited_links
+8. additionally, every opened page is checked for errors (see check_url_for_error method)
    ->this is very basic checking, but it is enough for me :)
-8. if error is found on the page, such url is appended to error_list
-9. eventually, there will be no more links having the same host that have not already been added to either 
+9. if error is found on the page, such url is appended to error_list
+10. eventually, there will be no more links having the same host that have not already been added to either 
    links_to_follow or visited_links lists. 
-10. then links_to_follow list will start to shrink - next urls will be checked/opened and no new appends.
-11. script is done when len(links_to_follow)=0
+11. then links_to_follow list will start to shrink - next urls will be checked/opened and no new appends.
+12. script is done when len(links_to_follow)=0
 
 Pages with authentication are handled as well: 
 -> see login_to_xnet method for user/pass forms (mechanize python module)
