@@ -1,0 +1,905 @@
+*INFO* Starting CWP_Web_Crawler ...
+
+
+send: 'GET /0,0.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:40 GMT
+header: Server: Apache
+header: Set-Cookie: JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806; path=/; HttpOnly
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis12_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* ALREADY LOGGED OR INET PAGE
+*INFO* -->checking [http://gazetapraca.pl/0,0.html#NavPion] for errors... [page length: 96759] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,0.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,0.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,8001,,1.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,7000,,4.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74783.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,97963.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=48&jobCompanyName=EURO+BANK+S.A. 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=586&jobCompanyName=ACP+PHARMA+S.A. 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=903&jobCompanyName=NOKIA+SIEMENS+NETWORKS+SP.+Z+O.O. 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=920&jobCompanyName=AGORA+SA 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=939&jobCompanyName=BIOFARM+SP.+Z+O.O. 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1039&jobCompanyName=MULTIMEDIA+POLSKA++S.A. 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1067&jobCompanyName=ahead+personal+management+GmbH+%26+Co.+KG 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1088&jobCompanyName=VON+CAPRIVI+GMBH 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1117&jobCompanyName=URZ%C4%84D+PRACY+M.ST.+WARSZAWY 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1156&jobCompanyName=UNIWERSYTET+MEDYCZNY+W+BIA%C5%81YMSTOKU 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1160&jobCompanyName=AB+Group 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1161&jobCompanyName=CASUS+FINANSE++S.A. 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Warszawa.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Krak%C3%B3w.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,%C5%81%C3%B3d%C5%BA.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Wroc%C5%82aw.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Pozna%C5%84.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Gda%C5%84sk.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Szczecin.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Bydgoszcz.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Lublin.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Katowice.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Bia%C5%82ystok.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Gdynia.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Radom.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Sosnowiec.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Toru%C5%84.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Kielce.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Gliwice.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Zabrze.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Bytom.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Rzesz%C3%B3w.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Grudzi%C4%85dz.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,S%C5%82upsk.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Jaworzno.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Jastrz%C4%99bie-Zdr%C3%B3j.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Nowy%20S%C4%85cz.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Jelenia%20G%C3%B3ra.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Konin.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Siedlce.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Piotrk%C3%B3w%20Trybunalski.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Inowroc%C5%82aw.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Mys%C5%82owice.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Pi%C5%82a.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Lubin.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Ostr%C3%B3w%20Wielkopolski.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Ostrowiec%20%C5%9Awi%C4%99tokrzyski.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Siemianowice%20%C5%9Al%C4%85skie.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Stargard%20Szczeci%C5%84ski.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Suwa%C5%82ki.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Gniezno.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Pabianice.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,G%C5%82og%C3%B3w.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Che%C5%82m.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Zamo%C5%9B%C4%87.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Przemy%C5%9Bl.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Tomasz%C3%B3w%20Mazowiecki.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Leszno.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,K%C4%99dzierzyn-Ko%C5%BAle.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Stalowa%20Wola.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,%C5%81om%C5%BCa.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,%C5%BBory.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Tarnowskie%20G%C3%B3ry.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Be%C5%82chat%C3%B3w.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Mielec.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Tczew.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,%C5%9Awidnica.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,B%C4%99dzin.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Piekary%20%C5%9Al%C4%85skie.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Bia%C5%82a%20Podlaska.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Zgierz.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,E%C5%82k.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Pruszk%C3%B3w.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Racib%C3%B3rz.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,%C5%9Awi%C4%99toch%C5%82owice.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Ostro%C5%82%C4%99ka.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Legionowo.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Zawiercie.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Starachowice.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Tarnobrzeg.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Skierniewice.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Wodzis%C5%82aw%20%C5%9Al%C4%85ski.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Pu%C5%82awy.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Radomsko.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Starogard%20Gda%C5%84ski.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Wejherowo.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Skar%C5%BCysko-Kamienna.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Krosno.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,D%C4%99bica.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Kutno.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Rumia.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Nysa.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Ko%C5%82obrzeg.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Ciechan%C3%B3w.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Otwock.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Zdu%C5%84ska%20Wola.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Sieradz.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Piaseczno.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,%C5%BByrard%C3%B3w.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,%C5%9Awinouj%C5%9Bcie.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,Chojnice.html 
+*INFO* -->links_to_follow.append: /0,4050,,,1,,,,O%C5%9Bwi%C4%99cim.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,13269264,Kto_dostanie_trzynastke.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,90443.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,13278202,Szef_nie_moze_zwolnic_za_krytyke_na_Facebooku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,13271874,Ciezkie_zycie_bankiera.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,13270860,5_2_mln_zl_na_pomoc_zwalnianym_z_Fiata.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,90445.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90445,13270100,Szesc_grzechow_glownych_menedzera.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,13270010,Jakich_jezykow_warto_sie_uczyc__zeby_wiecej_zarabiac.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,90438.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74861.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74861,11342190,CV__pokaz_mi_swoje_zdjecie__a_dam_ci_prace.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74861,11111917,Dobre_CV__czyli_jakie_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74861,10720188,CV__Z_czego_smieja_sie_rekruterzy.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74861,8405109,Jak_napisac_dobre_CV___instrukcja_krok_po_kroku,,ga.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74866.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74866,55135.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74866,10768645,Jeszcze_raz_o_tym_jak_pisac_list_motywacyjny.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74866,10153854,Zanim_napiszesz_list_motywacyjny__sprawdz_slowniczek.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74866,7992249,Jak_napisac_dobry_list_motywacyjny_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74867.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74867,10253338,Rozmowa_kwalifikacyjna_jak_bitwa.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74867,8826013,Ile_chce_Pan__Pani_zarabiac_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74867,9360664,Czego_unikac__zeby_dobrze_wypasc_na_rozmowie_kwalifikacyjnej_,,ga.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74867,10762707,Rozmowa_kwalifikacyjna___specjalisci__ds__rekrutacji.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,11242551,Zarobki_w_dzialach_finansow_i_controllingu_w_2011.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,11312966,Mieszkancy_Warszawy_zarabiaja_najwiecej.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,11071265,Ile_zarabiaja_programisci_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,10950325,Zarobki_pracownikow__skarbowki_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,91755,12844042,Podwyzka_i_motywacja_w_kryzysie___jak_o_nie_walczyc_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90440,12778623,Ktory_inzynier_zarobi_najwiecej_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,10984865,Oni_beda_mieli_prace_w_tym_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90440,9319534,10_najbardziej_prestizowych_zawodow_zdaniem_Polakow,,ga.html 
+*INFO* -->links_to_follow.append: /offerDayClickStats.action?dayOfferId=82 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,12657815,Od_stazysty_do_pracownika.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,79441,11172424,Umowa_o_dzielo_i_zlecenie__sprawdz__jak_je_podrasowac.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,94047,13144566,Wolontariat__z_zawodu_pomagam.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,12595430,Otwarci_urbanisci_i_architekci_i_jeszcze_90_zawodow.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,67738,10222447,Pierwsza_praca_za_granica.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,67738,12771830,Inzynier_na_emigracji___gdzie_mu_najlepiej_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/56,90440,11102179,Ile_zarabia_Lis__Durczok_i_Olejnik____lista_najbardziej.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,9896695,Praca_sezonowa___jak_jej_szukac_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91738.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91739.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74861,799903.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74817,5488473,Urlop_na_zadanie.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,79441,5674774,Wypowiedzenie_umowy_o_prace.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90444,10732851,Urlop_ojcowski_czyli_tatusiowe_na_urlopie.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74817,5488603,Ekwiwalent_za_niewykorzystany_urlop_wypoczynkowy.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74817,10958738,Kodeks_pracy_2012__urlop_okolicznosciowy.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,11056479,Minimalne_wynagrodzenie__im_wyzsza_pensja_minimalna.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90443,13073901,Dni_wolne_w_2013_roku___czyli_to__co_lubimy_najbardziej.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74817,10902153,Kodeks_pracy_2012__zmiany_w_nowym_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,90442,6225714,Jak_sie_nie_dac_zwolnic.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973551.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973523.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973352.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973409.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973592.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973343.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973453.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973650.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973734.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,10,-postDate,,,,,,asystentka,,,0.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,10,-postDate,,,,,,Dyrektor,,,0.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,,,,,,,,Grafik.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,,,,,,,,Informatyk.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,,,,,,,,Kierowca.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,,,,,,,,Kierownik.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,,,,,,,,Ksi%C4%99gowa.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,,,,,,,,Przedstawiciel.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/0,4050,,,1,,,,,,,,Sprzedawca.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,93447.html 
+*INFO* -->links_to_follow.append: /gazetapraca/3660000,0.html 
+*INFO* -->link_to_follow.length: [183]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/gazetapraca/0,0.html] 
+
+send: 'GET /gazetapraca/0,0.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:38 GMT
+header: Server: Apache
+header: Location: http://gazetapraca.pl/0,0.html
+header: Content-Length: 238
+header: Connection: close
+header: Content-Type: text/html; charset=iso-8859-1
+send: 'GET /0,0.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:41 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis09_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/gazetapraca/0,0.html] for errors... [page length: 96759] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/gazetapraca/0,0.html 
+*INFO* -->link_to_follow.length: [182]
+*INFO* -->visited_links.length: [2] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/0,0.html] 
+
+send: 'GET /0,0.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:41 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis08_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/0,0.html] for errors... [page length: 96759] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/0,0.html 
+*INFO* -->link_to_follow.length: [181]
+*INFO* -->visited_links.length: [3] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/0,8001,,1.html] 
+
+send: 'GET /0,8001,,1.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:39 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis07_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/0,8001,,1.html] for errors... [page length: 25749] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,0.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74867,8533983,Rozmowa_kwalifikacyjna___krok_po_kroku,,ga.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,107265.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,94047.html 
+*INFO* -->links_to_follow.append: /0,8001,,1.html 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=A 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C4%84 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=B 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=C 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C4%86 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=D 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=E 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C4%98 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=F 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=G 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=H 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=I 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=J 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=K 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=L 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C5%81 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=M 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=N 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C5%83 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=O 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C3%93 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=P 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=Q 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=R 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=S 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C5%9A 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=T 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=U 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=W 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=V 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=X 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=Y 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=Z 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C5%B9 
+*INFO* -->links_to_follow.append: /0,8001,,1.html?keyword=%C5%BB 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/0,8001,,1.html 
+*INFO* -->link_to_follow.length: [219]
+*INFO* -->visited_links.length: [4] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/0,7000,,4.html] 
+
+send: 'GET /0,7000,,4.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:42 GMT
+header: Server: Apache
+header: Location: 2,181.html
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis12_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+send: 'GET /2,181.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:42 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis09_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/0,7000,,4.html] for errors... [page length: 16654] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,8001,,1.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/0,7000,,4.html 
+*INFO* -->link_to_follow.length: [218]
+*INFO* -->visited_links.length: [5] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/gazetapraca/0,74897.html] 
+
+send: 'GET /gazetapraca/0,74897.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:42 GMT
+header: Server: Apache
+header: Set-Cookie: test=87A207A23A171k1358890963654; domain=.gazetapraca.pl; expires=Thursday, 22-Jan-2015 21:42:43 GMT; path=/
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis09_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=iso-8859-2
+*INFO* -->checking [http://gazetapraca.pl/gazetapraca/0,74897.html] for errors... [page length: 163392] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91755.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,95288,5922018.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74786.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91829.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,130824.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,79222.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74817.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74788.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,94505.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74896.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,67734.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,67733.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,67737.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74997.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,68946.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,67732.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,67735.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,67739.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,89977.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74995.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74880.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74996.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75015.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,73655.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,73657.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74998.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74999.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75001.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75000.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75002.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75003.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,73656.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75004.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75005.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75006.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,75028.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,67736.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91734.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91736.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91733.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,90444.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,90442.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,120733.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,90440.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/ 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,74779.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,117200,10158341.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,12487431,Wynagrodzenia_czlonkow_zarzadow_spolek_IT_notowanych.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,12032238,Gdzie_zarobisz_najwiecej__W_Warszawie.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,11847400,Place_w_sektorze_publicznym_w_2011_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,11565025,Place_w_handlu_w_2011_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,117200,11470016,Place_w_przemysle_w_2011_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,111678,8926903.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,111678,10810493,Zarobki_w_dziale_logistyki_i_transportu_w_2010_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,111678,10617726,Wynagrodzenia_polskich_parlamentarzystow_i_ministrow.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,111678,10556204,Zarobki_w_branzy_pogrzebowej.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,111678,10273847,Zarobki_pracownikow_produkcyjnych.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,111678,10154052,Place_menedzerow_w_Polsce_wyrownuja_sie.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,111678,9931405,Zarobki_operatorow_wozkow_widlowych.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,111678,9890020,Ile_zarabia_magazynier_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,111678,9223993,Wynagrodzenia_uzytkownikow_portalu_GazetaPraca_pl.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,103345,7528257.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,103345,8835223,Zarobki_mieszkancow_okolic_Warszawy.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,103345,8809258,Kryzys_a_zarobki_menedzerow.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,103345,8785882,Ile_mozna_zarobic_na_budowie_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,103345,8759971,Czy_gornicy_zarabiaja_za_malo_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,103345,8741487,Ile_zarabiaja_wrozki_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,103345,8710459,Place_dwudziestolatkow.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,103345,8668744,Ktorzy_inzynierowie_sa_najlepiej_oplacani____place.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,103345,8667139,Tutaj_sie_nie_dorobisz___place_w_wojewodztwie_podkarpackim.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,98557,6569536.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,98557,7395891,Ile_mozesz_zarobic_po_15_latach_pracy_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,98557,7138745,Ile_zarabiaja_nauczyciele_.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,98557,7103884,Wynagrodzenia_w_handlu_w_2008_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,98557,7103758,Zarobki_w_bankowosci_w_2008_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,98557,7026338,Wynagrodzenia_w_miastach_roznej_wielkosci_w_2008_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,98557,6925957,Najlepiej_i_najgorzej_wynagradzani_pracownicy_MSP.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,98557,6901648,Wynagrodzenia_informatykow_w_2008_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,98557,6828458,Wynagrodzenia_w_dzialach_ksiegowosci_w_2008_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,88932,5462901.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,88932,5616641,Wynagrodzenia_w_sektorze_publicznym_w_2007_roku.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,88932,5024472.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,88932,5023992.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,88932,5015972.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,88932,5016163.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,88932,5015639.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,88932,4995713.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,88932,4988030.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91746.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,91745.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,94505,5809950,Umowa_zlecenia.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,94505,5795572,Czas_pracy.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,94505,5796387,Odprawa.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,94505,5796724,Praca_tymczasowa.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,94505,5809114,Stopa_bezrobocia.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,94505,5795661,Fundusz_pracy.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973525.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973626.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973548.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973349.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973410.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,74896,2973610.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,107291,7987677.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,79395,5484293,Blyskotliwa_kariera___nowe_zasady_sukcesu.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,79395,5484251,4_godzinny_tydzien_pracy.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,79395,5728395,Powrot_do_kariery.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,79395,5728216,Jak_wygrac_kazde_negocjacje_nie_podnoszac_glosu__nie.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*INFO* -->link_to_follow.length: [324]
+*INFO* -->visited_links.length: [6] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/gazetapraca/0,74783.html] 
+
+send: 'GET /gazetapraca/0,74783.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:40 GMT
+header: Server: Apache
+header: Set-Cookie: GazetaPlUser=87A207A23A171k1358890963654; domain=.gazetapraca.pl; expires=Thursday, 22-Jan-2015 21:42:44 GMT; path=/
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis07_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=iso-8859-2
+*INFO* -->checking [http://gazetapraca.pl/gazetapraca/0,74783.html] for errors... [page length: 34804] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*INFO* -->links_to_follow.append: /gazetapraca/0,74783.html?i=2 
+*INFO* -->links_to_follow.append: /gazetapraca/0,74783.html?i=3 
+*INFO* -->links_to_follow.append: /gazetapraca/0,74783.html?i=4 
+*INFO* -->links_to_follow.append: /gazetapraca/0,74783.html?i=5 
+*INFO* -->links_to_follow.append: /gazetapraca/0,74784.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/gazetapraca/0,74783.html 
+*INFO* -->link_to_follow.length: [328]
+*INFO* -->visited_links.length: [7] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/gazetapraca/0,97963.html] 
+
+send: 'GET /gazetapraca/0,97963.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:43 GMT
+header: Server: Apache
+header: Location: http://dodajonline.gazetapraca.pl/dodaj/0,0.html
+header: Content-Length: 256
+header: Connection: close
+header: Content-Type: text/html; charset=iso-8859-1
+send: 'GET /dodaj/0,0.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: dodajonline.gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:43 GMT
+header: Server: Apache
+header: Set-Cookie: JSESSIONID_IBO3=ntJhQ1HJJNS2ZqQ1h1LhtCSYFjkSL5s3p2PC1phvfg2GvJF0vX5q!161007313; path=/; HttpOnly
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cache29
+header: P3P: CP="NOI DSP COR NID DEV PSA OUR IND UNI"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/gazetapraca/0,97963.html] for errors... [page length: 20051] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,114570.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,114573,9679171.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/1,114574,10181497,GazetaPraca_pl___w_internecie_i_prasie__.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/0,114575.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/3660000,0.html 
+*INFO* -->links_to_follow.append: http://gazetapraca.pl/gazetapraca/2029030,97963.html?utm_source=recommend&utm_medium=email&utm_campaign=recommend&home=http%3A%2F%2Fgazetapraca.pl%2Fgazetapraca%2F0%2C0.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/gazetapraca/0,97963.html 
+*INFO* -->link_to_follow.length: [333]
+*INFO* -->visited_links.length: [8] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=48&jobCompanyName=EURO+BANK+S.A.] 
+
+send: 'GET /currentlyRecruitingStats.action?jobCompanyId=48&jobCompanyName=EURO+BANK+S.A. HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 303 See Other\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:41 GMT
+header: Server: Apache
+header: Location: 0,4050,,,1,,,,,,,EURO+BANK+S.A..html
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis07_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Content-Length: 0
+header: Connection: close
+header: Content-Type: text/html; charset=ISO-8859-2
+send: 'GET /0,4050,,,1,,,,,,,EURO+BANK+S.A..html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:44 GMT
+header: Server: Apache
+header: Set-Cookie: GP_USER_LAST_VISIT_DATE=1358809200000
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis08_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=48&jobCompanyName=EURO+BANK+S.A.] for errors... [page length: 119088] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,8001,,1.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,7000,,4.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74783.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,97963.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=48&jobCompanyName=EURO+BANK+S.A. 
+*INFO* -->link_to_follow.length: [332]
+*INFO* -->visited_links.length: [9] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=586&jobCompanyName=ACP+PHARMA+S.A.] 
+
+send: 'GET /currentlyRecruitingStats.action?jobCompanyId=586&jobCompanyName=ACP+PHARMA+S.A. HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 303 See Other\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:46 GMT
+header: Server: Apache
+header: Location: 0,4050,,,1,,,,,,,ACP+PHARMA+S.A..html
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis07_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Content-Length: 0
+header: Connection: close
+header: Content-Type: text/html; charset=ISO-8859-2
+send: 'GET /0,4050,,,1,,,,,,,ACP+PHARMA+S.A..html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:49 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis11_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=586&jobCompanyName=ACP+PHARMA+S.A.] for errors... [page length: 42889] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,8001,,1.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,7000,,4.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74783.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,97963.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=586&jobCompanyName=ACP+PHARMA+S.A. 
+*INFO* -->link_to_follow.length: [331]
+*INFO* -->visited_links.length: [10] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=903&jobCompanyName=NOKIA+SIEMENS+NETWORKS+SP.+Z+O.O.] 
+
+send: 'GET /currentlyRecruitingStats.action?jobCompanyId=903&jobCompanyName=NOKIA+SIEMENS+NETWORKS+SP.+Z+O.O. HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 303 See Other\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:49 GMT
+header: Server: Apache
+header: Location: 0,4050,,,1,,,,,,,NOKIA+SIEMENS+NETWORKS+SP.+Z+O.O..html
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis08_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Content-Length: 0
+header: Connection: close
+header: Content-Type: text/html; charset=ISO-8859-2
+send: 'GET /0,4050,,,1,,,,,,,NOKIA+SIEMENS+NETWORKS+SP.+Z+O.O..html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:47 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis07_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=903&jobCompanyName=NOKIA+SIEMENS+NETWORKS+SP.+Z+O.O.] for errors... [page length: 202225] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,8001,,1.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,7000,,4.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74783.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,97963.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=903&jobCompanyName=NOKIA+SIEMENS+NETWORKS+SP.+Z+O.O. 
+*INFO* -->link_to_follow.length: [330]
+*INFO* -->visited_links.length: [11] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=920&jobCompanyName=AGORA+SA] 
+
+send: 'GET /currentlyRecruitingStats.action?jobCompanyId=920&jobCompanyName=AGORA+SA HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 303 See Other\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:56 GMT
+header: Server: Apache
+header: Location: 0,4050,,,1,,,,,,,AGORA+SA.html
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis12_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Content-Length: 0
+header: Connection: close
+header: Content-Type: text/html; charset=ISO-8859-2
+send: 'GET /0,4050,,,1,,,,,,,AGORA+SA.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:56 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis11_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=920&jobCompanyName=AGORA+SA] for errors... [page length: 60003] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,8001,,1.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,7000,,4.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74783.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,97963.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=920&jobCompanyName=AGORA+SA 
+*INFO* -->link_to_follow.length: [329]
+*INFO* -->visited_links.length: [12] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=939&jobCompanyName=BIOFARM+SP.+Z+O.O.] 
+
+send: 'GET /currentlyRecruitingStats.action?jobCompanyId=939&jobCompanyName=BIOFARM+SP.+Z+O.O. HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 303 See Other\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:56 GMT
+header: Server: Apache
+header: Location: 0,4050,,,1,,,,,,,BIOFARM+SP.+Z+O.O..html
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis09_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Content-Length: 0
+header: Connection: close
+header: Content-Type: text/html; charset=ISO-8859-2
+send: 'GET /0,4050,,,1,,,,,,,BIOFARM+SP.+Z+O.O..html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:57 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis12_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=939&jobCompanyName=BIOFARM+SP.+Z+O.O.] for errors... [page length: 55115] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,8001,,1.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,7000,,4.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74783.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,97963.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=939&jobCompanyName=BIOFARM+SP.+Z+O.O. 
+*INFO* -->link_to_follow.length: [328]
+*INFO* -->visited_links.length: [13] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1039&jobCompanyName=MULTIMEDIA+POLSKA++S.A.] 
+
+send: 'GET /currentlyRecruitingStats.action?jobCompanyId=1039&jobCompanyName=MULTIMEDIA+POLSKA++S.A. HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 303 See Other\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:57 GMT
+header: Server: Apache
+header: Location: 0,4050,,,1,,,,,,,MULTIMEDIA+POLSKA++S.A..html
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis11_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Content-Length: 0
+header: Connection: close
+header: Content-Type: text/html; charset=ISO-8859-2
+send: 'GET /0,4050,,,1,,,,,,,MULTIMEDIA+POLSKA++S.A..html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:42:57 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis11_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection: close
+header: Transfer-Encoding: chunked
+header: Content-Type: text/html; charset=UTF-8
+*INFO* -->checking [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1039&jobCompanyName=MULTIMEDIA+POLSKA++S.A.] for errors... [page length: 50700] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,0.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,8001,,1.html 
+*WARN* -->skipping: http://gazetapraca.pl/0,7000,,4.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74897.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,74783.html 
+*WARN* -->skipping: http://gazetapraca.pl/gazetapraca/0,97963.html 
+*INFO* -->link_to_follow.delete: http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1039&jobCompanyName=MULTIMEDIA+POLSKA++S.A. 
+*INFO* -->link_to_follow.length: [327]
+*INFO* -->visited_links.length: [14] 
+*INFO* -->error_list.length: [0] 
+*WARN* error_list:
+[]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [http://gazetapraca.pl/currentlyRecruitingStats.action?jobCompanyId=1067&jobCompanyName=ahead+personal+management+GmbH+%26+Co.+KG] 
+
+send: 'GET /currentlyRecruitingStats.action?jobCompanyId=1067&jobCompanyName=ahead+personal+management+GmbH+%26+Co.+KG HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 303 See Other\r\n'
+header: Date: Tue, 22 Jan 2013 21:43:01 GMT
+header: Server: Apache
+header: Location: 0,4050,,,1,,,,,,,ahead+personal+management+GmbH+%26+Co.+KG.html
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis11_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Content-Length: 0
+header: Connection: close
+header: Content-Type: text/html; charset=ISO-8859-2
+send: 'GET /0,4050,,,1,,,,,,,ahead+personal+management+GmbH+%26+Co.+KG.html HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: gazetapraca.pl\r\nCookie: test=87A207A23A171k1358890963654; GazetaPlUser=87A207A23A171k1358890963654; GP_USER_LAST_VISIT_DATE=1358809200000; JSESSIONID_JOBS=GxYqQ1HRbQbKhrSpDZv52zzpN2H8ppBTxkG0JZKrQvL1gMtZ5hQw!149754806\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Date: Tue, 22 Jan 2013 21:43:01 GMT
+header: Server: Apache
+header: Content-Language: pl
+header: X-Powered-By: Servlet/2.5 JSP/2.1
+header: Vary: Accept-Encoding,User-Agent
+header: X-Server-Name: cacheis11_serwisy
+header: P3P: CP="NOI DSP COR NID PSAo OUR IND"
+header: Connection

@@ -184,7 +184,7 @@ def main():
         obj.run_crawler()
     finally:
         sys.stdout = sys.__stdout__     #revert sys.stdout to normal
-
+    
 if __name__ == '__main__':
     main()
     
