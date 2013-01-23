@@ -172,7 +172,7 @@ class Menu(Crawler, RootClass):
         print (INTRO)
         
     def get_address(self):
-        return raw_input('> Provide start_url: ')
+        return raw_input('> Provide start_url [must start with http://] : ')
         
 def _main():
     #to run from CMD, with predefined start_url in config_file
