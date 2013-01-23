@@ -153,8 +153,14 @@ class Menu(RootClass,object):
     '''
     
     def __init__(self):
+        self.welcome_page()
         self.checklist=[]
         self.menu()
+    
+    def welcome_page(self):
+        self._info('>> CWP_URL_Checker << author: Maciej Balazy >>')
+        time.sleep(2)
+        print (INTRO)
         
     def _get_host_list(self):
             self.host_list = []     

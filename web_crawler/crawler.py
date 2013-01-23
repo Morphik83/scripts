@@ -11,29 +11,6 @@ from config_file import *
 from urllib2 import URLError
 from httplib import InvalidURL
 
-'''
-start_url = ''
-links_to_follow = []
-visited_urls = []
-
-open start_url
-    get_urls -> links_to_follow.append
-    visisted_urls.append(start_url) 
-
-for url in links_to_follow:
-    open url
-    get_urls -> if url not in links_to_follow and not in visited_urls:
-                    links_to_followlinks_to_follow.append
-    visited_urls.append(url)
-    links_to_follow.pop(links_to_follow.index(url))
-
-when is it done? -> we open urls one by one from links_to_follow, and after some time
-more and more links would be already in either links_to_follow list or visisted_urls list, 
-so such links won't be appended to neither list. 
-In that way, links_to_follow would eventually start to shrink.
-script will be done when len(links_to_follow)=0 
-'''
-
 
 class Get_Browser(RootClass):
     '''
@@ -57,8 +34,9 @@ class Get_Browser(RootClass):
         self._opener["ctl00$BodyContent$login$Password"]=passwd
         self._opener.submit(name='ctl00$BodyContent$login$LoginButton')
 
+
 class Crawler(Get_Browser):
-    def __init__(self):
+    def __init__(self, start_url):
         self.links_to_follow = []
         self.visited_urls = []
         self.error_list = []
@@ -69,13 +47,16 @@ class Crawler(Get_Browser):
         sys.stdout = loggers.Logger()
         
     def _get_url_host(self,url):
+        self._info('Validating url ...')
         parsed = urlparse.urlparse(url)
-        if parsed.scheme and parsed.netloc:
-            url_host = parsed.scheme + '://' + parsed.netloc
-            return url_host
+        if parsed.scheme and parsed.netloc and re.match(r'http[s]?',parsed.scheme):
+            self.host_url = parsed.scheme + '://' + parsed.netloc
+            return self.host_url
         else:
             self._warn('_get_url_host: Cannot find hostname in given url! [',url,']')
-
+            self._warn('Closing the script')
+            sys.exit()
+    
     def check_url_for_error(self, url):
         response = self._opener.response()
         the_page = response.read()
@@ -100,7 +81,7 @@ class Crawler(Get_Browser):
         #start timer
         t0 = time.clock()
         #open start_url
-        self._opener.open(start_url)
+        self._opener.open(self.start_url)
         #login to xnet
         try:
             self.login_to_xnet(username, passwd)
@@ -175,13 +156,36 @@ class Crawler(Get_Browser):
         self._info('error_list.length: [%d] '%len(self.error_list))
         self._warn('error_list:')
         pprint.pprint(self.error_list)
-        
-                
 
-def main():
-    obj = Crawler()
+
+class Menu(Crawler, RootClass):
+    '''simple menu with  basic selections
+    '''
+    def __init__(self):
+        self.welcome_page()
+        Crawler.__init__(self, self.get_address())
+        self.run_crawler()
+        
+    def welcome_page(self):
+        self._info('>> Web_Crawler << author: Maciej Balazy >>')
+        time.sleep(2)
+        print (INTRO)
+        
+    def get_address(self):
+        return raw_input('> Provide start_url [must start with http://] : ')
+        
+def _main():
+    #to run from CMD, with predefined start_url in config_file
+    obj = Crawler(start_url)
     try:
         obj.run_crawler()
+    finally:
+        sys.stdout = sys.__stdout__     #revert sys.stdout to normal
+        
+def main():
+    #to run from Run_Crawler.bat where you can provide start_url
+    try:
+        obj = Menu()
     finally:
         sys.stdout = sys.__stdout__     #revert sys.stdout to normal
     
