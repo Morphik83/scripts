@@ -124,8 +124,11 @@ class Crawler(Get_Browser):
                                 self._warn('-->skipping: %s ' % link.url)
             
             except mechanize.BrowserStateError,e:
-                assert str(e)== 'not viewing HTML'
-                self._info('URL points to document! [',url,']')
+                if str(e)== 'not viewing HTML':
+                    self._info('URL points to document! [',url,']')
+                else:
+                    self._warn("is this URL:",str(url)," valid?\n",str(e))
+                    self.error_list.append([url,str(e)])
             
             except (URLError,InvalidURL,IndexError),e:
                 self._warn("is this URL:",str(url)," valid?\n",str(e))
