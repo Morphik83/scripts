@@ -2,9 +2,6 @@ import os
 from credentials import *           #define username/passwd if needed 
 from time import strftime
 
-#exampoe start_url
-start_url = 'http://gazetapraca.pl/0,0.html#NavPion'
-
 #current date
 cur_date = strftime( "%y-%m-%d_%H_%M_%S_")
 
@@ -24,7 +21,7 @@ INTRO = '''
 Script traverses all the links within given host (url) and parses looking for the errors
 
 How is this script working?
-1. define start_url in config_file
+1. define start url (program asks when started)
 2. start_url is opened and all the valid links from that page are scrapped. 
    Wait! VALID?
 3. only links that have the same host as start_url (in our example 'http://online.renault-trucks-qa.volvo.com') 
