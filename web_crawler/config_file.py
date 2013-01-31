@@ -24,7 +24,7 @@ How is this script working?
 1. define start url (program asks when started)
 2. start_url is opened and all the valid links from that page are scrapped. 
    Wait! VALID?
-3. only links that have the same host as start_url (in our example 'http://online.renault-trucks-qa.volvo.com') 
+3. only links that have the same host as start_url (in the example 'http://github.com') 
    or links that start from '/' (so having the same host...) are added to check list (links_to_follow=[])
 4. opened link is added to visited_urls = []
 5. now, script is iterating over links_to_follow=[] and opening links one by one 
@@ -45,8 +45,8 @@ Pages with authentication are handled as well (see credentials in config_file.py
 
 simplified logic:
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-start_url = 'http://online.renault-trucks-qa.volvo.com/dcs/tr/tr/Vente/Pages/VenteBOLD.aspx'
-(so, only links that starts with 'http://online.renault-trucks-qa.volvo.com' or '/' will be checked)
+start_url = 'http://github.com'
+(so, only links that starts with 'http://github.com' or '/' will be checked)
 
 links_to_follow = []
 visited_urls = []
@@ -67,5 +67,5 @@ for url in links_to_follow:
     visited_urls.append(url)
     links_to_follow.pop(links_to_follow.index(url))
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-For example log file content see attached /logs/CRAWLER.log 
+For example log file content see attached /logs/[github.com]13-01-31_13_38_56_CRAWLER.log
 '''
