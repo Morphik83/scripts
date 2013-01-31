@@ -47,6 +47,10 @@ class Crawler(Get_Browser):
         sys.stdout = loggers.Logger(self.add_hostname_to_crawler_log())
     
     def add_hostname_to_crawler_log(self):    
+        '''inserts start_url hostname to the crawler log file
+        before: D:\workspace\Git\scripts\web_crawler\logs\13-01-31_13_22_45_CRAWLER.log
+        after:  D:\workspace\Git\scripts\web_crawler\logs\[volvo.com]13-01-31_13_22_45_CRAWLER.log
+        '''
         pttrn = re.compile(r'(.*\\)(.*$)')
         result = re.search(pttrn, crawler_log)
         if result:
