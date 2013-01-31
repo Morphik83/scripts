@@ -46,3 +46,29 @@ run_URL_checks_through_PROXY = False
 #provide login/pass:
 username  = '*****'
 passwd = '******'
+
+
+INTRO = '''
+>>>>>>  CWP_Urls_Checker  <<<<<<<
+
+Script gets on the input list of urls, then creates requests and send them to predefined server.
+Next, return code + IP_address of the actual host are logged to either log file or xls report.
+Settings can be done via config_file.py
+
+>> Scenario
+Assume that all of your webpages are hosted on a couple of different servers (eg.S1,S2,S3,S4).
+Your task is to ensure, that after each deploy, all the most important pages (and servers)
+are up and running (you do not have direct access to the backend)
+You've been given a complete list of the URLs that should be validated on each server.
+-> config_file.py >> URLS.input
+So, lets say that there are four host files with appropriate list of IP addresses (and corresponding host names)
+-> see 'hosts' dir
+These files are iteratively replaces with the original host file [C:\Windows\System32\drivers\etc\hosts]
+(in my case, it ensures that requests actually hit proper server - bypassing proxy server)
+and all the URLS are verified on every server.
+Report file is saved with information about return code and eventual errors (see 'example_Input_Report' dir)
+<<
+
+For detailed info go to [%s/README] file
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+''' % cwd
