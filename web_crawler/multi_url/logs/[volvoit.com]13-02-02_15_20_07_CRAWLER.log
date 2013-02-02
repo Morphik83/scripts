@@ -1,0 +1,274 @@
+*INFO* Starting CWP_Web_Crawler ...
+
+
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Connection: close
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Server: Microsoft-IIS/6.0
+header: Pragma: no-cache
+header: Cache-Control: no-cache
+header: Content-Type: text/html
+header: Content-Length: 187
+header: Location: http://www.volvoit.com/volvoit/global/en-gb/
+send: 'GET /volvoit/global/en-gb/ HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 187
+header: Content-Type: text/html
+header: Location: http://www.volvoit.com/volvoit/global/en-gb/Pages/Home page.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Connection: close
+send: 'GET /volvoit/global/en-gb/Pages/Home%20page.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:10 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:10 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* ALREADY LOGGED OR INET PAGE
+*INFO* -->checking [http://volvoit.com] for errors... [page length: 32974] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/ContactUs/pages/contact_us.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/Pages/Home%20page.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/career/Pages/career_2.aspx 
+*INFO* -->links_to_follow.append: /VOLVOIT/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_media.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/Pages/solutions.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/Pages/services.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/customer%20cases/Pages/customer_cases_a.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/Pages/aboutus.aspx 
+*INFO* -->links_to_follow.append: /VOLVOIT/GLOBAL/EN-GB/Pages/Home%20page.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/news/Pages/news.aspx 
+*INFO* -->links_to_follow.append: /VOLVOIT/GLOBAL/EN-GB/CAREER/PAGES/CAREER_2.ASPX 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/blogs/Pages/blogsatVolvoIT.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/news/RSS_Volvo_IT/Pages/Default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/Applications/CopyrightPrivacy/pages/copyrightPrivacy.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/Applications/CopyrightPrivacy/pages/copyrightPrivacy.aspx? 
+*INFO* -->link_to_follow.length: [16]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/volvoit/global/en-gb/Applications/SiteMap] 
+
+send: 'GET /volvoit/global/en-gb/Applications/SiteMap HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 206
+header: Content-Type: text/html
+header: Location: http://www.volvoit.com/volvoit/global/en-gb/Applications/SiteMap/Pages/SiteMap.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2543
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:11 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:11 GMT
+header: Connection: close
+send: 'GET /volvoit/global/en-gb/Applications/SiteMap/Pages/SiteMap.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:12 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:13 GMT
+header: Content-Length: 27958
+header: Connection: close
+*INFO* -->checking [/volvoit/global/en-gb/Applications/SiteMap] for errors... [page length: 27958] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/career/Available%20positions%20in%20Sweden%20US%20France%20China%20Japan%20United%20Kingdom%20India/Pages/Volvo%20IT%20Jobs.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/career/workinglife/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/news/RSS_Volvo_IT/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/pressreleases/Pages/press%20releases.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/pressreleases/2005_prior/Pages/2005_and_prior.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/press_releases_swedish/Pages/press_releases_Swedish.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/press_releases_swedish/2005/Pages/press%20releases%20swedish.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/press%20contacts/Pages/Press_contacts.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/images_volvoit/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/VOR/Pages/VolvoOceanRace.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/VOR/press/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/productDevelopment/Pages/Productdevelopment.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/salesAndMarket/Pages/sales_and_market.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/afterMarket/Pages/after_market_table.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/manufacturing/Pages/manufacturing.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/businessAdministration/Pages/business%20administration.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/ITinfrastructure/Pages/IT%20infrastructure_table.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/telematics/Pages/telematics.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/solutions/Commute_Greener/Pages/commutegreener.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/professionalservices/Pages/professionalservices.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/managedservices/Pages/managedservices.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/managedservices/applicationManagement/Pages/Applicationmanagement_2.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/managedservices/IT_operation/Pages/IT-operation.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/managedservices/network%20andCommunicationServices/Pages/network_communication.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/managedservices/supportServices/Pages/Supportservices.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/managedservices/voice_communications/Pages/Voice_communications.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/enduserservices/Pages/enduserservice.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/enduserservices/collaboration%20workplace/Pages/collaboration_workplace.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/enduserservices/mobility%20services/Pages/Mobility_services.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/enduserservices/desktop/Pages/Desktop.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/enduserservices/training/Pages/training.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/enduserservices/support%20services/Pages/Supportservice.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/services/enduserservices/end_user_telephony/Pages/end-user-telephony.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/customer%20cases/Awards_Recognition/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/customer%20cases/Deliveries/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/ContactUs/Pages/contact_us.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/facts_and_figures/Pages/Factsfigures.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/Volvo%20Group/Pages/VolvoGroup.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/Responsibility/Pages/Responsibility.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/values/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/values/Professionalism/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/values/Respect/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/values/Spirit/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/socialmedia/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/Applications/Search 
+*INFO* -->link_to_follow.delete: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->link_to_follow.length: [60]
+*INFO* -->visited_links.length: [2] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/volvoit/global/en-gb/about_us/ContactUs/pages/contact_us.aspx] 
+
+send: 'GET /volvoit/global/en-gb/about_us/ContactUs/pages/contact_us.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:13 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:14 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* -->checking [/volvoit/global/en-gb/about_us/ContactUs/pages/contact_us.aspx] for errors... [page length: 47573] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->skipping: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/ContactUs/Pages/mailing_address.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/about_us/socialmedia/Pages/Default.aspx 
+*INFO* -->skipping: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->link_to_follow.delete: /volvoit/global/en-gb/about_us/ContactUs/pages/contact_us.aspx 
+*INFO* -->link_to_follow.length: [61]
+*INFO* -->visited_links.length: [3] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/volvoit/global/en-gb/Pages/Home%20page.aspx] 
+
+send: 'GET /volvoit/global/en-gb/Pages/Home%20page.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:10 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:15 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* -->checking [/volvoit/global/en-gb/Pages/Home%20page.aspx] for errors... [page length: 32974] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->skipping: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->skipping: /volvoit/global/en-gb/about_us/ContactUs/pages/contact_us.aspx 
+*INFO* -->skipping: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->link_to_follow.delete: /volvoit/global/en-gb/Pages/Home%20page.aspx 
+*INFO* -->link_to_follow.length: [60]
+*INFO* -->visited_links.length: [4] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/volvoit/global/en-gb/career/Pages/career_2.aspx] 
+
+send: 'GET /volvoit/global/en-gb/career/Pages/career_2.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:16 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:16 GMT
+header: Content-Length: 27579
+header: Connection: close
+*INFO* -->checking [/volvoit/global/en-gb/career/Pages/career_2.aspx] for errors... [page length: 27579] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->skipping: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->skipping: /volvoit/global/en-gb/about_us/ContactUs/pages/contact_us.aspx 
+*INFO* -->skipping: /volvoit/global/en-gb/Pages/Home%20page.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/career/available%20positions/Pages/available%20positions.aspx 
+*INFO* -->links_to_follow.append: /SiteCollectionDocuments/Volvo%20IT/presentation/Volvo%20IT%20company%20presentation%202012.pdf 
+*INFO* -->skipping: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->link_to_follow.delete: /volvoit/global/en-gb/career/Pages/career_2.aspx 
+*INFO* -->link_to_follow.length: [61]
+*INFO* -->visited_links.length: [5] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/VOLVOIT/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_media.aspx] 
+
+send: 'GET /VOLVOIT/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_media.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoit.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:17 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:17 GMT
+header: Content-Length: 27757
+header: Connection: close
+*INFO* -->checking [/VOLVOIT/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_media.aspx] for errors... [page length: 27757] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->skipping: /volvoit/global/en-gb/Applications/SiteMap 
+*INFO* -->skipping: /volvoit/global/en-gb/about_us/ContactUs/pages/contact_us.aspx 
+*INFO* -->skipping: /volvoit/global/en-gb/Pages/Home%20page.aspx 
+*INFO* -->skipping: /volvoit/global/en-gb/career/Pages/career_2.aspx 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/news/Pages/news.aspx?rss=true&ver=rss2 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/pressreleases/Pages/press%20releases.aspx?rss=true&ver=rss2 
+*INFO* -->links_to_follow.append: /volvoit/global/en-gb/newsmedia/press_releases_swedish/Pages/press_releases_Swedish.aspx?rss=true&ver=rss2 
+*INFO* -->skipping: /volvoit/global/en-gb/career/Pages/career_2.aspx 
+*INFO* -->skipping: /volvoit/global/en-gb/career/Pages/career_2.aspx 
+*INFO* -->skipping: /volvoit/global/en-gb/Applications/SiteMap *INFO* -->link_to_follow.delete: /VOLVOIT/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_media.aspx 
+*INFO* -->link_to_follow.length: [63]
+*INFO* -->visited_links.length: [6] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------

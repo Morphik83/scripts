@@ -1,0 +1,44 @@
+*INFO* Starting CWP_Web_Crawler ...
+
+
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: volvotrucks.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Connection: close
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Server: Microsoft-IIS/6.0
+header: Pragma: no-cache
+header: Cache-Control: no-cache
+header: Content-Type: text/html
+header: Content-Length: 153
+header: Location: http://www.volvotrucks.com/
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvotrucks.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Content-Type: text/html
+header: Content-Location: http://www.volvotrucks.com/_layouts/cwp-splash/volvotrucks-com/splash.html
+header: Last-Modified: Tue, 11 Dec 2012 13:20:41 GMT
+header: ETag: "c76a551a2d7cd1:5897"
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Vary: Accept-Encoding
+header: Cache-Control: max-age=30732642
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Content-Length: 22151
+header: Connection: close
+*INFO* ALREADY LOGGED OR INET PAGE
+*INFO* -->checking [http://volvotrucks.com] for errors... [page length: 22151] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->link_to_follow.length: [0]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+
+
+*INFO* >>>>>>> SCRIPT IS DONE <<<<<<<<<
+*INFO* RUN_TIME_OVERALL: 0.6 [s]
+*INFO* visited_links.length: [1] 
+*INFO* error_list.length: [0] 
+*WARN* error_list:
+[]
