@@ -1,0 +1,284 @@
+*INFO* Starting CWP_Web_Crawler ...
+
+
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: volvoce.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Connection: close
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Server: Microsoft-IIS/6.0
+header: Pragma: no-cache
+header: Cache-Control: no-cache
+header: Content-Type: text/html
+header: Content-Length: 251
+header: Location: http://www.volvoce.com/constructionequipment/global/splash/Pages/splash.aspx
+send: 'GET /constructionequipment/global/splash/Pages/splash.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoce.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: MicrosoftSharePointTeamServices: 12.0.0.6608
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: public
+header: Expires: Sat, 02 Feb 2013 14:20:30 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:10 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* ALREADY LOGGED OR INET PAGE
+*INFO* -->checking [http://volvoce.com] for errors... [page length: 58165] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/applications/login/pages/login.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb 
+*INFO* -->links_to_follow.append: /dealers/en-au/cogetp/pages/selectlanguage.aspx 
+*INFO* -->links_to_follow.append: /dealers/pt-au/maquinaria 
+*INFO* -->links_to_follow.append: /dealers/en-au/smt/Pages/select_language.aspx 
+*INFO* -->links_to_follow.append: /dealers/en-au/smt 
+*INFO* -->links_to_follow.append: /dealers/en-au/ghabbour 
+*INFO* -->links_to_follow.append: /dealers/en-au/ebg 
+*INFO* -->links_to_follow.append: /dealers/en-au/autosueco 
+*INFO* -->links_to_follow.append: /dealers/en-au/lec 
+*INFO* -->links_to_follow.append: /dealers/en-au/babcock 
+*INFO* -->links_to_follow.append: /dealers/fr-au/nct 
+*INFO* -->links_to_follow.append: /dealers/fr-au/maroc/pages/HomeSplash.aspx 
+*INFO* -->links_to_follow.append: /dealers/en-au/yazbeck 
+*INFO* -->links_to_follow.append: /dealers/en-au/Babcock 
+*INFO* -->links_to_follow.append: /dealers/en-au/albarajoub 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au 
+*INFO* -->links_to_follow.append: /dealers/en-au/cjd 
+*INFO* -->links_to_follow.append: /dealers/en-sg/solengineering 
+*INFO* -->links_to_follow.append: /dealers/en-sg/riwang 
+*INFO* -->links_to_follow.append: /dealers/en-sg/umgcambodia 
+*INFO* -->links_to_follow.append: /constructionequipment/china/zh-cn 
+*INFO* -->links_to_follow.append: /dealers/en-sg/huada 
+*INFO* -->links_to_follow.append: /dealers/en-sg/indo 
+*INFO* -->links_to_follow.append: /constructionequipment/asia/en-in/ 
+*INFO* -->links_to_follow.append: /constructionequipment/asia/ja-jp 
+*INFO* -->links_to_follow.append: /dealers/ru-ru/Volvo 
+*INFO* -->links_to_follow.append: /constructionequipment/asia/ko-kr 
+*INFO* -->links_to_follow.append: /dealers/en-sg/italthailao 
+*INFO* -->links_to_follow.append: /dealers/en-sg/VolvoMalaysia 
+*INFO* -->links_to_follow.append: /dealers/en-sg/mongolia 
+*INFO* -->links_to_follow.append: /dealers/en-sg/ace 
+*INFO* -->links_to_follow.append: /dealers/en-au/cipac/pages/HomeSplash.aspx 
+*INFO* -->links_to_follow.append: /dealers/en-au/transdiesel 
+*INFO* -->links_to_follow.append: /dealers/en-sg/civic 
+*INFO* -->links_to_follow.append: /constructionequipment/asia/en-sg 
+*INFO* -->links_to_follow.append: /dealers/en-sg/jou 
+*INFO* -->links_to_follow.append: /dealers/th-th/Italthai 
+*INFO* -->links_to_follow.append: /dealers/en-sg/cosh 
+*INFO* -->links_to_follow.append: /dealers/br-es/Escandinavia 
+*INFO* -->links_to_follow.append: /constructionequipment/brazil/br-pt 
+*INFO* -->links_to_follow.append: /dealers/br-es/SK 
+*INFO* -->links_to_follow.append: /dealers/br-es/Chaneme 
+*INFO* -->links_to_follow.append: /dealers/br-es/Macori 
+*INFO* -->links_to_follow.append: /dealers/br-es/Ecuaire 
+*INFO* -->links_to_follow.append: /constructionequipment/brazil/br-es 
+*INFO* -->links_to_follow.append: /dealers/br-es/ComercialdeMotores 
+*INFO* -->links_to_follow.append: /dealers/br-es/Rieder 
+*INFO* -->links_to_follow.append: /dealers/br-es/SKCM_Peru 
+*INFO* -->links_to_follow.append: /dealers/br-es/GrupoCasco 
+*INFO* -->links_to_follow.append: /constructionequipment/europe/en-gb/Albania-and-kosovo/Pages/Albania-and-Kosovo-T-and-C-Heavy-Equipments.aspx 
+*INFO* -->links_to_follow.append: /dealers/de-de/Volvo 
+*INFO* -->links_to_follow.append: /dealers/ru-ru/speceurotech 
+*INFO* -->links_to_follow.append: /dealers/bg-bg/sigma 
+*INFO* -->links_to_follow.append: /dealers/en-gb/cyprus 
+*INFO* -->links_to_follow.append: /dealers/cs-cz/Volvo 
+*INFO* -->links_to_follow.append: /dealers/sr-sp/serbia-evocon/Pages/home.aspx 
+*INFO* -->links_to_follow.append: /dealers/fr-fr/Volvo/Pages/introduction.aspx 
+*INFO* -->links_to_follow.append: /dealers/el-gr/saracakis 
+*INFO* -->links_to_follow.append: /dealers/en-gb/patodonnell 
+*INFO* -->links_to_follow.append: /dealers/nl-nl/Kuiken 
+*INFO* -->links_to_follow.append: /dealers/pt-pt/autosueco 
+*INFO* -->links_to_follow.append: /dealers/ru-ru/Volvo/pages/homesplash.aspx 
+*INFO* -->links_to_follow.append: /dealers/sr-sp/serbia-evocon 
+*INFO* -->links_to_follow.append: /dealers/es-es/volmaquinaria 
+*INFO* -->links_to_follow.append: /dealers/sv-se/swecon 
+*INFO* -->links_to_follow.append: /constructionequipment/turkey/tr-tr 
+*INFO* -->links_to_follow.append: /dealers/en-au/ukraine 
+*INFO* -->links_to_follow.append: /constructionequipment/europe/en-gb 
+*INFO* -->links_to_follow.append: /dealers/en-au/afghanistan 
+*INFO* -->links_to_follow.append: /dealers/en-au/parsian 
+*INFO* -->links_to_follow.append: /dealers/en-au/sardargroup/pages/homesplash.aspx 
+*INFO* -->links_to_follow.append: /dealers/he-il/MCT 
+*INFO* -->links_to_follow.append: /dealers/en-au/Alzabin 
+*INFO* -->links_to_follow.append: /dealers/en-au/genserv/pages/HomeSplash.aspx 
+*INFO* -->links_to_follow.append: /dealers/en-au/vpl 
+*INFO* -->links_to_follow.append: /dealers/en-au/araco 
+*INFO* -->links_to_follow.append: /dealers/en-au/saudi-arabia/pages/HomeSplash.aspx 
+*INFO* -->links_to_follow.append: /dealers/en-au/famco/pages/HomeSplash.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/na/en-us/pages/BAHome.aspx?sc_cid=vce_na_us_00003 
+*INFO* -->links_to_follow.append: /dealers/br-es/Minecon 
+*INFO* -->links_to_follow.append: /constructionequipment/na/en-us/pages/BAHome.aspx?sc_cid=vce_na_us_00002 
+*INFO* -->links_to_follow.append: /constructionequipment/na/en-us/pages/BAHome.aspx?sc_cid=vce_na_us_00004 
+*INFO* -->link_to_follow.length: [83]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/constructionequipment/global/en-au/applications/login/pages/login.aspx] 
+
+send: 'GET /constructionequipment/global/en-au/applications/login/pages/login.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoce.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2543
+header: MicrosoftSharePointTeamServices: 12.0.0.6608
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: public
+header: Expires: Sat, 02 Feb 2013 14:20:32 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:12 GMT
+header: Content-Length: 19207
+header: Connection: close
+*INFO* -->checking [/constructionequipment/global/en-au/applications/login/pages/login.aspx] for errors... [page length: 19207] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/Applications/pages/ContactUs.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/Pages/BAHome_ILF.aspx 
+*INFO* -->links_to_follow.append: /CONSTRUCTIONEQUIPMENT/GLOBAL/EN-AU/PRODUCTS/Pages/introduction.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/usedequipment/Pages/usedequipmentapplication.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/partsservice/Pages/introduction.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/newsmedia/Pages/introduction.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/AboutUs/Pages/introduction.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/Applications/login/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/Applications/SiteMap 
+*INFO* -->links_to_follow.append: /constructionequipment/global/en-au/Applications/CopyrightPrivacy/pages/copyrightPrivacy.aspx 
+*INFO* -->link_to_follow.delete: /constructionequipment/global/en-au/applications/login/pages/login.aspx 
+*INFO* -->link_to_follow.length: [92]
+*INFO* -->visited_links.length: [2] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/constructionequipment/corporate/en-gb] 
+
+send: 'GET /constructionequipment/corporate/en-gb HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoce.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 199
+header: Content-Type: text/html
+header: Location: http://www.volvoce.com/constructionequipment/corporate/en-gb/Pages/home.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: MicrosoftSharePointTeamServices: 12.0.0.6608
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:12 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:12 GMT
+header: Connection: close
+send: 'GET /constructionequipment/corporate/en-gb/Pages/home.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoce.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: MicrosoftSharePointTeamServices: 12.0.0.6608
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: public
+header: Expires: Sat, 02 Feb 2013 14:20:34 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:14 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* -->checking [/constructionequipment/corporate/en-gb] for errors... [page length: 40619] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/press_room/press_contacts 
+*INFO* -->links_to_follow.append: / 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/applications/locator/pages/DealerLocator.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/Pages/home.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/quality/Pages/quality.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/safety/Pages/safety.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/environment/Pages/environment.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/innovation/Pages/innovation.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/press_room/Pages/pressroom.aspx 
+*INFO* -->links_to_follow.append: /CONSTRUCTIONEQUIPMENT/CORPORATE/EN-GB/ABOUTUS/Pages/about_us.aspx 
+*INFO* -->links_to_follow.append: /CONSTRUCTIONEQUIPMENT/CORPORATE/EN-GB/Pages/home.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/AboutUs/global_iso_certification/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/press_room/articles 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/AboutUs/core_values 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/AboutUs 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/AboutUs/history 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/AboutUs/volvo_ocean_race/Pages/volvo_ocean_race.aspx 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/AboutUs/career 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/applications/locator/Pages/DealerLocator.aspx 
+*INFO* -->links_to_follow.append: /CONSTRUCTIONEQUIPMENT/CORPORATE/EN-GB/PRESS_ROOM/ARTICLES/INNOVATION/PAGES/FUME_EXTRACTION_SYSTEM_SHORTLISTED_FOR_BAUMA_INNOVATION_AWARD.ASPX 
+*INFO* -->links_to_follow.append: /CONSTRUCTIONEQUIPMENT/CORPORATE/EN-GB/ENVIRONMENT/WWF_CLIMATE_SAVERS/PAGES/DEFAULT.ASPX 
+*INFO* -->links_to_follow.append: /CONSTRUCTIONEQUIPMENT/CORPORATE/EN-GB/ABOUTUS/TIER_IV_COMPLIANCE/PAGES/TIER_IV_COMPLIANCE.ASPX 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/press_room/press_releases 
+*INFO* -->links_to_follow.append: /constructionequipment/corporate/en-gb/applications/SiteMap 
+*INFO* -->link_to_follow.delete: /constructionequipment/corporate/en-gb 
+*INFO* -->link_to_follow.length: [115]
+*INFO* -->visited_links.length: [3] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/dealers/en-au/cogetp/pages/selectlanguage.aspx] 
+
+send: 'GET /dealers/en-au/cogetp/pages/selectlanguage.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoce.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: MicrosoftSharePointTeamServices: 12.0.0.6608
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: public
+header: Expires: Sat, 02 Feb 2013 14:20:35 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:15 GMT
+header: Content-Length: 10625
+header: Connection: close
+*INFO* -->checking [/dealers/en-au/cogetp/pages/selectlanguage.aspx] for errors... [page length: 10625] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /dealers/en-au/cogetp 
+*INFO* -->links_to_follow.append: /dealers/fr-au/cogetp/pages/cogetp.aspx 
+*INFO* -->links_to_follow.append: /dealers/en-au/cogetp/pages/cogetp.aspx 
+*INFO* -->links_to_follow.append: /group/global/en-gb/Applications/CopyrightPrivacy/pages/privacy_english.aspx 
+*INFO* -->links_to_follow.append: /group/global/en-gb/Applications/CopyrightPrivacy/pages/copyright_english.aspx 
+*INFO* -->link_to_follow.delete: /dealers/en-au/cogetp/pages/selectlanguage.aspx 
+*INFO* -->link_to_follow.length: [119]
+*INFO* -->visited_links.length: [4] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/dealers/pt-au/maquinaria] 
+
+send: 'GET /dealers/pt-au/maquinaria HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoce.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 194
+header: Content-Type: text/html
+header: Location: http://www.volvoce.com/dealers/pt-au/maquinaria/Pages/introduction.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: MicrosoftSharePointTeamServices: 12.0.0.6608
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:15 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:15 GMT
+header: Connection: close
+send: 'GET /dealers/pt-au/maquinaria/Pages/introduction.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvoce.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2543
+header: MicrosoftSharePointTeamServices: 12.0.0.6608
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: public
+header: Expires: Sat, 02 Feb 2013 14:20:38 GMT
+*INFO* -->link_to_follow.delete: /dealers/pt-au/maquinaria 
+*INFO* -->link_to_follow.length: [118]
+*INFO* -->visited_links.length: [5] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------

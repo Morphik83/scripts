@@ -1,0 +1,228 @@
+*INFO* Starting CWP_Web_Crawler ...
+
+
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Connection: close
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Server: Microsoft-IIS/6.0
+header: Pragma: no-cache
+header: Cache-Control: no-cache
+header: Content-Type: text/html
+header: Content-Length: 197
+header: Location: http://www.volvopenta.com/volvopenta/splash/en-gb
+send: 'GET /volvopenta/splash/en-gb HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 197
+header: Content-Type: text/html
+header: Location: http://www.volvopenta.com/volvopenta/splash/en-gb/Pages/global_splash.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:09 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Connection: close
+send: 'GET /volvopenta/splash/en-gb/Pages/global_splash.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:25:06 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:10 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* ALREADY LOGGED OR INET PAGE
+*INFO* -->checking [http://volvopenta.com] for errors... [page length: 45272] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl 
+*INFO* -->links_to_follow.append: /volvopenta/denmark/da-dk 
+*INFO* -->links_to_follow.append: /volvopenta/finland/fi-fi 
+*INFO* -->links_to_follow.append: /volvopenta/france/fr-fr 
+*INFO* -->links_to_follow.append: /volvopenta/germany/de-de 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/applications/dealer_locator 
+*INFO* -->links_to_follow.append: /volvopenta/italy/it-it 
+*INFO* -->links_to_follow.append: /volvopenta/norway/no-no 
+*INFO* -->links_to_follow.append: /volvopenta/poland/pl-pl 
+*INFO* -->links_to_follow.append: /volvopenta/spain/es-es 
+*INFO* -->links_to_follow.append: /volvopenta/russia/ru-ru 
+*INFO* -->links_to_follow.append: /volvopenta/se/sv-se 
+*INFO* -->links_to_follow.append: /volvopenta/turkey/en-tr 
+*INFO* -->links_to_follow.append: /volvopenta/turkey/tr-tr 
+*INFO* -->links_to_follow.append: /volvopenta/uk/en-gb 
+*INFO* -->links_to_follow.append: /volvopenta/na/en-us 
+*INFO* -->links_to_follow.append: /volvopenta/brazil/pt-br 
+*INFO* -->links_to_follow.append: /volvopenta/singapore/en-sg 
+*INFO* -->links_to_follow.append: /volvopenta/china/zh-cn 
+*INFO* -->links_to_follow.append: /volvopenta/japan/ja-jp 
+*INFO* -->links_to_follow.append: /volvopenta/australia/en-au 
+*INFO* -->link_to_follow.length: [22]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/volvopenta/global/en-gb] 
+
+send: 'GET /volvopenta/global/en-gb HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 188
+header: Content-Type: text/html
+header: Location: http://www.volvopenta.com/volvopenta/global/en-gb/Pages/home.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:11 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:11 GMT
+header: Connection: close
+send: 'GET /volvopenta/global/en-gb/Pages/home.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:12 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:12 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* -->checking [/volvopenta/global/en-gb] for errors... [page length: 35499] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/our_company/career 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/applications/contact_us 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/Pages/home.aspx 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/GLOBAL/EN-GB/MARINE_LEISURE_ENGINES/Pages/marine_leisure.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/MARINECOMMERCIALENGINES/Pages/marine_commercial_engines.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/our_company/Pages/our_company.aspx 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/GLOBAL/EN-GB/Pages/home.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/marine_leisure_engines/accessories/Pages/JoystickDriving.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/marine_leisure_engines/Aquamatic/c_diesel_sterndrive/Pages/DieselEngineRange.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/marine_leisure_engines/Aquamatic/c_gasoline_sterndrive/Pages/GasolineEngineRange.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/marine_leisure_engines/accessories/Pages/full_control.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/our_company/press_releases 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/GLOBAL/EN-GB/MARINE_LEISURE_ENGINES/PAGES/EKEY.ASPX 
+*INFO* -->links_to_follow.append: /volvopenta/global/en-gb/applications/SiteMap 
+*INFO* -->link_to_follow.delete: /volvopenta/global/en-gb 
+*INFO* -->link_to_follow.length: [35]
+*INFO* -->visited_links.length: [2] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/volvopenta/benelux/nl-nl] 
+
+send: 'GET /volvopenta/benelux/nl-nl HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 194
+header: Content-Type: text/html
+header: Location: http://www.volvopenta.com/volvopenta/benelux/nl-nl/Pages/pentahome.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:12 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:12 GMT
+header: Connection: close
+send: 'GET /volvopenta/benelux/nl-nl/Pages/pentahome.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:16 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:16 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* -->checking [/volvopenta/benelux/nl-nl] for errors... [page length: 37611] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/our_company/career 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/applications/contact_us 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/Pages/pentahome.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/marine_leisure_engines/Pages/marine_leisure_engines.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/MARINECOMMERCIALENGINES/Pages/marine_commercial_engines.aspx 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/BENELUX/NL-NL/OUR_COMPANY/Pages/our_company.aspx 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/BENELUX/NL-NL/Pages/pentahome.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl//marine_leisure_engines/accessories/Pages/JoystickDriving.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/marine_leisure_engines/Aquamatic/c_diesel_sterndrive/Pages/DieselEngineRange.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/marine_leisure_engines/Aquamatic/c_gasoline_sterndrive/Pages/GasolineEngineRange.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/marine_leisure_engines/accessories/Pages/fullcontrol.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/our_company/press_releases 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/BENELUX/NL-NL/MARINE_LEISURE_ENGINES/PAGES/EKEY.ASPX 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/BENELUX/NL-NL/MARINECOMMERCIALENGINES/NEWS/VP_IN_RTL_TRANSPORTWERELD/PAGES/VOLVO_PENTA_IN_RTL_TRANSPORTWERELD.ASPX 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/BENELUX/NL-NL/MARINE_LEISURE_ENGINES/PARTS_SERVICE/EXTENDED_PROTECTION/PAGES/EXTENDED_PROTECTION.ASPX 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/BENELUX/NL-NL/MARINE_LEISURE_ENGINES/OUT_OF_PRODUCTION_ENGINES/PAGES/OUT_OF_PRODUCTION_ENGINES.ASPX 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/applications/dealer_locator 
+*INFO* -->links_to_follow.append: /group/global/en-gb 
+*INFO* -->links_to_follow.append: /volvopenta/benelux/nl-nl/applications/SiteMap 
+*INFO* -->link_to_follow.delete: /volvopenta/benelux/nl-nl 
+*INFO* -->link_to_follow.length: [53]
+*INFO* -->visited_links.length: [3] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/volvopenta/denmark/da-dk] 
+
+send: 'GET /volvopenta/denmark/da-dk HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 194
+header: Content-Type: text/html
+header: Location: http://www.volvopenta.com/volvopenta/denmark/da-dk/Pages/pentahome.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:17 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:17 GMT
+header: Connection: close
+send: 'GET /volvopenta/denmark/da-dk/Pages/pentahome.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvopenta.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:26:51 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:17 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* -->checking [/volvopenta/denmark/da-dk] for errors... [page length: 37053] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /volvopenta/denmark/da-dk/applications/contact_us 
+*INFO* -->links_to_follow.append: /volvopenta/denmark/da-dk/Pages/pentahome.aspx 
+*INFO* -->links_to_follow.append: /VOLVOPENTA/DENMARK/DA-DK/MARINE_LEISURE_ENGINES/Pages/marine_leisure_engines.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/denmark/da-dk/MARINECOMMERCIALENGINES/Pages/marine_commercial_engines.aspx 
+*INFO* -->links_to_follow.append: /volvopenta/denmark/da-dk/our_company/Pages/our_company.aspx *INFO* -->link_to_follow.delete: /volvopenta/denmark/da-dk 
+*INFO* -->link_to_follow.length: [56]
+*INFO* -->visited_links.length: [4] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------

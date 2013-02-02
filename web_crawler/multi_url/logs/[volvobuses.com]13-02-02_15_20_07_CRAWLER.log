@@ -1,0 +1,295 @@
+*INFO* Starting CWP_Web_Crawler ...
+
+
+send: 'GET / HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 301 Moved Permanently\r\n'
+header: Connection: close
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Server: Microsoft-IIS/6.0
+header: Pragma: no-cache
+header: Cache-Control: no-cache
+header: Content-Type: text/html
+header: Content-Length: 183
+header: Location: http://www.volvobuses.com/bus/global/en-gb
+send: 'GET /bus/global/en-gb HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 185
+header: Content-Type: text/html
+header: Location: http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2543
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:09 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:09 GMT
+header: Connection: close
+send: 'GET /bus/global/en-gb/Pages/home_new.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:10 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:10 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* ALREADY LOGGED OR INET PAGE
+*INFO* -->checking [http://volvobuses.com] for errors... [page length: 43074] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/contact/Pages/Default_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/Pages/home_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_ilf.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/Pages/default_new.aspx 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/Pages/home_new.aspx 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/BUSES/CITY%20BUSES/VOLVO_7900_HYBRID/Pages/Introduction.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/volvo_bus_telematics/Pages/volvo_bus_telematics.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/green_efficiency/Pages/Futureelectromobility.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/green_efficiency/Pages/Efficientdrivelines.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/on_the_move/_layouts/CWP.Internet.VolvoCom/NewsItem.aspx?News.ItemId=130755&News.Language=en-gb 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/pressreleases 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/applications/CopyrightPrivacy 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/applications/CopyrightPrivacy/pages/copyright_english.aspx 
+*INFO* -->link_to_follow.length: [16]
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/bus/global/en-gb/applications/SiteMap] 
+
+send: 'GET /bus/global/en-gb/applications/SiteMap HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 205
+header: Content-Type: text/html
+header: Location: http://www.volvobuses.com/bus/global/en-gb/applications/SiteMap/Pages/sitemap.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:11 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:11 GMT
+header: Connection: close
+send: 'GET /bus/global/en-gb/applications/SiteMap/Pages/sitemap.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:12 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:12 GMT
+header: Content-Length: 25258
+header: Connection: close
+*INFO* -->checking [/bus/global/en-gb/applications/SiteMap] for errors... [page length: 25258] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/buses/Pages/buses.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/buses/City%20buses/Pages/city-buses_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/buses/Intercity%20buses/Pages/volvo-buses-intercity_new.aspx 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/COACHES/Pages/volvo-buses-coaches.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/coaches/Volvo_9500/Pages/introduction.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/coaches/Volvo%209700/Pages/introduction.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/coaches/Volvo%209900/Pages/introduction.aspx 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/COACHES/CHASSIS/Pages/chassis.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/used_new/Pages/Used_New_Page.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/BRT/Pages/BRT.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/volvobusfinancing/Pages/finance_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/servicecontracts/Pages/volvo%20service%20contracts.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/volvobustraining/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/volvoactionservice/Pages/vas_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/parts_workshop/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/servicenetwork/Pages/service_part_workshops.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/products_services/contact/Pages/contact_us_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/pressreleases/Pages/pressleleases.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/pressreleases/2005/Pages/press%20releases.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/image%20gallery/Pages/imagegallery2.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/image%20gallery/imagegallerycontactus/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/Calendar%20of%20events/Pages/events.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/on_the_move/Pages/on_the_move.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/presscontact/Pages/press_contact.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/newsmedia/interaction/Pages/Defaultnew.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/vbcstory/Pages/Default_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/green_efficiency/Pages/Default_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/lifecycle_productivity/Pages/Default_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/values/Pages/Default_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/values/environmental_care/Pages/environment.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/values/quality/Pages/quality.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/values/safety/Pages/safety.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/volvo_group/Pages/Default_new.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/volvobusesstory/career/Pages/default.aspx 
+*INFO* -->links_to_follow.append: /bus/global/en-gb/applications/search/Pages/search.aspx 
+*INFO* -->link_to_follow.delete: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->link_to_follow.length: [50]
+*INFO* -->visited_links.length: [2] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/bus/global/en-gb/volvobusesstory/contact/Pages/Default_new.aspx] 
+
+send: 'GET /bus/global/en-gb/volvobusesstory/contact/Pages/Default_new.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:13 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:13 GMT
+header: Content-Length: 23809
+header: Connection: close
+*INFO* -->checking [/bus/global/en-gb/volvobusesstory/contact/Pages/Default_new.aspx] for errors... [page length: 23809] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->skipping: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->skipping: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->link_to_follow.delete: /bus/global/en-gb/volvobusesstory/contact/Pages/Default_new.aspx 
+*INFO* -->link_to_follow.length: [49]
+*INFO* -->visited_links.length: [3] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/bus/global/en-gb] 
+
+send: 'GET /bus/global/en-gb HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 302 Moved Temporarily\r\n'
+header: Content-Length: 185
+header: Content-Type: text/html
+header: Location: http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: Expires: Sat, 02 Feb 2013 14:20:13 GMT
+header: Cache-Control: max-age=0, no-cache, no-store
+header: Pragma: no-cache
+header: Date: Sat, 02 Feb 2013 14:20:13 GMT
+header: Connection: close
+send: 'GET /bus/global/en-gb/Pages/home_new.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:10 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:13 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* -->checking [/bus/global/en-gb] for errors... [page length: 43074] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->skipping: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->skipping: /bus/global/en-gb/volvobusesstory/contact/Pages/Default_new.aspx 
+*INFO* -->skipping: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->link_to_follow.delete: /bus/global/en-gb 
+*INFO* -->link_to_follow.length: [48]
+*INFO* -->visited_links.length: [4] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/bus/global/en-gb/Pages/home_new.aspx] 
+
+send: 'GET /bus/global/en-gb/Pages/home_new.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:10 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:14 GMT
+header: Transfer-Encoding:  chunked
+header: Connection: close
+header: Connection: Transfer-Encoding
+*INFO* -->checking [/bus/global/en-gb/Pages/home_new.aspx] for errors... [page length: 43074] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->skipping: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->skipping: /bus/global/en-gb/volvobusesstory/contact/Pages/Default_new.aspx 
+*INFO* -->skipping: /bus/global/en-gb 
+*INFO* -->skipping: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->link_to_follow.delete: /bus/global/en-gb/Pages/home_new.aspx 
+*INFO* -->link_to_follow.length: [47]
+*INFO* -->visited_links.length: [5] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/bus/global/en-gb/products_services/Pages/default.aspx] 
+
+send: 'GET /bus/global/en-gb/products_services/Pages/default.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2544
+header: X-Powered-By: ASP.NET
+header: X-AspNet-Version: 2.0.50727
+header: Cache-Control: private
+header: Expires: Sat, 02 Feb 2013 14:35:22 GMT
+header: Content-Type: text/html; charset=utf-8
+header: Vary: Accept-Encoding
+header: Date: Sat, 02 Feb 2013 14:20:22 GMT
+header: Content-Length: 31170
+header: Connection: close
+*INFO* -->checking [/bus/global/en-gb/products_services/Pages/default.aspx] for errors... [page length: 31170] 
+*INFO* no errors noticed
+
+*INFO* >>scraping...
+*INFO* -->skipping: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->skipping: /bus/global/en-gb/volvobusesstory/contact/Pages/Default_new.aspx 
+*INFO* -->skipping: /bus/global/en-gb 
+*INFO* -->skipping: /bus/global/en-gb/Pages/home_new.aspx 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/BUSES/PAGES/BUSES.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/COACHES/PAGES/VOLVO-BUSES-COACHES.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/USED_NEW/PAGES/USED_NEW_PAGE.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/VOLVOACTIONSERVICE/PAGES/VAS_NEW.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/BRT/PAGES/BRT.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/VOLVO_BUS_TELEMATICS/PAGES/VOLVO_BUS_TELEMATICS.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/PARTS_WORKSHOP/PAGES/DEFAULT.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/SERVICECONTRACTS/PAGES/VOLVO%20SERVICE%20CONTRACTS.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/VOLVOBUSFINANCING/PAGES/FINANCE_NEW.ASPX 
+*INFO* -->links_to_follow.append: /BUS/GLOBAL/EN-GB/PRODUCTS_SERVICES/VOLVOBUSTRAINING/PAGES/DEFAULT.ASPX 
+*INFO* -->skipping: /bus/global/en-gb/applications/SiteMap 
+*INFO* -->link_to_follow.delete: /bus/global/en-gb/products_services/Pages/default.aspx 
+*INFO* -->link_to_follow.length: [56]
+*INFO* -->visited_links.length: [6] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
+*INFO* >>opening: [/BUS/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_ilf.aspx] 
+
+send: 'GET /BUS/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_ilf.aspx HTTP/1.1\r\nAccept-Encoding: identity\r\nHost: www.volvobuses.com\r\nConnection: close\r\nUser-Agent: Mozilla/4.0\r\n\r\n'
+reply: 'HTTP/1.1 200 OK\r\n'
+header: Server: Microsoft-IIS/6.0
+header: Server: SEGOTN2543
+*INFO* -->link_to_follow.delete: /BUS/GLOBAL/EN-GB/NEWSMEDIA/Pages/news_ilf.aspx 
+*INFO* -->link_to_follow.length: [55]
+*INFO* -->visited_links.length: [7] 
+*INFO* -->error_list.length: [0] 
+
+
+*INFO* ------------------->> NEXT <<-------------------
