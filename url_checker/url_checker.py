@@ -166,7 +166,17 @@ class Menu(RootClass,object):
             self.host_list = []     
             for host_server in self.all_files:
                 if re.search(server_hosts_pattern, host_server):
-                    self.host_list.append(host_server)    
+                    self.host_list.append(host_server)
+    
+    def _get_url_list(self):
+        url_list = []
+        with open(file_with_urls, 'a+') as f:
+            for line in f:
+                if line.startswith('[X]') or line.startswith('[I]'):
+                    url_list.append(line.strip())
+            pprint.pprint(url_list)
+            
+            
     def menu(self):
         def _menu_check_subPages(self):
             """set True/False whether you want to check all the subpages on the given page
@@ -174,15 +184,14 @@ class Menu(RootClass,object):
             (eg. http://volovit.com -> any link that exists on that page will be checked) 
             set FALSE if only pages from URLS.input file should be checked
             """
-            self._info('>>CWP_Urls_Checker<<\n\nConfiguration:')
-            check = raw_input('Do you want to verify sub_pages? [y/n]: ')
+            check = raw_input('\nDo you want to verify sub_pages? [y/n]: ')
             if re.search(r'\b[yY]\b|\byes\b|\bYES\b',check):
                 self.check_all_subPages = True
-                self._info('check_all_subPages: TRUE')
+                self._info('check_all_subPages: TRUE\n')
                 return self.check_all_subPages
             elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',check):
                 self.check_all_subPages = False
-                self._info('check_all_subPages: FALSE')
+                self._info('check_all_subPages: FALSE\n')
                 return self.check_all_subPages
             else:
                 self._warn('Not valid answer! Valid: [y/n]\nStarting again...\n')
@@ -194,7 +203,7 @@ class Menu(RootClass,object):
                 for host_server in self.host_list:
                     msg = ''.join(['Add [',host_server,'] to checklist? [y/n]: '])
                     yes_no = raw_input(msg)
-                    if re.search(r'\b[yY]\b|\byes\b|\bYES\b',yes_no):
+                    if re.search(r'\b[yY]\b',yes_no):
                         #del host_server from self.host_list
                         self._info(self.host_list.pop(self.host_list.index(host_server))\
                                    ,' added to current checklist')
@@ -207,7 +216,7 @@ class Menu(RootClass,object):
                         #start again 'for' loop with updated self.host_list from the index[0]
                         _for_host_server(self)
                         return
-                    elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',yes_no):
+                    elif re.search(r'\b[nN]\b',yes_no):
                         self._info('Skipping [',host_server,']...')
                         #del host_server from self.host_list
                         self.host_list.pop(self.host_list.index(host_server))
@@ -245,7 +254,7 @@ class Menu(RootClass,object):
             self.host_list_backUp = self.host_list[:]
             if len(self.host_list) >0:
                 self._info('Available server-host files: ',self.host_list,'\n')
-                resp = raw_input('Add all to checklist? [y/n] ')
+                resp = raw_input('Add all servers to checklist? [y/n] ')
                 if re.search(r'\b[yY]\b|\byes\b|\bYES\b',resp):
                     self._info('Adding all servers to checklist...\n')
                     self.checklist = self.host_list[:]
@@ -263,12 +272,14 @@ class Menu(RootClass,object):
                 sys.exit()
             else:
                 self._info('>>>>>>CURRENT  CONFIGURATION:')
-                self._info('URLs from [%s] will be verified on the following servers: ' % file_with_urls)
+                self._info('URLs to verify -> [%s]' % file_with_urls)
+                self._get_url_list()
+                self._info('Servers to verify:')
                 self._info(self.checklist)
-                if self.check_all_subPages:
-                    self._info('Check subpages: True')
-                else:    
-                    self._info('Check subpages: False')
+
+                #sets check_all_subPages=True/False
+                _menu_check_subPages(self)
+                
                 self._info('Report file will be saved here: [%s]' %report_file)
                 go = raw_input("Run ? [y/n] ")
                 if re.search(r'\b[yY]\b|\byes\b|\bYES\b',go):
@@ -277,10 +288,8 @@ class Menu(RootClass,object):
                     self._info('Exiting...\n')
                     sys.exit()
         
-        try:            
-            #sets check_all_subPages=True/False
-            _menu_check_subPages(self)
-            
+        try:
+            self._info('>>CWP_Urls_Checker<<\n\nConfiguration:')            
             #select server_host files
             _menu_add_servers(self)
         except KeyboardInterrupt:
@@ -395,11 +404,12 @@ class Check_URLs(Report,Get_Browser,Menu):
         self._info("Parsing opened page...")
         the_page = response.read()
         #print 'chars_onPage:',len(the_page)
-        self._info("Checking [%s] for errors..." %url)
-        search = re.search('(not available)|(error)', the_page)
+        self._info("-->checking [%s] for errors... [page length: %d] " %(url,len(the_page)))
+        search = re.search(r'(\w+\sis not available)|(Value does not fall within the expected range)', the_page)
         if search:
-            self._warn('CHECK THIS URL [%s] !\n' %url)
-            self.error_list.append(['_check_url_for_error:',url])
+            self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
+            self.error_list.append([url,search.group(1)])
+            self.write_to_report(self.format, url, '', '', search.group(1))
         else:
             self._info('No errors noticed\n')
             
