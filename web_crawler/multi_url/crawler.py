@@ -74,7 +74,7 @@ class Crawler(Get_Browser):
         response = self._opener.response()
         the_page = response.read()
         self._info("-->checking [%s] for errors... [page length: %d] " %(url,len(the_page)))
-        search = re.search(r'(\w+\sis not available)|(is not available)|(Technical information is available in the error log)', the_page)
+        search = re.search(r'(\w+\sis not available)|(Value does not fall within the expected range)', the_page)
         if search:
             self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
             self.error_list.append([url,search.group(1)])
@@ -100,7 +100,7 @@ class Crawler(Get_Browser):
             except URLError,e:
                 self._warn("is this URL: [",str(self.start_url),"] valid?\n",str(e))
                 self.error_list.append([self.start_url,str(e)])
-                error_queue.put((self.net_loc, self.start_url , str(e)))
+                #error_queue.put((self.net_loc, self.start_url , str(e)))
                 sys.exit()
             #login to xnet
             try:
@@ -150,12 +150,12 @@ class Crawler(Get_Browser):
                     else:
                         self._warn("is this URL: [",str(url),"] valid?\n",str(e))
                         self.error_list.append([url,str(e)])
-                        error_queue.put((self.net_loc, url, str(e)))
+                        #error_queue.put((self.net_loc, url, str(e)))
                 
                 except (URLError,InvalidURL,IndexError),e:
                     self._warn("is this URL:",str(url)," valid?\n",str(e))
                     self.error_list.append([url,str(e)])
-                    error_queue.put((self.net_loc, url, str(e)))
+                    #error_queue.put((self.net_loc, url, str(e)))
     
                 finally:
                     #before getting next url from list, update:
@@ -185,7 +185,8 @@ class Crawler(Get_Browser):
         
         except KeyboardInterrupt:
             print '\n'
-            self._warn('Stopped by user!')
+            self._warn('Stopped by user!\nError list:\n')
+            pprint.pprint(self.error_list)
             sys.exit()
 
 
@@ -199,7 +200,8 @@ def get_url_list():
     url_list = []
     with open(crawler_start_file, 'a+') as f:
         for line in f:
-            url_list.append(line.strip())
+            if line.startswith('http'):
+                url_list.append(line.strip())
         print '\nFollowing URLS will be checked: '
         pprint.pprint(url_list)
         ans = raw_input("\nSTART ? [y/n]")
@@ -264,7 +266,7 @@ def main():
             
         #===========================================================================
         # when all the processes are up and running, start 'listener' process, that 
-        # gets as input error_queue and writes all the items to the log file.
+        # gets as input 'error_queue' and writes all the items to the log file.
         # ->put listener in the infinite loop start/stop. Every time just check,
         # if there are any running jobs. If true: keep starting the 'listener', 
         # if false -> means that all jobs are done. (len(jobs)=0)
@@ -284,6 +286,7 @@ def main():
            #print 'checking error_queue...'
            commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
            commonLog_proc.start()
+           time.sleep(120)
            commonLog_proc.join()
                  
         #when process is done, close gently:        
