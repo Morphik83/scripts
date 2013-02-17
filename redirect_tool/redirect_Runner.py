@@ -11,14 +11,15 @@ but only final/xls logs give the info about PASS/FAIL !!
 graphic/detailed presents only formatted sys.stdout !!
 """
 
-#todo - read input XLS file (not only LOG)
 
 """
 KNOWN ISSUES
-1. if there are two (or more) the same origin_urls, only first one will be logged to xls report 
+1. if there are two (or more) the same origin_urls, only second one will be logged to xls report 
 (dict cannot have two the same keys...)
  eg. www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspx
      www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspxa
+2. http://www.volvotrucks.com http://www.volvotrucks.com
+also does not work, since there is no redirection (missing 'TO' header, so there is no dict to compare results with)
 """
 
 
@@ -45,9 +46,19 @@ def input_data(input_file):
             
             #print "2: ",search.group(2)
             url_out = search.group(2)
-            if not re.match(r'^http[s]?://',search.group(2)):
-                url_out = 'http://'+search.group(2)
-            out_list.append(url_out)
+            '''
+            I had to turn-off adding 'http' to the target_url(below) 
+            in order to allow proper checking of the Xnet Login pages
+            eg. current behavior: http://www.trucksdealerportal.com -> /_layouts/login.aspx?ReturnUrl=%2f
+            but with enabled 'http' append it was like below:
+            http://www.trucksdealerportal.com -> http:///_layouts/login.aspx?ReturnUrl=%2f
+            As the side-effect, it is now required to manually add 'http' to the target_ur where needed
+            '''
+            #===================================================================
+            # if not re.match(r'^http[s]?://',search.group(2)):
+            #   url_out = 'http://'+search.group(2)
+            # out_list.append(url_out)
+            #===================================================================
             
             redirect_dict[url_in] = url_out
             
@@ -98,7 +109,7 @@ def fetch_url(redirects_list):
         sys.stdout = sys.__stdout__                 #revert sys.stdout to normal
     return logger.content
 
-def main():
+def run():
     
     #get list of URLs to check redirects (from input_file)
     redirects_list = input_data(input_file)
@@ -113,7 +124,17 @@ def main():
     
     #Finally, lets check if all redirects are correct and generate final_log (LOG or XLS)
     parser.verify_redirects(redirects_list, out_dict, 'xls')
-    
+
+def main():
+    print INTRO
+    ans = raw_input('START [y/n]? ')
+    if ans == 'y':
+        print 'Starting...\n'
+        time.sleep(2)
+        run()
+    else:
+        print 'Exiting...'
+        sys.exit()
 
 if __name__ == '__main__':
     main()
