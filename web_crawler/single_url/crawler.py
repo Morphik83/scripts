@@ -6,7 +6,6 @@ import os
 import urlparse
 import loggers
 import time
-import get_PROXY
 from _root import *
 from config_file import * 
 from urllib2 import URLError
@@ -214,6 +213,10 @@ class Menu(Crawler, RootClass):
         print 
         if proxy == 'y':
             enable_proxy = True
+            try:
+                import get_PROXY
+            except ImportError,e:
+                print e
         else:
             enable_proxy = False
         return start_url, enable_proxy 
