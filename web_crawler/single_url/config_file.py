@@ -14,6 +14,9 @@ not os.path.exists(crawler_log_path) and os.makedirs(crawler_log_path)
 #CRAWLER.log path
 crawler_log = os.path.join(crawler_log_path, cur_date+'CRAWLER.log')
 
+#pacfile
+proxy_path = os.path.join(os.getcwd(),'proxy')
+pacfile = os.path.join(proxy_path, 'pac_file')
 
 #copy from README
 INTRO = '''

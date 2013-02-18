@@ -6,6 +6,7 @@ import os
 import urlparse
 import loggers
 import time
+import get_PROXY
 from _root import *
 from config_file import * 
 from urllib2 import URLError
@@ -36,10 +37,11 @@ class Get_Browser(RootClass):
 
 
 class Crawler(Get_Browser):
-    def __init__(self, start_url):
+    def __init__(self, start_url, enable_proxy):
         self.links_to_follow = []
         self.visited_urls = []
         self.error_list = []
+        self.enable_proxy = enable_proxy
         self.start_url = start_url
         self.host_url = self._get_url_host(self.start_url)
         Get_Browser.__init__(self)
@@ -91,6 +93,10 @@ class Crawler(Get_Browser):
         try:    
             self._info('Starting CWP_Web_Crawler ...\n\n')
             time.sleep(2)
+            if self.enable_proxy:
+                proxies = get_PROXY.get_proxy_from_pac(pacfile, self.start_url)
+                self._opener.set_proxies(proxies)
+        
             #start timer
             t0 = time.clock()
             #open start_url
@@ -129,6 +135,10 @@ class Crawler(Get_Browser):
                 try:
                     url = self.links_to_follow[0]
                     self._info('>>opening: [%s] \n' % url)
+                    if self.enable_proxy:
+                        proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
+                        self._opener.set_proxies(proxies)
+                    
                     self._opener.open(url)
                     #check for error:
                     self.check_url_for_error(url)
@@ -189,7 +199,8 @@ class Menu(Crawler, RootClass):
     '''
     def __init__(self):
         self.welcome_page()
-        Crawler.__init__(self, self.get_address())
+        start_url, enable_proxy = self.get_info()
+        Crawler.__init__(self, start_url, enable_proxy)
         self.run_crawler()
         
     def welcome_page(self):
@@ -197,8 +208,15 @@ class Menu(Crawler, RootClass):
         time.sleep(2)
         print (INTRO)
         
-    def get_address(self):
-        return raw_input('> Provide start_url [must start with http://] : ')
+    def get_info(self):
+        start_url = raw_input('> Provide start_url [must start with http://] : ')
+        proxy = raw_input('> Enable PROXY ?[y/n]: ')
+        print 
+        if proxy == 'y':
+            enable_proxy = True
+        else:
+            enable_proxy = False
+        return start_url, enable_proxy 
         
 def main():
     #to run from Run_Crawler.bat where you can provide start_url
