@@ -67,8 +67,9 @@ class Output_Parser(loggers.Logger):
                       _host = pttrn_send.search(line).group(2)[:-4]            #[:-4] to del \n\r
                       _rest = pttrn_send.search(line).group(1)
                       #print >>f, '\nGET: ', _host, _rest                        #if NO LOGGER, this print "trick" can be used to write to file ;)
-                      print '\nGET: ', ''.join(_host+_rest)                      #www.volvopenta.com / --> www.volvopenta.com/
-                      
+                      #print '\nGET: ', ''.join(_host+_rest)                      #www.volvopenta.com / --> www.volvopenta.com/
+                      print '\nGET: ', ''.join(_host)                      #www.volvopenta.com / --> www.volvopenta.com/
+                                            
                   elif re.search(pttrn_reply, line):
                       _status = pttrn_reply.search(line).group(1)[:-5]
                       print '|\n|STATUS: ', _status
@@ -135,9 +136,17 @@ class Output_Parser(loggers.Logger):
         book = xlwt.Workbook(encoding="utf-8") 
         sheet1 = book.add_sheet("Redirects Report")
         
+        f_1 = xlwt.Font()
+        f_1.name = 'Verdana'
+        #f.bold = True
+        f_1.underline = xlwt.Font.UNDERLINE_SINGLE
+        f_1.colour_index = 4
+        
         #define styles
-        style0 = xlwt.easyxf('font: name Times New Roman, color-index black, bold on')
-        style1 = xlwt.easyxf('font: name Times New Roman, color-index black, bold off',num_format_str='#,##0.00')
+        style0 = xlwt.easyxf('font: name Verdana, color-index black, bold on')  #columns styles
+        style1 = xlwt.easyxf('font: name Verdana, color-index black, bold off',num_format_str='#,##0.00') 
+        style2 = xlwt.easyxf()
+        style2.font = f_1        
         
         #style for ERROR results (red background)
         err_st = xlwt.easyxf('pattern: pattern solid')
@@ -170,7 +179,8 @@ class Output_Parser(loggers.Logger):
                 out_dict[url_key] => out_dict[key] returns list of all the urls that target_url was redirected to
                 Below lines check if: out_dict[key] list HAS target_url from input file
                 """
-                sheet1.write(row,col,url_key,style1 )
+                n="HYPERLINK"   #log url(FROM) as active link
+                sheet1.write_merge(row, row, col, col, xlwt.Formula(n + '("'+url_key+'";"'+url_key+'")'), style2)
                 sheet1.write(row, col+1, redirects_list[2][url_key], style1 )
                 #strip() added - sometimes there is extra whitespace char at the end
                 par = redirects_list[2][url_key].strip() in out_dict[url_key]
@@ -223,5 +233,3 @@ if __name__ == '__main__':
     #match words that starts from only one underscore - second char 
     #cannot be underscore [^_]
 
-    
-    
