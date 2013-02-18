@@ -73,7 +73,7 @@ class Output_Parser(loggers.Logger):
                   elif re.search(pttrn_reply, line):
                       _status = pttrn_reply.search(line).group(1)[:-5]
                       print '|\n|STATUS: ', _status
-                      
+                          
                   elif re.search(pttrn_location, line):
                       _target = pttrn_location.search(line).group(1)
                       _target = re.sub(r'\b\s\b','%20',_target)                  #replace in url: /Home page.aspx' with /Home%20page.aspx'
@@ -93,8 +93,8 @@ class Output_Parser(loggers.Logger):
               except AttributeError,e:                                           #AttributeError is thrown, when no MATCH for 
                   pass                                                           #re.search - it means there are no redirection!
         finally:
-            sys.stdout = sys.__stdout__                                          #reset sys.stdout to normal state! Deletes redirection to logger
-            #pprint.pprint(out_dict)
+            sys.stdout = sys.__stdout__ 
+            #pprint.pprint(out_dict)                                         #reset sys.stdout to normal state! Deletes redirection to logger
             print '\nDONE!\n'
             
         return out_dict
