@@ -55,23 +55,24 @@ class Output_Parser(loggers.Logger):
                                                                                  
         try:
           #read line by line from foo.content (redirected sys.stdout)
-          for line in self.response:                                             
+          for line in self.response:
               try:
                   if re.search(pttrn_start_request, line):
-                        print "index: ",self.response.index(line)
-                        _origin_url = re.search(pttrn_start_request,line)
-                        out_list = []           #anytime "index" is changed, new out_list is created
-                                                #but out_dict stays the same! out_dict={_origin_url:out_list, _origin_url:out_list,...}
+                      print '#'*50
+                      print "index: ",self.response.index(line)
+                      _origin_url = re.search(pttrn_start_request,line)
+                      out_list = []           #anytime "index" is changed, new out_list is created
+                                              #but out_dict stays the same! out_dict={_origin_url:out_list, _origin_url:out_list,...}
                   elif re.search(pttrn_send, line):           
                       _host = pttrn_send.search(line).group(2)[:-4]            #[:-4] to del \n\r
                       _rest = pttrn_send.search(line).group(1)
                       #print >>f, '\nGET: ', _host, _rest                        #if NO LOGGER, this print "trick" can be used to write to file ;)
                       print '\nGET: ', ''.join(_host+_rest)                      #www.volvopenta.com / --> www.volvopenta.com/
+                      
                   elif re.search(pttrn_reply, line):
                       _status = pttrn_reply.search(line).group(1)[:-5]
                       print '|\n|STATUS: ', _status
-                      if re.match(r'\b200\b', _status):                          #if STATUS = 200, draw #*50 -> redirect reached final url
-                          print '\n','#'*50
+                      
                   elif re.search(pttrn_location, line):
                       _target = pttrn_location.search(line).group(1)
                       _target = re.sub(r'\b\s\b','%20',_target)                  #replace in url: /Home page.aspx' with /Home%20page.aspx'
@@ -85,16 +86,15 @@ class Output_Parser(loggers.Logger):
                               ['http://www.volvobuses.com/bus/global/en-gb',
                                'http://www.volvobuses.com/bus/global/en-gb/Pages/home_new.aspx'],}    
                       """
-                      
                   elif re.search(pttrn_error, line):
-                      print '\n|', line, '\n\n','#'*50
-                  else:
-                      pass
+                      print '\n|', line, '\n\n'
+
               except AttributeError,e:                                           #AttributeError is thrown, when no MATCH for 
                   pass                                                           #re.search - it means there are no redirection!
         finally:
             sys.stdout = sys.__stdout__                                          #reset sys.stdout to normal state! Deletes redirection to logger
-            pprint.pprint(out_dict)
+            #pprint.pprint(out_dict)
+            print '\nDONE!\n'
             
         return out_dict
             
@@ -173,27 +173,30 @@ class Output_Parser(loggers.Logger):
                 sheet1.write(row,col,url_key,style1 )
                 sheet1.write(row, col+1, redirects_list[2][url_key], style1 )
                 #strip() added - sometimes there is extra whitespace char at the end
-                if redirects_list[2][url_key].strip() in out_dict[url_key]:
+                par = redirects_list[2][url_key].strip() in out_dict[url_key]
+                if par:
                     #if OK, use GREEN background in xls report
-                    sheet1.write(row, col+2, str(redirects_list[2][url_key].strip() in out_dict[url_key]), ok_st)
+                    sheet1.write(row, col+2, par, ok_st)
                 else:
                     #if NOT OK, use RED background
-                    sheet1.write(row, col+2, str(redirects_list[2][url_key].strip() in out_dict[url_key]), err_st)
+                    sheet1.write(row, col+2, par, err_st)
                 #go to the next row
                 row=row+1
         book.save(xls_report)
         print xls_report," saved"
     
-    def _generate_LOG(self, redirects_list, out_dict):
-        with open(final_log, 'a+') as f:
-            for url_key in redirects_list[2].keys():
-                if out_dict.has_key(url_key):
-                    f.write("From: %s \n" % url_key)
-                    f.write("To:   %s \n" % redirects_list[2][url_key])
-                    f.write("%s\n" % str(redirects_list[2][url_key].strip() in out_dict[url_key]))
-                    f.write(50*"-"+"\n")
-        
-        print final_log," saved"
+    #===========================================================================
+    # def _generate_LOG(self, redirects_list, out_dict):
+    #    with open(final_log, 'a+') as f:
+    #        for url_key in redirects_list[2].keys():
+    #            if out_dict.has_key(url_key):
+    #                f.write("From: %s \n" % url_key)
+    #                f.write("To:   %s \n" % redirects_list[2][url_key])
+    #                f.write("%s\n" % str(redirects_list[2][url_key].strip() in out_dict[url_key]))
+    #                f.write(50*"-"+"\n")
+    #    
+    #    print final_log," saved"
+    #===========================================================================
 
 if __name__ == '__main__':
     pass

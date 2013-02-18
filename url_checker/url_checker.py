@@ -737,6 +737,14 @@ class Run_URL_Checks_OnServers(Check_URLs):
         self.end = True
         self.save_report()
         
+        #=======================================================================
+        # #if err_list is not empty, save to file:
+        # if self.error_list:
+        #    with open(error_log, 'a+') as f:
+        #        for e in self.error_list:
+        #            f.write(str(e)+'\n')
+        #=======================================================================
+        
     def set_OriginalHost(self):
         """if self.end is True, revert host to the original host file
         """

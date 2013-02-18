@@ -103,7 +103,8 @@ class Crawler(Get_Browser):
             #login to xnet
             try:
                 self.login_to_xnet(username, passwd)
-            except mechanize.ControlNotFoundError,e:
+            #except (mechanize.ControlNotFoundError,mechanize.FormNotFoundError),e:
+            except (mechanize.ControlNotFoundError,mechanize.FormNotFoundError),e:
                 self._info('ALREADY LOGGED OR INET PAGE')
             #get all valid links
             finally:
