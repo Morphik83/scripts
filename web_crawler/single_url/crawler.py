@@ -139,10 +139,6 @@ class Crawler(Get_Browser):
                 try:
                     url = self.links_to_follow[0]
                     self._info('>>opening: [%s] \n' % url)
-                    if self.enable_proxy:
-                        proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
-                        self._opener.set_proxies(proxies)
-                    
                     self._opener.open(url)
                     #check for error:
                     self.check_url_for_error(url)
