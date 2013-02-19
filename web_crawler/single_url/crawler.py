@@ -93,6 +93,11 @@ class Crawler(Get_Browser):
             self._info('Starting CWP_Web_Crawler ...\n\n')
             time.sleep(2)
             if self.enable_proxy:
+                try:
+                    print 'IMPORT getProxy'
+                    import get_PROXY
+                except ImportError,e:
+                    print e
                 proxies = get_PROXY.get_proxy_from_pac(pacfile, self.start_url)
                 self._opener.set_proxies(proxies)
         
@@ -213,10 +218,6 @@ class Menu(Crawler, RootClass):
         print 
         if proxy == 'y':
             enable_proxy = True
-            try:
-                import get_PROXY
-            except ImportError,e:
-                print e
         else:
             enable_proxy = False
         return start_url, enable_proxy 
