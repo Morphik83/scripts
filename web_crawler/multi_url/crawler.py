@@ -14,9 +14,9 @@ from urllib2 import URLError
 from httplib import InvalidURL
 
 class Get_Browser(RootClass):
-    '''
-    creates browser's instance; feeds CheckURLs
-    '''     
+    """creates browser's instance; feeds CheckURLs
+    """
+         
     def __init__(self):
         self._opener = self._browser()
 
@@ -35,24 +35,22 @@ class Get_Browser(RootClass):
         self._opener["ctl00$BodyContent$login$Password"]=passwd
         self._opener.submit(name='ctl00$BodyContent$login$LoginButton')
 
-
 class Crawler(Get_Browser):
     def __init__(self, start_url):
         self.links_to_follow = []
         self.visited_urls = []
         self.error_list = []
         self.start_url = start_url
-        self.mail_body = []
         self.host_url = self._get_url_host(self.start_url)
         Get_Browser.__init__(self)
         #redirect sys.stdout (all print statements) to Logger obj
         sys.stdout = loggers.Logger(self.add_hostname_to_crawler_log())
     
     def add_hostname_to_crawler_log(self):    
-        '''inserts start_url hostname to the crawler log file
+        """inserts start_url hostname to the crawler log file
         before: D:\workspace\Git\scripts\web_crawler\logs\13-01-31_13_22_45_CRAWLER.log
         after:  D:\workspace\Git\scripts\web_crawler\logs\[volvo.com]13-01-31_13_22_45_CRAWLER.log
-        '''
+        """
         pttrn = re.compile(r'(.*\\)(.*$)')
         result = re.search(pttrn, crawler_log)
         if result:
@@ -81,11 +79,8 @@ class Crawler(Get_Browser):
             self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
             self.error_list.append([url,search.group(1)])
             error_queue.put((self.net_loc, url, search.group(1)))
-            self.mail_body.append([url,search.group(1)])
         else:
             self._info('no errors noticed\n')
-    
-    
                     
     def run_crawler(self, error_queue):
         def _update_visited_urls(self, url):
@@ -118,8 +113,7 @@ class Crawler(Get_Browser):
                 self._info('ALREADY LOGGED OR INET PAGE')
             #get all valid links
             finally:
-                #check start_url for errors:
-                self.check_url_for_error(self.start_url, error_queue)
+                self.check_url_for_error(self.start_url, error_queue)   #check for errors:
                 self._info('>>scraping...')
                 for link in self._opener.links():
                     if not re.search(r'[?]', link.url):   #to exclude urls with query strings
@@ -143,8 +137,7 @@ class Crawler(Get_Browser):
                     self._info('>>opening: [%s] \n' % url)
                     
                     self._opener.open(url)
-                    #check for error:
-                    self.check_url_for_error(url, error_queue)
+                    self.check_url_for_error(url, error_queue)  #check for error:
                     self._info('>>scraping...')
                     for link in self._opener.links():
                         if not re.search(r'[?]', link.url):   #to exclude urls with query strings
@@ -192,24 +185,18 @@ class Crawler(Get_Browser):
             self._info('>>>>>>> SCRIPT IS DONE <<<<<<<<<')
             if overall_time>60:
                 self._info('RUN_TIME_OVERALL: %d[m]%d[s]' %(overall_time/60,overall_time%60))
-                self.mail_body.append('RUN_TIME_OVERALL: %d[m]%d[s]' %(overall_time/60,overall_time%60))
             else:
                 self._info('RUN_TIME_OVERALL: %.01f [s]' %overall_time)
-                self.mail_body.append('RUN_TIME_OVERALL: %.01f [s]' %overall_time)
             self._info('visited_links.length: [%d] ' % len(self.visited_urls))
-            self.mail_body.append('visited_links.length: [%d] ' % len(self.visited_urls))
             self._info('error_list.length: [%d] '%len(self.error_list))
             self._warn('error_list:')
-            self.mail_body.append('error_list:')
             pprint.pprint(self.error_list)
-            self.mail_body.append(pprint.pprint(self.error_list))
        
         except KeyboardInterrupt:
             print '\n'
             self._warn('Stopped by user!\nError list:\n')
             pprint.pprint(self.error_list)
             sys.exit()
-
 
 def welcome_page():
         print ('>> Web_Crawler << author: Maciej Balazy >>')
@@ -231,7 +218,24 @@ def get_url_list():
         else:
             print 'User aborted execution...\n'
             sys.exit()
-            
+
+def get_email_addresses():
+    addr_to = raw_input('Enter valid e-mail address [to]: ')
+    if re.search(r'[@]',addr_to):
+        to=addr_to
+    else:
+        to=None
+        print 'E-mail not valid! [%s]' % addr_to
+    
+    addr_cc = raw_input('Enter valid e-mail address [cc]: ')
+    if re.search(r'[@]',addr_cc):
+        cc=addr_cc
+    else:
+        cc=None
+        print 'E-mail not valid! [%s]' % addr_cc
+    
+    return to,cc
+    
 class menu(Crawler, RootClass):
    def __init__(self, start_url, error_queue):
        Crawler.__init__(self, start_url)
@@ -255,10 +259,9 @@ def worker(url, error_queue):
 #===============================================================================
          
 def writer_q2f(queue):
-    '''
-    every value appended to the error_queue in any of the running processes, has the same schema:
+    """every value appended to the error_queue in any of the running processes, has the same schema:
     (self.netloc, url, error) 
-    '''
+    """
     #print 'inside writer'
     with open (common_log ,'a+') as f:
         while True: 
@@ -270,32 +273,45 @@ def writer_q2f(queue):
             except:
                 break
 
-def send_mail(*args):
-        '''
-        to,cc,subject,body,attachments,bcc=None
-        '''
-        MailItem = 0x0
-        outlook = win32com.client.Dispatch("Outlook.Application")
-        newMail = outlook.CreateItem(MailItem)
-        newMail.To = args[0]
-        newMail.CC = args[1]
-        newMail.Subject = args[2]
-        if args[3]:
-            newMail.Body = str(args[3])
-        if args[4]:
-            newMail.Attachments.Add(args[4])
-        
-        #newMail.display()
-        newMail.Send()
-        print 'Email with results sent to the recipients:\n[%s]\n[%s]'%(to,cc) 
+def send_mail(**kwargs):
+    """available args:
+    [to,cc,bcc,body,subject,attachment]
+    pass arguments as below:
+    (Cc='this_is_cc',Body='this_is_body', to='test@test.test')
+    """
+    MailItem = 0x0
+    outlook = win32com.client.Dispatch("Outlook.Application")
+    newMail = outlook.CreateItem(MailItem)
+    
+    for key in kwargs:
+        if re.search(r'[Tt]o',key):
+            newMail.To = kwargs[key]
+        elif re.search(r'[Cc]c',key):
+            newMail.CC = kwargs[key]
+        elif re.search(r'[Bb]cc',key):
+            newMail.Bcc = kwargs[key]
+        elif re.search(r'[Ss]ubject', key):
+            newMail.Subject = kwargs[key]
+        elif re.search(r'[Bb]ody',key):
+            newMail.Body = kwargs[key]
+        elif re.searc(r'[Aa]ttachments',key):
+            newMail.Attachments.Add(kwargs[key])
+        else:
+            print 'Send_mail: incorrect key! [%s]' % key
+    #newMail.display()
+    newMail.Send()
+    print 'Email with results sent to the recipients:\n[%s]\n[%s]'%(to,cc)
             
 def main():
     welcome_page()
     url_list = get_url_list()
+    to_email, cc_email = get_email_addresses()
     
     #all the started processes are appending error info to the common queue
     error_queue = Queue()
+    #IDs of the dispatched processes are stored here 
     jobs = []
+    #monitor is used to track active jobs - if not, send_mail with results
     monitor = {}
     
     if url_list:
@@ -306,69 +322,46 @@ def main():
             jobs.append(process)
             monitor[process]= url_list[i]
             
-        #===========================================================================
-        # when all the processes are up and running, start 'listener' process, that 
-        # gets as input 'error_queue' and writes all the items to the log file.
-        # ->put listener in the infinite loop start/stop. Every time just check,
-        # if there are any running jobs. If true: keep starting the 'listener', 
-        # if false -> means that all jobs are done. (len(jobs)=0)
-        #===========================================================================
-        
-        #=======================================================================
-        # print '1',[job for job in jobs if job.is_alive()]
-        # time.sleep(2)
-        # print '2',[job for job in jobs if job.is_alive()]
-        # time.sleep(2)
-        # print '3',[job for job in jobs if job.is_alive()]
-        # time.sleep(2)
-        # print '4',[job for job in jobs if job.is_alive()]
-        #=======================================================================
+        """
+        when all the processes are up and running, start 'listener' process, that 
+        gets as input 'error_queue' and writes all the items to the log file.
+        ->put listener in the infinite loop start/stop (as long as there is at least
+        one active job). 
+        If true: keep starting the 'listener', 
+        if false -> means that all jobs are done. (len(jobs)=0)
+        """
         
         while [job for job in jobs if job.is_alive()]:
             
-            #send mail:
-            active_jobs_list = [job for job in jobs if job.is_alive()]
-            print 'active_jobs_list: %s' % active_jobs_list
-            print 'MONITOR: %s ' % monitor 
-            for job_process in monitor.keys():
-                #print job_process in active_jobs_list
-                if job_process not in active_jobs_list:
-                    send_mail(to,cc,str(monitor[job_process] + ' has finished!'),'CommonLog attached',common_log)
-                    monitor.pop(job_process)
+            if to_email:        #send_mail only if to_mail given
+                active_jobs_list = [job for job in jobs if job.is_alive()]
+                print 'active_jobs_list: %s' % active_jobs_list
+                print 'MONITOR: %s ' % monitor 
+                for job_process in monitor.keys():
+                    #print job_process in active_jobs_list
+                    if job_process not in active_jobs_list:
+                        #send_mail(to,cc,str(monitor[job_process] + ' has finished!'),'CommonLog attached',common_log)
+                        send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+' has finished!')\
+                                  ,Body='[1]CommonLog attached', Attachemnts=common_log)
+                        monitor.pop(job_process)
                
-            """
-            example:
-            active jobs list: 
-            [<Process(Process-1, started)>, 
-            <Process(Process-2, started)>, 
-            <Process(Process-3, started)>, 
-            <Process(Process-4, started)>, 
-            <Process(Process-5, started)>, 
-            <Process(Process-6, started)>, 
-            <Process(Process-7, started)>, 
-            <Process(Process-8, started)>, 
-            <Process(Process-9, started)>, 
-            <Process(Process-10, started)>, 
-            <Process(Process-11, started)>, 
-            <Process(Process-12, started)>, 
-            <Process(Process-13, started)>]
+                """
+                example:
+                active jobs list: 
+                [<Process(Process-1, started)>, 
+                <Process(Process-2, started)>, 
+                <Process(Process-3, started)>,]
+                
+                MONITOR: 
+                {<Process(Process-1, started)>: 'http://volvoitxnet-qa.volvo.com', 
+                <Process(Process-2, started)>: 'http://vfsco-qa.volvo.com', 
+                <Process(Process-3, started)>: 'http://volvobuses-qa.volvo.com',}
+                """
             
-            MONITOR: 
-            {<Process(Process-13, started)>: 'http://volvoitxnet-qa.volvo.com', 
-            <Process(Process-6, started)>: 'http://vfsco-qa.volvo.com', 
-            <Process(Process-3, started)>: 'http://volvobuses-qa.volvo.com', 
-            <Process(Process-11, started)>: 'http://vppn-qa.volvo.com', 
-            <Process(Process-7, started)>: 'http://volvoaero-qa.volvo.com', 
-            <Process(Process-12, started)>: 'http://vdn.volvoce-qa.volvo.com', 
-            <Process(Process-8, started)>: 'http://volvologistics-qa.volvo.com', 
-            <Process(Process-1, started)>: 'http://volvoce-qa.volvo.com', 
-            <Process(Process-9, started)>: 'http://trucksdealerportal-qa.volvo.com', 
-            <Process(Process-10, started)>: 'http://online.renault-trucks-qa.volvo.com', 
-            <Process(Process-5, started)>: 'http://volvopenta-qa.volvo.com', 
-            <Process(Process-2, started)>: 'http://volvoit-qa.volvo.com', 
-            <Process(Process-4, started)>: 'http://volvotrucks-qa.volvo.com'}
-            """
             #print 'checking error_queue...'
+            """
+            check error_queue in 5 minutes cycles and if not-empty, write to common_log
+            """
             commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
             commonLog_proc.start()
             time.sleep(300)
@@ -380,10 +373,14 @@ def main():
             print '%s is %s' % (i.pid, i.is_alive())
             i.join()
         
-        send_mail(to,cc,'CommorError_LOG','body', common_log)  
-        
+        """
+        send_mail only when all the jobs are done with truly common_log ;)
+        """
+        if to_email:    #send_mail only if to_mail given
+            send_mail(To=to, Cc=cc, Subject=str(monitor[job_process]+' has finished!')\
+                      ,Body='[2]CommonLog attached', Attachemnts=common_log) 
+  
+    
 if __name__ == '__main__':
-    main()
-        
-    
-    
+   main()
+   
