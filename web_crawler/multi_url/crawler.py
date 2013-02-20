@@ -6,6 +6,7 @@ import os
 import urlparse
 import loggers
 import time
+import win32com.client
 from multiprocessing import Process, Queue
 from _root import *
 from config_file import * 
@@ -41,6 +42,7 @@ class Crawler(Get_Browser):
         self.visited_urls = []
         self.error_list = []
         self.start_url = start_url
+        self.mail_body = []
         self.host_url = self._get_url_host(self.start_url)
         Get_Browser.__init__(self)
         #redirect sys.stdout (all print statements) to Logger obj
@@ -79,8 +81,11 @@ class Crawler(Get_Browser):
             self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
             self.error_list.append([url,search.group(1)])
             error_queue.put((self.net_loc, url, search.group(1)))
+            self.mail_body.append([url,search.group(1)])
         else:
             self._info('no errors noticed\n')
+    
+    
                     
     def run_crawler(self, error_queue):
         def _update_visited_urls(self, url):
@@ -96,7 +101,11 @@ class Crawler(Get_Browser):
             t0 = time.clock()
             #open start_url
             try:
-                self._opener.open(self.start_url)
+                if not re.search(r'[?]', self.start_url):   #to exclude urls with query strings
+                    self._opener.open(self.start_url)
+                else:
+                    self._info('-->skipping(urlsWithQueryStr>"?"): %s ' % self.start_url)
+                    sys.exit()
             except URLError,e:
                 self._warn("is this URL: [",str(self.start_url),"] valid?\n",str(e))
                 self.error_list.append([self.start_url,str(e)])
@@ -113,14 +122,16 @@ class Crawler(Get_Browser):
                 self.check_url_for_error(self.start_url, error_queue)
                 self._info('>>scraping...')
                 for link in self._opener.links():
-                    if link.url.startswith(self.host_url) or link.url.startswith('/') :
-                        if link.url not in self.links_to_follow:
-                            if link.url not in self.visited_urls:
-                                self._info('-->links_to_follow.append: %s ' % link.url)
-                                _update_links_to_follow(self, link.url)
-                            else:
-                                self._info('-->skipping: %s ' % link.url)
-                                
+                    if not re.search(r'[?]', link.url):   #to exclude urls with query strings
+                        if link.url.startswith(self.host_url) or link.url.startswith('/') :
+                            if link.url not in self.links_to_follow:
+                                if link.url not in self.visited_urls:
+                                    self._info('-->links_to_follow.append: %s ' % link.url)
+                                    _update_links_to_follow(self, link.url)
+                                else:
+                                    self._info('-->skipping: %s ' % link.url)
+                    else:
+                        self._info('-->skipping(urlsWithQueryStr>"?"): %s ' % link.url)           
                 _update_visited_urls(self, self.start_url)
                 self._info('-->link_to_follow.length: [%d]' % len(self.links_to_follow))
                 print '\n'
@@ -136,13 +147,18 @@ class Crawler(Get_Browser):
                     self.check_url_for_error(url, error_queue)
                     self._info('>>scraping...')
                     for link in self._opener.links():
-                        if link.url.startswith(self.host_url) or link.url.startswith('/') :
-                            if link.url not in self.links_to_follow:
-                                if link.url not in self.visited_urls:
-                                    self._info('-->links_to_follow.append: %s ' % link.url)
-                                    _update_links_to_follow(self, link.url)
-                                else:
-                                    self._info('-->skipping: %s ' % link.url)
+                        if not re.search(r'[?]', link.url):   #to exclude urls with query strings
+                            if link.url.startswith(self.host_url) or link.url.startswith('/'):
+                                if link.url not in self.links_to_follow:
+                                    if link.url not in self.visited_urls:
+                                        self._info('-->links_to_follow.append: %s ' % link.url)
+                                        _update_links_to_follow(self, link.url)
+                                    else:
+                                        self._info('-->skipping(alreadyVisited|addedToFollow: %s ' % link.url)
+                            else:
+                                self._info('-->skipping (notStartWith hostname or /: %s ' % link.url)
+                        else:
+                            self._info('-->skipping(urlsWithQueryStr): %s ' % link.url)
                 
                 except mechanize.BrowserStateError,e:
                     if str(e)== 'not viewing HTML':
@@ -176,13 +192,18 @@ class Crawler(Get_Browser):
             self._info('>>>>>>> SCRIPT IS DONE <<<<<<<<<')
             if overall_time>60:
                 self._info('RUN_TIME_OVERALL: %d[m]%d[s]' %(overall_time/60,overall_time%60))
+                self.mail_body.append('RUN_TIME_OVERALL: %d[m]%d[s]' %(overall_time/60,overall_time%60))
             else:
                 self._info('RUN_TIME_OVERALL: %.01f [s]' %overall_time)
+                self.mail_body.append('RUN_TIME_OVERALL: %.01f [s]' %overall_time)
             self._info('visited_links.length: [%d] ' % len(self.visited_urls))
+            self.mail_body.append('visited_links.length: [%d] ' % len(self.visited_urls))
             self._info('error_list.length: [%d] '%len(self.error_list))
             self._warn('error_list:')
+            self.mail_body.append('error_list:')
             pprint.pprint(self.error_list)
-        
+            self.mail_body.append(pprint.pprint(self.error_list))
+       
         except KeyboardInterrupt:
             print '\n'
             self._warn('Stopped by user!\nError list:\n')
@@ -248,6 +269,25 @@ def writer_q2f(queue):
                 f.write(s)
             except:
                 break
+
+def send_mail(*args):
+        '''
+        to,cc,subject,body,attachments,bcc=None
+        '''
+        MailItem = 0x0
+        outlook = win32com.client.Dispatch("Outlook.Application")
+        newMail = outlook.CreateItem(MailItem)
+        newMail.To = args[0]
+        newMail.CC = args[1]
+        newMail.Subject = args[2]
+        if args[3]:
+            newMail.Body = str(args[3])
+        if args[4]:
+            newMail.Attachments.Add(args[4])
+        
+        #newMail.display()
+        newMail.Send()
+        print 'Email with results sent to the recipients:\n[%s]\n[%s]'%(to,cc) 
             
 def main():
     welcome_page()
@@ -256,6 +296,7 @@ def main():
     #all the started processes are appending error info to the common queue
     error_queue = Queue()
     jobs = []
+    monitor = {}
     
     if url_list:
         for i in xrange(len(url_list)):
@@ -263,6 +304,7 @@ def main():
             print 'Starting process for ['+ url_list[i]+']'
             process.start()
             jobs.append(process)
+            monitor[process]= url_list[i]
             
         #===========================================================================
         # when all the processes are up and running, start 'listener' process, that 
@@ -283,17 +325,63 @@ def main():
         #=======================================================================
         
         while [job for job in jobs if job.is_alive()]:
-           #print 'checking error_queue...'
-           commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
-           commonLog_proc.start()
-           time.sleep(120)
-           commonLog_proc.join()
-                 
+            
+            #send mail:
+            active_jobs_list = [job for job in jobs if job.is_alive()]
+            print 'active_jobs_list: %s' % active_jobs_list
+            print 'MONITOR: %s ' % monitor 
+            for job_process in monitor.keys():
+                #print job_process in active_jobs_list
+                if job_process not in active_jobs_list:
+                    send_mail(to,cc,str(monitor[job_process] + ' has finished!'),'CommonLog attached',common_log)
+                    monitor.pop(job_process)
+               
+            """
+            example:
+            active jobs list: 
+            [<Process(Process-1, started)>, 
+            <Process(Process-2, started)>, 
+            <Process(Process-3, started)>, 
+            <Process(Process-4, started)>, 
+            <Process(Process-5, started)>, 
+            <Process(Process-6, started)>, 
+            <Process(Process-7, started)>, 
+            <Process(Process-8, started)>, 
+            <Process(Process-9, started)>, 
+            <Process(Process-10, started)>, 
+            <Process(Process-11, started)>, 
+            <Process(Process-12, started)>, 
+            <Process(Process-13, started)>]
+            
+            MONITOR: 
+            {<Process(Process-13, started)>: 'http://volvoitxnet-qa.volvo.com', 
+            <Process(Process-6, started)>: 'http://vfsco-qa.volvo.com', 
+            <Process(Process-3, started)>: 'http://volvobuses-qa.volvo.com', 
+            <Process(Process-11, started)>: 'http://vppn-qa.volvo.com', 
+            <Process(Process-7, started)>: 'http://volvoaero-qa.volvo.com', 
+            <Process(Process-12, started)>: 'http://vdn.volvoce-qa.volvo.com', 
+            <Process(Process-8, started)>: 'http://volvologistics-qa.volvo.com', 
+            <Process(Process-1, started)>: 'http://volvoce-qa.volvo.com', 
+            <Process(Process-9, started)>: 'http://trucksdealerportal-qa.volvo.com', 
+            <Process(Process-10, started)>: 'http://online.renault-trucks-qa.volvo.com', 
+            <Process(Process-5, started)>: 'http://volvopenta-qa.volvo.com', 
+            <Process(Process-2, started)>: 'http://volvoit-qa.volvo.com', 
+            <Process(Process-4, started)>: 'http://volvotrucks-qa.volvo.com'}
+            """
+            #print 'checking error_queue...'
+            commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
+            commonLog_proc.start()
+            time.sleep(300)
+            commonLog_proc.join()
+        
+               
         #when process is done, close gently:        
         for i in jobs:
             print '%s is %s' % (i.pid, i.is_alive())
             i.join()
-
+        
+        send_mail(to,cc,'CommorError_LOG','body', common_log)  
+        
 if __name__ == '__main__':
     main()
         

@@ -29,6 +29,10 @@ crawler_start_file = os.path.join(input_log_path, 'crawler_start_file')
 #make sure /input dir exists
 not os.path.exists(input_log_path) and os.makedirs(input_log_path)
 
+#mail
+to = 'email_address_to'
+cc = 'email_address_cc'
+
 #copy from README
 INTRO = '''
 >>>>> Web_Crawler <<<<<
