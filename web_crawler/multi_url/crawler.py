@@ -300,7 +300,7 @@ def send_mail(**kwargs):
             print 'Send_mail: incorrect key! [%s]' % key
     #newMail.display()
     newMail.Send()
-    print 'Email with results sent to the recipients:\n[%s]\n[%s]'%(to,cc)
+    print 'Email with the results sent to the recipients!'
             
 def main():
     welcome_page()
