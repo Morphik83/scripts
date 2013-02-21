@@ -326,8 +326,8 @@ def main():
                 for job_process in monitor.keys():
                     if job_process not in active_jobs_list:
            
-                        print str(monitor[job_process]+'>>Crawler has finished!')
-                        print 'Check common_log for error [%s]' %common_log
+                        print str('\n\n'+monitor[job_process]+'>>Crawler has finished!')
+                        print 'Check common_log for error [%s]\n\n' %common_log
            
                         if to_email and not cc_email:        #send_mail only if to_mail given
                             send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
@@ -336,6 +336,8 @@ def main():
                             send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
                                       ,Body='[1]CommonLog attached', Attachments=common_log)
                         
+                        job_process.terminate()
+                        job_process.join()
                         monitor.pop(job_process)
            
                 """
