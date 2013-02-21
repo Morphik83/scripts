@@ -212,7 +212,7 @@ def get_url_list():
                 url_list.append(line.strip())
         print '\nFollowing URLS will be checked: '
         pprint.pprint(url_list)
-        ans = raw_input("\nSTART ? [y/n]")
+        ans = raw_input("\nSTART ? [y/n] ")
         if ans == 'y':
             return url_list
         else:
@@ -225,14 +225,14 @@ def get_email_addresses():
         to=addr_to
     else:
         to=None
-        print 'E-mail not valid! [%s]' % addr_to
+        #print 'E-mail not valid! [%s]' % addr_to
     
     addr_cc = raw_input('Enter valid e-mail address [cc]: ')
     if re.search(r'[@]',addr_cc):
         cc=addr_cc
     else:
         cc=None
-        print 'E-mail not valid! [%s]' % addr_cc
+        #print 'E-mail not valid! [%s]' % addr_cc
     
     return to,cc
     
@@ -294,7 +294,7 @@ def send_mail(**kwargs):
             newMail.Subject = kwargs[key]
         elif re.search(r'[Bb]ody',key):
             newMail.Body = kwargs[key]
-        elif re.searc(r'[Aa]ttachments',key):
+        elif re.search(r'[Aa]ttachments',key):
             newMail.Attachments.Add(kwargs[key])
         else:
             print 'Send_mail: incorrect key! [%s]' % key
@@ -304,8 +304,9 @@ def send_mail(**kwargs):
             
 def main():
     welcome_page()
-    url_list = get_url_list()
     to_email, cc_email = get_email_addresses()
+    url_list = get_url_list()
+    
     
     #all the started processes are appending error info to the common queue
     error_queue = Queue()
@@ -333,30 +334,32 @@ def main():
         
         while [job for job in jobs if job.is_alive()]:
             
-            if to_email:        #send_mail only if to_mail given
-                active_jobs_list = [job for job in jobs if job.is_alive()]
-                print 'active_jobs_list: %s' % active_jobs_list
-                print 'MONITOR: %s ' % monitor 
-                for job_process in monitor.keys():
-                    #print job_process in active_jobs_list
-                    if job_process not in active_jobs_list:
-                        #send_mail(to,cc,str(monitor[job_process] + ' has finished!'),'CommonLog attached',common_log)
-                        send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+' has finished!')\
-                                  ,Body='[1]CommonLog attached', Attachemnts=common_log)
-                        monitor.pop(job_process)
-               
-                """
-                example:
-                active jobs list: 
-                [<Process(Process-1, started)>, 
-                <Process(Process-2, started)>, 
-                <Process(Process-3, started)>,]
-                
-                MONITOR: 
-                {<Process(Process-1, started)>: 'http://volvoitxnet-qa.volvo.com', 
-                <Process(Process-2, started)>: 'http://vfsco-qa.volvo.com', 
-                <Process(Process-3, started)>: 'http://volvobuses-qa.volvo.com',}
-                """
+            active_jobs_list = [job for job in jobs if job.is_alive()]
+            print 'active_jobs_list: %s' % active_jobs_list
+            print 'MONITOR: %s ' % monitor 
+            for job_process in monitor.keys():
+                #print job_process in active_jobs_list
+                if job_process not in active_jobs_list:
+                    if to_email and not cc_email:        #send_mail only if to_mail given
+                        send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                                  ,Body='[1]CommonLog attached', Attachments=common_log)
+                    if to_email and cc_email:
+                        send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                                  ,Body='[1]CommonLog attached', Attachments=common_log)
+                    monitor.pop(job_process)
+           
+            """
+            example:
+            active jobs list: 
+            [<Process(Process-1, started)>, 
+            <Process(Process-2, started)>, 
+            <Process(Process-3, started)>,]
+            
+            MONITOR: 
+            {<Process(Process-1, started)>: 'http://volvoitxnet-qa.volvo.com', 
+            <Process(Process-2, started)>: 'http://vfsco-qa.volvo.com', 
+            <Process(Process-3, started)>: 'http://volvobuses-qa.volvo.com',}
+            """
             
             #print 'checking error_queue...'
             """
@@ -376,11 +379,13 @@ def main():
         """
         send_mail only when all the jobs are done with truly common_log ;)
         """
-        if to_email:    #send_mail only if to_mail given
-            send_mail(To=to, Cc=cc, Subject=str(monitor[job_process]+' has finished!')\
-                      ,Body='[2]CommonLog attached', Attachemnts=common_log) 
-  
-    
+        if to_email and not cc_email:    #send_mail only if to_mail given
+            send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                      ,Body='[2]CommonLog attached', Attachments=common_log) 
+        if to_email and cc_email:    #send_mail only if to_mail given
+            send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                      ,Body='[2]CommonLog attached', Attachments=common_log)
+ 
 if __name__ == '__main__':
    main()
    

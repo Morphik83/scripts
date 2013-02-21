@@ -7,6 +7,7 @@ import re
 import pprint
 import shutil
 import time
+import win32com.client
 from _root import RootClass                       
 from urllib2 import URLError
 from httplib import InvalidURL
@@ -155,6 +156,7 @@ class Menu(RootClass,object):
     def __init__(self):
         self.welcome_page()
         self.checklist=[]
+        self.get_email_addresses()
         self.menu()
     
     def welcome_page(self):
@@ -176,6 +178,21 @@ class Menu(RootClass,object):
                     url_list.append(line.strip())
             pprint.pprint(url_list)
             
+    def get_email_addresses(self):
+        addr_to = raw_input('Enter valid e-mail address [to]: ')
+        if re.search(r'[@]',addr_to):
+            self.to=addr_to
+        else:
+            self.to=None
+            #print 'E-mail not valid! [%s]' % addr_to
+        
+        addr_cc = raw_input('Enter valid e-mail address [cc]: ')
+        if re.search(r'[@]',addr_cc):
+            self.cc=addr_cc
+        else:
+            self.cc=None
+            #print 'E-mail not valid! [%s]' % addr_cc
+        return self.to,self.cc        
             
     def menu(self):
         def _menu_check_subPages(self):
@@ -444,9 +461,9 @@ class Check_URLs(Report,Get_Browser,Menu):
                     self._info('GETTING PROXY...')
                     proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
                     self._opener.set_proxies(proxies)
-                
-                self._get_url_host(url)
-                self._info('URL_HOST:',self.url_host)
+                if url.startswith('http'):  #exclude urls that start with '/'
+                    self._get_url_host(url)
+                    self._info('URL_HOST:',self.url_host)
                 response = self._opener.open(url)
                 #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
                 #print self.xnet_opener.response().code #or alternatively: print r.code 
@@ -539,7 +556,8 @@ class Check_URLs(Report,Get_Browser,Menu):
         final_list = []
         
         self.main_url_host = self.url_host
-        for link in self._opener.links(url_regex="/*"):
+        #for link in self._opener.links(url_regex="/*"):
+        for link in self._opener.links():
            if link.url.startswith('http') or link.url.startswith('/'):
                link_list.append(link.url.lower()) 
                #.lower() since URLs are case.insensitive!
@@ -560,7 +578,8 @@ class Check_URLs(Report,Get_Browser,Menu):
         
         for url in final_list:
             #get url_hostname (current self.url_host)
-            self._get_url_host(url)
+            if url.startswith('http'):  #exclude urls that start with '/'
+                self._get_url_host(url)
             try:
                 #with this url we stay in the same hostname area:
                 if url.startswith('/') or self.url_host == self.main_url_host:
@@ -580,6 +599,7 @@ class Check_URLs(Report,Get_Browser,Menu):
                     print '\n'
                     self._info('Skipping [%s] due to diff domain\n'%url)
                     self.skipped_list.append(url)
+                    
                 #if url hostname (domain) is different from the main page, then use ->open.no_vist
                 #===============================================================
                 # else:
@@ -591,13 +611,10 @@ class Check_URLs(Report,Get_Browser,Menu):
                 #    ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
                 #    error = None
                 #    self.write_to_report(self.format, url, ip_addr, r_code, error)
-                #    #===============================================================
-                #    # DOES NOT WORK - .open_novisit(url)->self.opener points to main
-                #    #self._check_url_for_error(url)
-                #    #===============================================================
                 #===============================================================
-                          
-            except (URLError,InvalidURL),e:  
+            except (URLError,InvalidURL,BrowserStateError,socket.error),e:  
+                self.write_to_report(self.format, url, '', '', str(e))
+                
                 #sometimes links on the page redirects to some other hosts - we have one browser instance, that is 
                 #following every link on the page (send Requests are created 'on the fly', so if page redirects
                 #to other host, then HEADER in our browser's request is updated to the new host name.
@@ -609,7 +626,7 @@ class Check_URLs(Report,Get_Browser,Menu):
                 #Other FIX is to use b.open_novisit(url) instead of b.open(url). In this case, browser state is unchanged
                 #but it somehow closes the door for scraping deeper (eg.cannot get links from such page - so I cannot 
                 #check them)
-                self.write_to_report(self.format, url, '', '', str(e))
+                
                 #=========================================================
                 # try:
                 #    self.write_to_report(self.format, url, '', '', str(e))
@@ -622,17 +639,15 @@ class Check_URLs(Report,Get_Browser,Menu):
                 # except (URLError,InvalidURL),e:
                 #    self.write_to_report(self.format, url, '', '', str(e))
                 #=========================================================
-            except socket.error,e:
-               self.write_to_report(self.format, url, '', '', str(e))
-                              
-                    #=============================================================
-                    #--> this does not occur when b.open_novisit(url) is used!
-                    # except mechanize._mechanize.BrowserStateError,e:
-                    #    #this error occurs, when 'Error 118 (net::ERR_CONNECTION_TIMED_OUT): The operation timed out.'
-                    #    #Page is not available. Eg. Open Inet page (eg.www.volvobuses.com), get all the links from that page
-                    #    #among other, there is XNET link (https://vbos.volvo.com/)
-                    #=============================================================
-                    
+                          
+                #=============================================================
+                #--> this does not occur when b.open_novisit(url) is used!
+                # except mechanize._mechanize.BrowserStateError,e:
+                #    #this error occurs, when 'Error 118 (net::ERR_CONNECTION_TIMED_OUT): The operation timed out.'
+                #    #Page is not available. Eg. Open Inet page (eg.www.volvobuses.com), get all the links from that page
+                #    #among other, there is XNET link (https://vbos.volvo.com/)
+                #=============================================================
+                
 class Run_URL_Checks_Through_Proxy(Check_URLs):
     
     def __init__(self):
@@ -737,14 +752,6 @@ class Run_URL_Checks_OnServers(Check_URLs):
         self.end = True
         self.save_report()
         
-        #=======================================================================
-        # #if err_list is not empty, save to file:
-        # if self.error_list:
-        #    with open(error_log, 'a+') as f:
-        #        for e in self.error_list:
-        #            f.write(str(e)+'\n')
-        #=======================================================================
-        
     def set_OriginalHost(self):
         """if self.end is True, revert host to the original host file
         """
@@ -755,13 +762,42 @@ class Run_URL_Checks_OnServers(Check_URLs):
                 self._info("renaming host_backUp to original hosts file...")
                 os.rename(os.path.join(PATH_HOSTS, host_backUp), os.path.join(PATH_HOSTS,host_original))
                 self._info('Done')
-                sys.exit()
+                #sys.exit()
         else:
             self._warn('Problem with reverting to original host file!')
 
+    def send_mail(self,**kwargs):
+        """available args:
+        [to,cc,bcc,body,subject,attachment]
+        pass arguments as below:
+        (Cc='this_is_cc',Body='this_is_body', to='test@test.test')
+        """
+        MailItem = 0x0
+        outlook = win32com.client.Dispatch("Outlook.Application")
+        newMail = outlook.CreateItem(MailItem)
+        
+        for key in kwargs:
+            if re.search(r'[Tt]o',key):
+                newMail.To = kwargs[key]
+            elif re.search(r'[Cc]c',key):
+                newMail.CC = kwargs[key]
+            elif re.search(r'[Bb]cc',key):
+                newMail.Bcc = kwargs[key]
+            elif re.search(r'[Ss]ubject', key):
+                newMail.Subject = kwargs[key]
+            elif re.search(r'[Bb]ody',key):
+                newMail.Body = kwargs[key]
+            elif re.search(r'[Aa]ttachments',key):
+                newMail.Attachments.Add(kwargs[key])
+            else:
+                print 'Send_mail: incorrect key! [%s]' % key
+        #newMail.display()
+        newMail.Send()
+        
+        print 'Email with the results sent to the recipients!'
+            
+
 def main():
-    #check = Check_URLs()
-    #check.hit_server_with_urls()
     if run_URL_checks_through_PROXY:
         obj = Run_URL_Checks_Through_Proxy()
         obj.hit_server_with_urls()
@@ -769,8 +805,18 @@ def main():
         obj = Run_URL_Checks_OnServers()
         if obj.backUp_originalHost():
             obj.setServerHostFile_and_RunUrlChecks()
-        obj.set_OriginalHost()    
-        
+        obj.set_OriginalHost()
+        """
+        sendmail with resutls to the recipients
+        """
+        if obj.to and not obj.cc:
+            obj.send_mail(To=obj.to, Subject='URL_Checker has finished!'\
+                  ,Body='Log attached', Attachments=report_file)
+        if obj.to and obj.cc:
+            obj.send_mail(To=obj.to, Cc=obj.cc, Subject='URL_Checker has finished!'\
+                  ,Body='Log attached', Attachments=report_file)
+    sys.exit()
+    
 if __name__ == '__main__':
     main()
 
