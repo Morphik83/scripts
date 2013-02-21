@@ -16,7 +16,6 @@ from httplib import InvalidURL
 class Get_Browser(RootClass):
     """creates browser's instance; feeds CheckURLs
     """
-         
     def __init__(self):
         self._opener = self._browser()
 
@@ -83,15 +82,9 @@ class Crawler(Get_Browser):
             self._info('no errors noticed\n')
                     
     def run_crawler(self, error_queue):
-        def _update_visited_urls(self, url):
-            self.visited_urls.append(url)
-        def _update_links_to_follow(self, url):
-            self.links_to_follow.append(url)
-        def _delete_url_from_links_to_follow(self, url):
-            self.links_to_follow.pop(self.links_to_follow.index(url))
         try:    
             self._info('Starting CWP_Web_Crawler ...\n\n')
-            time.sleep(2)
+            time.sleep(1)
             #start timer
             t0 = time.clock()
             #open start_url
@@ -104,7 +97,6 @@ class Crawler(Get_Browser):
             except URLError,e:
                 self._warn("is this URL: [",str(self.start_url),"] valid?\n",str(e))
                 self.error_list.append([self.start_url,str(e)])
-                #error_queue.put((self.net_loc, self.start_url , str(e)))
                 sys.exit()
             #login to xnet
             try:
@@ -121,12 +113,12 @@ class Crawler(Get_Browser):
                             if link.url not in self.links_to_follow:
                                 if link.url not in self.visited_urls:
                                     self._info('-->links_to_follow.append: %s ' % link.url)
-                                    _update_links_to_follow(self, link.url)
+                                    self.links_to_follow.append(link.url)
                                 else:
                                     self._info('-->skipping: %s ' % link.url)
                     else:
                         self._info('-->skipping(urlsWithQueryStr>"?"): %s ' % link.url)           
-                _update_visited_urls(self, self.start_url)
+                self.visited_urls.append(self.start_url)
                 self._info('-->link_to_follow.length: [%d]' % len(self.links_to_follow))
                 print '\n'
                 self._info('------------------->> NEXT <<-------------------')
@@ -145,7 +137,7 @@ class Crawler(Get_Browser):
                                 if link.url not in self.links_to_follow:
                                     if link.url not in self.visited_urls:
                                         self._info('-->links_to_follow.append: %s ' % link.url)
-                                        _update_links_to_follow(self, link.url)
+                                        self.links_to_follow.append(link.url)
                                     else:
                                         self._info('-->skipping(alreadyVisited|addedToFollow: %s ' % link.url)
                             else:
@@ -159,24 +151,18 @@ class Crawler(Get_Browser):
                     else:
                         self._warn("is this URL: [",str(url),"] valid?\n",str(e))
                         self.error_list.append([url,str(e)])
-                        #error_queue.put((self.net_loc, url, str(e)))
-                
                 except (URLError,InvalidURL,IndexError),e:
                     self._warn("is this URL:",str(url)," valid?\n",str(e))
                     self.error_list.append([url,str(e)])
-                    #error_queue.put((self.net_loc, url, str(e)))
-    
                 finally:
                     #before getting next url from list, update:
-                    _update_visited_urls(self, url)
+                    self.visited_urls.append(url)
                     self._info('-->link_to_follow.delete: %s ' % url)
-                    _delete_url_from_links_to_follow(self, url)
+                    self.links_to_follow.pop(self.links_to_follow.index(url))
                     
                     self._info('-->link_to_follow.length: [%d]' % len(self.links_to_follow))
                     self._info('-->visited_links.length: [%d] ' % len(self.visited_urls))
                     self._info('-->error_list.length: [%d] '%len(self.error_list))
-                    #self._warn('error_list:')
-                    #pprint.pprint(self.error_list)
                     print '\n'
                     self._info('------------------->> NEXT <<-------------------') 
                           
@@ -200,8 +186,8 @@ class Crawler(Get_Browser):
 
 def welcome_page():
         print ('>> Web_Crawler << author: Maciej Balazy >>')
-        print INTRO
-        time.sleep(2)
+        #print INTRO
+        time.sleep(1)
 
 def get_url_list():
     print '\nChecking ['+crawler_start_file+ '] for url\'s start_list...'
@@ -262,7 +248,6 @@ def writer_q2f(queue):
     """every value appended to the error_queue in any of the running processes, has the same schema:
     (self.netloc, url, error) 
     """
-    #print 'inside writer'
     with open (common_log ,'a+') as f:
         while True: 
             try:
@@ -271,7 +256,8 @@ def writer_q2f(queue):
                 print s
                 f.write(s)
             except:
-                break
+                #break
+                pass
 
 def send_mail(**kwargs):
     """available args:
@@ -303,89 +289,104 @@ def send_mail(**kwargs):
     print 'Email with the results sent to the recipients!'
             
 def main():
-    welcome_page()
-    to_email, cc_email = get_email_addresses()
-    url_list = get_url_list()
-    
-    
-    #all the started processes are appending error info to the common queue
-    error_queue = Queue()
-    #IDs of the dispatched processes are stored here 
-    jobs = []
-    #monitor is used to track active jobs - if not, send_mail with results
-    monitor = {}
-    
-    if url_list:
-        for i in xrange(len(url_list)):
-            process = Process(target=worker, args=(url_list[i], error_queue))
-            print 'Starting process for ['+ url_list[i]+']'
-            process.start()
-            jobs.append(process)
-            monitor[process]= url_list[i]
-            
-        """
-        when all the processes are up and running, start 'listener' process, that 
-        gets as input 'error_queue' and writes all the items to the log file.
-        ->put listener in the infinite loop start/stop (as long as there is at least
-        one active job). 
-        If true: keep starting the 'listener', 
-        if false -> means that all jobs are done. (len(jobs)=0)
-        """
+    try:
+        welcome_page()
+        to_email, cc_email = get_email_addresses()
+        url_list = get_url_list()
         
-        while [job for job in jobs if job.is_alive()]:
+        #all the started processes are appending error info to the common queue
+        error_queue = Queue()
+        #IDs of the dispatched processes are stored here 
+        jobs = []
+        #monitor is used to track active jobs - if not, send_mail with results
+        monitor = {}
+        
+        if url_list:
+            for i in xrange(len(url_list)):
+                process = Process(target=worker, args=(url_list[i], error_queue))
+                print 'Starting process for ['+ url_list[i]+']'
+                process.start()
+                jobs.append(process)
+                monitor[process]= url_list[i]
+                
+            """
+            when all the processes are up and running, start 'listener' process, that 
+            gets as input 'error_queue' and writes all the items to the log file.
+            ->put listener in the infinite loop start/stop (as long as there is at least
+            one active job). 
+            If true: keep starting the 'listener', 
+            if false -> means that all jobs are done. (len(jobs)=0)
+            """
             
-            active_jobs_list = [job for job in jobs if job.is_alive()]
-            print 'active_jobs_list: %s' % active_jobs_list
-            print 'MONITOR: %s ' % monitor 
-            for job_process in monitor.keys():
-                #print job_process in active_jobs_list
-                if job_process not in active_jobs_list:
-                    if to_email and not cc_email:        #send_mail only if to_mail given
-                        send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
-                                  ,Body='[1]CommonLog attached', Attachments=common_log)
-                    if to_email and cc_email:
-                        send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
-                                  ,Body='[1]CommonLog attached', Attachments=common_log)
-                    monitor.pop(job_process)
+            while [job for job in jobs if job.is_alive()]:
+                active_jobs_list = [job for job in jobs if job.is_alive()]
+                print '\nactive_jobs_list: %s' % active_jobs_list
+                print 'MONITOR: %s ' % monitor 
+                
+                for job_process in monitor.keys():
+                    if job_process not in active_jobs_list:
            
-            """
-            example:
-            active jobs list: 
-            [<Process(Process-1, started)>, 
-            <Process(Process-2, started)>, 
-            <Process(Process-3, started)>,]
+                        print str(monitor[job_process]+'>>Crawler has finished!')
+                        print 'Check common_log for error [%s]' %common_log
+           
+                        if to_email and not cc_email:        #send_mail only if to_mail given
+                            send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                                      ,Body='[1]CommonLog attached', Attachments=common_log)
+                        if to_email and cc_email:
+                            send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                                      ,Body='[1]CommonLog attached', Attachments=common_log)
+                        
+                        monitor.pop(job_process)
+           
+                """
+                example:
+                active jobs list: 
+                [<Process(Process-1, started)>, 
+                <Process(Process-2, started)>, 
+                <Process(Process-3, started)>,]
+                
+                MONITOR: 
+                {<Process(Process-1, started)>: 'http://volvoitxnet-qa.volvo.com', 
+                <Process(Process-2, started)>: 'http://vfsco-qa.volvo.com', 
+                <Process(Process-3, started)>: 'http://volvobuses-qa.volvo.com',}
+                """
             
-            MONITOR: 
-            {<Process(Process-1, started)>: 'http://volvoitxnet-qa.volvo.com', 
-            <Process(Process-2, started)>: 'http://vfsco-qa.volvo.com', 
-            <Process(Process-3, started)>: 'http://volvobuses-qa.volvo.com',}
-            """
+                #print 'checking error_queue...'
+                """
+                check error_queue in 5 minutes cycles and if not-empty, write to common_log
+                """
+                commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
+                commonLog_proc.start()
+                print '\nChecking error_queue...'
+                time.sleep(5)
+                print '\nChecking error_queue - Done'
+                print '\nScript is running...\nKeep checking logs [%s]\n' % crawler_log_path
+                commonLog_proc.terminate()
+                commonLog_proc.join()
+                time.sleep(300)
+                   
+            #when process is done, close gently:        
+            for i in jobs:
+                print '%s is %s' % (i.pid, i.is_alive())
+                i.join()
             
-            #print 'checking error_queue...'
             """
-            check error_queue in 5 minutes cycles and if not-empty, write to common_log
+            send_mail only when all the jobs are done with truly common_log ;)
             """
-            commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
-            commonLog_proc.start()
-            time.sleep(300)
-            commonLog_proc.join()
+            if to_email and not cc_email:    #send_mail only if to_mail given
+                send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                          ,Body='[2]CommonLog attached', Attachments=common_log) 
+            if to_email and cc_email:    #send_mail only if to_mail given
+                send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                          ,Body='[2]CommonLog attached', Attachments=common_log)
+            print '>>Crawler has finished!<<'
+            print 'Check common_log for error [%s]\n' %common_log
+    
+    except KeyboardInterrupt:
+        print '\n'
+        print ('Terminated by user!')
+        sys.exit()
         
-               
-        #when process is done, close gently:        
-        for i in jobs:
-            print '%s is %s' % (i.pid, i.is_alive())
-            i.join()
-        
-        """
-        send_mail only when all the jobs are done with truly common_log ;)
-        """
-        if to_email and not cc_email:    #send_mail only if to_mail given
-            send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
-                      ,Body='[2]CommonLog attached', Attachments=common_log) 
-        if to_email and cc_email:    #send_mail only if to_mail given
-            send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
-                      ,Body='[2]CommonLog attached', Attachments=common_log)
- 
 if __name__ == '__main__':
    main()
    
