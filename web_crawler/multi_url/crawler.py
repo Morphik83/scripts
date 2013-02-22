@@ -58,7 +58,7 @@ class Crawler(Get_Browser):
             self._warn('add_hostname_to_crawler_log: Cannot add hostname to the crawler_log!')
             
     def _get_url_host(self,url):
-        self._info('Validating url ...')
+        self._info('Getting host from [%s]' % url)
         parsed = urlparse.urlparse(url)
         if parsed.scheme and parsed.netloc and re.match(r'http[s]?',parsed.scheme):
             self.net_loc = parsed.netloc
@@ -180,12 +180,12 @@ class Crawler(Get_Browser):
        
         except KeyboardInterrupt:
             print '\n'
-            self._warn('Stopped by user!\nError list:\n')
+            self._warn('>>'+strftime("%H:%M:%S")+'<< Stopped by user!\nError list:\n')
             pprint.pprint(self.error_list)
             sys.exit()
 
 def welcome_page():
-        print ('>> Web_Crawler << author: Maciej Balazy >>')
+        print ('>> Web_Crawler << author: Maciej Balazy >>\n\n')
         #print INTRO
         time.sleep(1)
 
@@ -211,14 +211,14 @@ def get_email_addresses():
         to=addr_to
     else:
         to=None
-        #print 'E-mail not valid! [%s]' % addr_to
+        print 'E-mail address not valid! Cannot send e-mail!'
     
     addr_cc = raw_input('Enter valid e-mail address [cc]: ')
     if re.search(r'[@]',addr_cc):
         cc=addr_cc
     else:
         cc=None
-        #print 'E-mail not valid! [%s]' % addr_cc
+        print 'Ohh come on! Is this really correct e-mail[cc] ? :)'
     
     return to,cc
     
@@ -252,12 +252,11 @@ def writer_q2f(queue):
         while True: 
             try:
                 host, url, error = queue.get(block=False)
-                s = str(error)+' || '+str(host)+' || '+str(url)+'\n'
+                s = str(error)+' || '+str(host)+str(url)
                 print s
                 f.write(s)
             except:
-                #break
-                pass
+                break
 
 def send_mail(**kwargs):
     """available args:
@@ -283,10 +282,11 @@ def send_mail(**kwargs):
         elif re.search(r'[Aa]ttachments',key):
             newMail.Attachments.Add(kwargs[key])
         else:
-            print 'Send_mail: incorrect key! [%s]' % key
+            print '>>'+strftime("%H:%M:%S")+' Send_mail: incorrect key! [%s]' % key
     #newMail.display()
     newMail.Send()
-    print 'Email with the results sent to the recipients!'
+    print '>>'+strftime("%H:%M:%S")+'<< Email with the results sent to the recipients!'
+
             
 def main():
     try:
@@ -304,7 +304,7 @@ def main():
         if url_list:
             for i in xrange(len(url_list)):
                 process = Process(target=worker, args=(url_list[i], error_queue))
-                print 'Starting process for ['+ url_list[i]+']'
+                print '>>'+strftime("%H:%M:%S")+'<< Starting process for ['+ url_list[i]+']'
                 process.start()
                 jobs.append(process)
                 monitor[process]= url_list[i]
@@ -320,20 +320,22 @@ def main():
             
             while [job for job in jobs if job.is_alive()]:
                 active_jobs_list = [job for job in jobs if job.is_alive()]
-                print '\nactive_jobs_list: %s' % active_jobs_list
-                print 'MONITOR: %s ' % monitor 
+                #print '\n>>'+strftime("%H:%M:%S")+'<< ACTIVE_JOBS: '
+                #pprint.pprint (active_jobs_list)
+                print '\n>>'+strftime("%H:%M:%S")+'<< MONITOR: '
+                pprint.pprint(monitor)
                 
                 for job_process in monitor.keys():
                     if job_process not in active_jobs_list:
            
-                        print str('\n\n'+monitor[job_process]+'>>Crawler has finished!')
-                        print 'Check common_log for error [%s]\n\n' %common_log
+                        print str('\n\n>>'+strftime("%H:%M:%S")+'<< '+monitor[job_process]+'>>Crawler has finished!')
+                        print '>>'+strftime("%H:%M:%S")+'<< Check common_log for error [%s]\n\n' %common_log
            
                         if to_email and not cc_email:        #send_mail only if to_mail given
-                            send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                            send_mail(To=to_email, Subject=str(monitor[job_process]+' >>Crawler has finished!')\
                                       ,Body='[1]CommonLog attached', Attachments=common_log)
                         if to_email and cc_email:
-                            send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                            send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+' >>Crawler has finished!')\
                                       ,Body='[1]CommonLog attached', Attachments=common_log)
                         
                         job_process.terminate()
@@ -359,10 +361,10 @@ def main():
                 """
                 commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
                 commonLog_proc.start()
-                print '\nChecking error_queue...'
+                print '\n>>'+strftime("%H:%M:%S")+'<< Checking error_queue...'
                 time.sleep(5)
-                print '\nChecking error_queue - Done'
-                print '\nScript is running...\nKeep checking logs [%s]\n' % crawler_log_path
+                print '\n>>'+strftime("%H:%M:%S")+'<< Checking error_queue - Done'
+                print '\n>>'+strftime("%H:%M:%S")+'<< Script is running...\nKeep checking logs [%s]\n' % crawler_log_path
                 commonLog_proc.terminate()
                 commonLog_proc.join()
                 time.sleep(300)
@@ -376,17 +378,17 @@ def main():
             send_mail only when all the jobs are done with truly common_log ;)
             """
             if to_email and not cc_email:    #send_mail only if to_mail given
-                send_mail(To=to_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                send_mail(To=to_email, Subject=str(monitor[job_process]+' >>Crawler has finished!')\
                           ,Body='[2]CommonLog attached', Attachments=common_log) 
             if to_email and cc_email:    #send_mail only if to_mail given
-                send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+'>>Crawler has finished!')\
+                send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+' >>Crawler has finished!')\
                           ,Body='[2]CommonLog attached', Attachments=common_log)
-            print '>>Crawler has finished!<<'
-            print 'Check common_log for error [%s]\n' %common_log
+            print '>>'+strftime("%H:%M:%S")+'<< Crawler has finished!<<'
+            print '>>'+strftime("%H:%M:%S")+'<< Check common_log for error [%s]\n' %common_log
     
     except KeyboardInterrupt:
         print '\n'
-        print ('Terminated by user!')
+        print ('>>'+strftime("%H:%M:%S")+'<< Terminated by user!')
         sys.exit()
         
 if __name__ == '__main__':
