@@ -1,6 +1,7 @@
-#from fetchURL_byProxy import fetchurl,isproxyalive
+from fetchURL_byProxy import fetchurl,isproxyalive
 from output_parser import *
 from config_file import *
+import win32com.client
 
 """
 For detailed config, see config_file.py!
@@ -79,28 +80,28 @@ def fetch_url(redirects_list):
             print ">>>>ORIGIN_URL:"+url         #needed for proper output parsing (marker of the request beginning)
                                                 #+ -> to keep everything in one line in sys.stdout
             #>>>====AT HOME ONLY - NO PROXY!===================================
-            handler = urllib2.HTTPHandler()
-            handler.set_http_debuglevel(1)
+            #handler = urllib2.HTTPHandler()
+            #handler.set_http_debuglevel(1)
             #cookie = urllib2.HTTPCookieProcessor()
-            opener = urllib2.build_opener(handler)
-            urllib2.install_opener(opener)
-            request = urllib2.Request(url, None, headers)
+            #opener = urllib2.build_opener(handler)
+            #urllib2.install_opener(opener)
+            #request = urllib2.Request(url, None, headers)
             #<<<===============================================================
             
             try:
-                #fetchurl(pacfile, url, headers)
+                fetchurl(pacfile, url, headers)
                 #>>>====AT HOME ONLY - NO PROXY!================================
-                opener.open(request)
+                #opener.open(request)
                 #<<<============================================================
             except URLError, e:                     #invalid URL
                 print "ERROR: "+url+" This URL does not exist! " + str(e)
             except ValueError, e:                   #url without 'http://'
                 if re.search(r'unknown url type', str(e)):
                     try:
-                        #fetchurl(pacfile, 'http://'+url)
+                        fetchurl(pacfile, 'http://'+url)
                         #>>>====AT HOME ONLY - NO PROXY!========================
-                        request = urllib2.Request('http://'+url, None, headers)
-                        opener.open(request)
+                        #request = urllib2.Request('http://'+url, None, headers)
+                        #opener.open(request)
                         #<<<====================================================
                     except Exception, e:                     #still might be invalid URL, eg.'ww.volvo.com'
                         print "ERROR: "+url+" This URL does not exist! " + str(e)
@@ -108,6 +109,55 @@ def fetch_url(redirects_list):
     finally:
         sys.stdout = sys.__stdout__                 #revert sys.stdout to normal
     return logger.content
+
+def send_mail(**kwargs):
+        """available args:
+        [to,cc,bcc,body,subject,attachment]
+        pass arguments as below:
+        (Cc='this_is_cc',Body='this_is_body', to='test@test.test')
+        """
+        MailItem = 0x0
+        outlook = win32com.client.Dispatch("Outlook.Application")
+        newMail = outlook.CreateItem(MailItem)
+        
+        for key in kwargs:
+            if re.search(r'[Tt]o',key):
+                newMail.To = kwargs[key]
+            elif re.search(r'[Cc]c',key):
+                newMail.CC = kwargs[key]
+            elif re.search(r'[Bb]cc',key):
+                newMail.Bcc = kwargs[key]
+            elif re.search(r'[Ss]ubject', key):
+                newMail.Subject = kwargs[key]
+            elif re.search(r'[Bb]ody',key):
+                newMail.Body = kwargs[key]
+            elif re.search(r'[Aa]ttachments',key):
+                #iterate over list of attachments
+                lst_with_attchments = kwargs[key]
+                for attch in lst_with_attchments: 
+                    newMail.Attachments.Add(attch)
+            else:
+                print '>>'+strftime("%H:%M:%S")+' Send_mail: incorrect key! [%s]' % key
+        #newMail.display()
+        newMail.Send()
+        
+        print '>>'+strftime("%H:%M:%S")+'<< Email with the results sent to the recipients!'
+        
+def get_email_addresses():
+        addr_to = raw_input('Enter valid e-mail address [to]: ')
+        if re.search(r'[@]',addr_to):
+            to=addr_to
+        else:
+            to=None
+            print 'E-mail address not valid! Cannot send e-mail!'
+        
+        addr_cc = raw_input('Enter valid e-mail address [cc]: ')
+        if re.search(r'[@]',addr_cc):
+            cc=addr_cc
+        else:
+            cc=None
+            print 'Ohh come on! Is this really correct e-mail[cc] ? :)'
+        return to,cc 
 
 def run():
     
@@ -124,14 +174,29 @@ def run():
     
     #Finally, lets check if all redirects are correct and generate final_log (LOG or XLS)
     parser.verify_redirects(redirects_list, out_dict, 'xls')
+    
+    
 
 def main():
     print INTRO
+    to, cc = get_email_addresses()
+    
     ans = raw_input('START [y/n]? ')
     if ans == 'y':
         print 'Starting...\n'
         time.sleep(2)
         run()
+        
+        """
+        sendmail with resutls to the recipients
+        """
+        if to and not cc:
+            send_mail(To=to, Subject='Redirect_Tool has finished!'\
+                  ,Body='Logs attached', Attachments=[graphic_log, detailed_log, xls_report])
+        if to and cc:
+            send_mail(To=to, Cc=cc, Subject='Redirect_Tool has finished!'\
+                  ,Body='Logs attached', Attachments=[graphic_log, detailed_log, xls_report])
+        
     else:
         print 'Exiting...'
         sys.exit()
