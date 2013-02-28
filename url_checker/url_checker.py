@@ -154,6 +154,8 @@ class Menu(RootClass,object):
     '''
     
     def __init__(self):
+        self.production_run = False
+        self.qa_run = False
         self.welcome_page()
         self.checklist=[]
         self.get_email_addresses()
@@ -161,7 +163,7 @@ class Menu(RootClass,object):
     
     def welcome_page(self):
         self._info('>> CWP_URL_Checker << author: Maciej Balazy >>')
-        time.sleep(2)
+        #time.sleep(2)
         print (INTRO)
         
     def _get_host_list(self):
@@ -172,26 +174,45 @@ class Menu(RootClass,object):
     
     def _get_url_list(self):
         url_list = []
-        with open(file_with_urls, 'a+') as f:
+        url_QA_list = []
+        with open(self.file_with_urls, 'a+') as f:
             for line in f:
                 if line.startswith('[X]') or line.startswith('[I]'):
                     url_list.append(line.strip())
+                if line.startswith('[X_QA]') or line.startswith('[I_QA]'):
+                    url_QA_list.append(line.strip())
+                    
+        #set global switchers for Prod/QA respectively:
+        if url_list:            
+            self._info("Production URLs:")    
             pprint.pprint(url_list)
+            print
+            self.production_run = True
+        if url_QA_list:
+            self._info("QA URLs:")
+            pprint.pprint(url_QA_list)
+            print
+            self.qa_run = True
+        if (not url_list) and (not url_QA_list):
+            self._info('URLS.input file is empty!')
+            sys.exit()
             
     def get_email_addresses(self):
         addr_to = raw_input('Enter valid e-mail address [to]: ')
-        if re.search(r'[@]',addr_to):
+        #if re.search(r'[@]',addr_to):
+        if re.search(r'\w+@\w+\.\D{3}',addr_to):
             self.to=addr_to
         else:
             self.to=None
-            #print 'E-mail not valid! [%s]' % addr_to
+            print 'E-mail address not valid! Cannot send e-mail!'
         
         addr_cc = raw_input('Enter valid e-mail address [cc]: ')
         if re.search(r'[@]',addr_cc):
             self.cc=addr_cc
         else:
             self.cc=None
-            #print 'E-mail not valid! [%s]' % addr_cc
+            print 'Ohh come on! Is this really correct e-mail[cc] ? :)'
+            
         return self.to,self.cc        
             
     def menu(self):
@@ -202,11 +223,11 @@ class Menu(RootClass,object):
             set FALSE if only pages from URLS.input file should be checked
             """
             check = raw_input('\nDo you want to verify sub_pages? [y/n]: ')
-            if re.search(r'\b[yY]\b|\byes\b|\bYES\b',check):
+            if re.search(r'\b[yY]\b',check):
                 self.check_all_subPages = True
                 self._info('check_all_subPages: TRUE\n')
                 return self.check_all_subPages
-            elif re.search(r'\b[nN]\b|\bno\b|\bNO\b',check):
+            elif re.search(r'\b[nN]\b',check):
                 self.check_all_subPages = False
                 self._info('check_all_subPages: FALSE\n')
                 return self.check_all_subPages
@@ -215,7 +236,7 @@ class Menu(RootClass,object):
                 _menu_check_subPages(self)
                 
         def _menu_add_servers(self):
-            
+
             def _for_host_server(self):
                 for host_server in self.host_list:
                     msg = ''.join(['Add [',host_server,'] to checklist? [y/n]: '])
@@ -262,7 +283,8 @@ class Menu(RootClass,object):
                         '''
                         return
 
-            #present all the valid/available HOST files                    
+            #present all the valid/available HOST files    
+            self._info('>>Select servers for checking Production URLs<<')                
             self._info('Reading [%s]' % PATH_HOSTS,'...')
             #any time _menu_add_servers is called - create new list 
             #(avoid appending to already existing list)
@@ -288,27 +310,36 @@ class Menu(RootClass,object):
                 self._warn('Current checklist is empty!\nNo servers selected!\nStart again...')
                 sys.exit()
             else:
-                self._info('>>>>>>CURRENT  CONFIGURATION:')
-                self._info('URLs to verify -> [%s]' % file_with_urls)
-                self._get_url_list()
-                self._info('Servers to verify:')
+                self._info('Servers to verify [Production URLs only!]:')
                 self._info(self.checklist)
-
-                #sets check_all_subPages=True/False
-                _menu_check_subPages(self)
-                
-                self._info('Report file will be saved here: [%s]' %report_file)
-                go = raw_input("Run ? [y/n] ")
-                if re.search(r'\b[yY]\b|\byes\b|\bYES\b',go):
-                    pass
-                else:
-                    self._info('Exiting...\n')
-                    sys.exit()
         
         try:
-            self._info('>>CWP_Urls_Checker<<\n\nConfiguration:')            
+            print
+            self._info('>>Configuration<<')   
+            print
+            self._info('URLs to verify -> [%s]' % file_with_urls)
+            self._get_url_list()
+            
+            if self.qa_run:
+                self._info('>>QA URLs will be checked using empty hosts file ("QA" in /drivers/etc/)')
+                print
+            
             #select server_host files
-            _menu_add_servers(self)
+            if self.production_run:
+                _menu_add_servers(self)
+            
+            #sets check_all_subPages=True/False
+            _menu_check_subPages(self)
+            
+            #Startup ?
+            self._info('Report file will be saved here: [%s]' %report_file)
+            go = raw_input("Run ? [y/n] ")
+            if re.search(r'\b[yY]\b|\byes\b|\bYES\b',go):
+                pass
+            else:
+                self._info('Exiting...\n')
+                sys.exit()
+            
         except KeyboardInterrupt:
             print '\n'
             self._warn('Stopped by user!')
@@ -341,6 +372,8 @@ class Check_URLs(Report,Get_Browser,Menu):
         self.file_with_urls = file_with_urls
         self.xnet_list = []
         self.inet_list = []
+        self.qa_xnet_list = []
+        self.qa_inet_list = []
         self.error_list = []
         self.skipped_list = []
         self.format = self._getFileExt()
@@ -384,10 +417,13 @@ class Check_URLs(Report,Get_Browser,Menu):
         [I] url_1
         #[X]url_1   #if line starts with '#' -> skip
         """   
-        #regexp patterns:
+        #Production regexp patterns:
         valid_line_pattern = re.compile(r'(^[^#\s].*$)')
         xnet_pattern = re.compile(r'(^\[X\])\s*([^\s].*)$')
         inet_pattern = re.compile(r'(^\[I\])\s*([^\s].*)$')
+        #QA regexp patterns:
+        qa_xnet_pattern = re.compile(r'(^\[X_QA\])\s*([^\s].*)$')
+        qa_inet_pattern = re.compile(r'(^\[I_QA\])\s*([^\s].*)$')
            
         with open(self.file_with_urls, 'r+') as opened_file:
            for line in opened_file:
@@ -407,28 +443,46 @@ class Check_URLs(Report,Get_Browser,Menu):
                            if not re.match(r'http[s]?://',url):
                               url = 'http://'+url
                            self.inet_list.append(url.strip())
-                       except AttributeError,e:                 #if no [X]|[I] are found, then verify urls 
-                           self._warn('ERROR: %s verify prefix!  e:%s' % (line,e))
-                           if line not in self.error_list:  #to avoid appending the same info for each server - log only once
-                               self.error_list.append(line)
-               
-        return self.inet_list, self.xnet_list, self.error_list        #when parsing is done, return 3 lists
+                       except AttributeError:                       #if no [X] and [I], try QA patterns
+                           try:
+                               url = re.search(qa_xnet_pattern,line).group(2)
+                               if not re.match(r'http[s]?://',url):
+                                   url = 'http://'+url                   
+                               self.qa_xnet_list.append(url.strip())
+                           except AttributeError:
+                               try:
+                                   url = re.search(qa_inet_pattern,line).group(2)
+                                   if not re.match(r'http[s]?://',url):
+                                      url = 'http://'+url
+                                   self.qa_inet_list.append(url.strip())
+                               except AttributeError,e:
+                                    self._warn('ERROR: %s verify prefix!  e:%s' % (line,e))
+        
+        return self.inet_list, self.xnet_list, self.qa_inet_list, self.qa_xnet_list       #when parsing is done, return 4 lists
     
     def _check_url_for_error(self, url):
         print '\n'
+        errorList = [r'(\w+\sis not available)',\
+                     r'(Value does not fall within the expected range)',\
+                     r'(Field type CWPRichText is not installed properly)',\
+                     r'(at Microsoft.SharePoint.\.*)',\
+                     r'(Request timeout)',\
+                     r'([O|o]bject reference not set)',\
+                     r'(key was not present)',]
         
         response = self._opener.response()
         self._info("Parsing opened page...")
         the_page = response.read()
         #print 'chars_onPage:',len(the_page)
         self._info("-->checking [%s] for errors... [page length: %d] " %(url,len(the_page)))
-        search = re.search(r'(\w+\sis not available)|(Value does not fall within the expected range)', the_page)
-        if search:
-            self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
-            self.error_list.append([url,search.group(1)])
-            self.write_to_report(self.format, url, '', '', search.group(1))
-        else:
-            self._info('No errors noticed\n')
+        for error in errorList:
+            search = re.search(error, the_page)
+            if search:
+                self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
+                self.error_list.append([url,search.group(1)])
+                self.write_to_report(self.format, url, '', '', search.group(1))
+            else:
+                self._info('No errors noticed\n')
             
     def hit_server_with_urls(self):
         #get lists with urls:
@@ -436,17 +490,28 @@ class Check_URLs(Report,Get_Browser,Menu):
         #create request (browser instance -> self._opener obj:
         Get_Browser.__init__(self)
         
-        #self.test_list defined, since __check_url is used for both inet & xnet
-        if self.inet_list:
-            self.test_list = self.inet_list      
-            self.__check_url(self.check_all_subPages, xnet_login=False)
-        if self.xnet_list:
-            self.test_list = self.xnet_list
-            self.__check_url(self.check_all_subPages, xnet_login=True)
-        
+        if self.production_run:
+            #self.test_list defined, since __check_url is used for both inet & xnet
+            if self.inet_list:
+                self.test_list = self.inet_list      
+                self.__check_url(self.check_all_subPages, xnet_login=False)
+            if self.xnet_list:
+                self.test_list = self.xnet_list
+                self.__check_url(self.check_all_subPages, xnet_login=True)
+        if self.qa_run:
+            #self.test_list defined, since __check_url is used for both inet & xnet
+            if self.qa_inet_list:
+                self.test_list = self.qa_inet_list      
+                self.__check_url(self.check_all_subPages, xnet_login=False)
+            if self.qa_xnet_list:
+                self.test_list = self.qa_xnet_list
+                self.__check_url(self.check_all_subPages, xnet_login=True)
+            
         #clear lists content:
         self.inet_list = []
         self.xnet_list = []
+        self.qa_inet_list = []
+        self.qa_xnet_list = []
         #close browser instance:
         self._opener.close()   
         self._warn('Check these URLs: ')
@@ -461,9 +526,8 @@ class Check_URLs(Report,Get_Browser,Menu):
                     self._info('GETTING PROXY...')
                     proxies = get_PROXY.get_proxy_from_pac(pacfile, url)
                     self._opener.set_proxies(proxies)
-                if url.startswith('http'):  #exclude urls that start with '/'
-                    self._get_url_host(url)
-                    self._info('URL_HOST:',self.url_host)
+                self._get_url_host(url)
+                self._info('URL_HOST:',self.url_host)
                 response = self._opener.open(url)
                 #print 'HEADERS: \n',b.response().info(), '\nEND HEADERS'
                 #print self.xnet_opener.response().code #or alternatively: print r.code 
@@ -494,7 +558,7 @@ class Check_URLs(Report,Get_Browser,Menu):
                 if check_all_subPages:
                     self.__check_all_subPages()
                     
-            except mechanize.ControlNotFoundError,e:
+            except mechanize.ControlNotFoundError,error:
                 """
                 ControlNotFoundError occurs when no Login/Pass forms are located on the page -> it might be that 
                 the user is already logged in, so that is why the return code (200) is checked. 
@@ -512,45 +576,21 @@ class Check_URLs(Report,Get_Browser,Menu):
                     if check_all_subPages:
                         self.__check_all_subPages()
                 except AssertionError,e:
-                    self._warn('Return code is not 200! It is: ',e)
-                    error = e
-                    self.write_to_report(self.format, url, '', '', error)
-                    
-            except (NameError,mechanize.FormNotFoundError),e:
-                self._warn('FIXME:',url,e)
-                error = e
-                self.write_to_report(self.format, url, '', '', error)
-            except (URLError,InvalidURL),e:
+                    self._warn('Return code is not 200! It is: ',error)
+                    self.write_to_report(self.format, url, '', '', str(error))
+                    self.error_list.append([url,error])
+            except (NameError,mechanize.FormNotFoundError),error:
+                self._warn('FIXME:',url,error)
+                self.write_to_report(self.format, url, '', '', str(error))
+                self.error_list.append([url,error])
+            except (URLError,InvalidURL),error:
                     #if URLError occurs, log info about it to log file, but does not exit
-                    self._warn("Is this URL:",url," valid?\n",e)
-                    error = e
-                    self.write_to_report(self.format, url, '', '', error)
+                    self._warn("Is this URL:",url," valid?\n",error)
+                    self.write_to_report(self.format, url, '', '', str(error))
                     self.error_list.append([url,error])
         #clear list:            
         self.test_list = []
-        
-        #=======================================================================
-        #--> this is how we can check urls with bare urllib2
-        # for url in self.inet_list:
-        #    request = urllib2.Request(url, None, self.headers)
-        #    try:
-        #        response = self.inet_opener.open(request)
-        #        #ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
-        #        ip_addr = socket.gethostbyaddr(urlparse.urlparse(r.geturl()).netloc)
-        #        r_code = response.getcode()
-        #        #print '\nURL:',url
-        #        #print '\nCode:',r_code
-        #        #print '\nIP:',ip_addr
-        #        error =  None
-        #        self.write_to_report(self.format, url, ip_addr, r_code, error)
-        #    except (URLError,InvalidURL),e:
-        #        #if URLError occurs, log info about it to log file, but does not exit
-        #        print "Is this URL:",url," valid?\n",e
-        #        error = e
-        #        self.write_to_report(self.format, url, '', '', error)
-        # self.inet_list = []      
-        #=======================================================================
-                
+                        
     def __check_all_subPages(self):
         link_list = []
         final_list = []
@@ -597,57 +637,14 @@ class Check_URLs(Report,Get_Browser,Menu):
                     #===============================================================
                 else:
                     print '\n'
-                    self._info('Skipping [%s] due to diff domain\n'%url)
+                    self._info('Skipping [%s] due to diff domain'%url)
                     self.skipped_list.append(url)
-                    
-                #if url hostname (domain) is different from the main page, then use ->open.no_vist
-                #===============================================================
-                # else:
-                #    response = self._opener.open_novisit(url) 
-                #    url = response.geturl()
-                #    r_code = response.code
-                #    ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
-                #    self._info("(hostname/aliases/IPlist):",ip_addr)
-                #    ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
-                #    error = None
-                #    self.write_to_report(self.format, url, ip_addr, r_code, error)
-                #===============================================================
-            except (URLError,InvalidURL,BrowserStateError,socket.error),e:  
-                self.write_to_report(self.format, url, '', '', str(e))
+
+            except (URLError,InvalidURL,BrowserStateError,socket.error),error:  
+                self.write_to_report(self.format, url, '', '', str(error))
+                self.error_list.append([url,error])
                 
-                #sometimes links on the page redirects to some other hosts - we have one browser instance, that is 
-                #following every link on the page (send Requests are created 'on the fly', so if page redirects
-                #to other host, then HEADER in our browser's request is updated to the new host name.
-                #Due to that, next links are send with improper(changed) HOSTNAME -> which results in 'HTTP 404 Page Not Found'
-                #FIX: when '404' occurs, we are going back 2 pages (it may be different on diff sites...), to the page
-                #when HOSTNAME was correct, and then we try to re-open the failing URL
-                #I am aware, this is VERY error prone (IDEA: maybe counter in the loop - back n=1 ->check ->FAIL back n=2->
-                #check ->FAIL back n=3... Up to predefined eg.n=5)
-                #Other FIX is to use b.open_novisit(url) instead of b.open(url). In this case, browser state is unchanged
-                #but it somehow closes the door for scraping deeper (eg.cannot get links from such page - so I cannot 
-                #check them)
-                
-                #=========================================================
-                # try:
-                #    self.write_to_report(self.format, url, '', '', str(e))
-                #    self.xnet_opener.back(n=2)
-                #    r = self.xnet_opener.open(url)
-                #    self.write_to_report(self.format, '', '', '', 'Probably Hostname was changed! BACK 2 pages...')
-                #    ip_addr = socket.gethostbyaddr(urlparse.urlparse(r.geturl()).netloc)
-                #    ip_addr = str(ip_addr[0])+"/"+str(ip_addr[2][0])
-                #    self.write_to_report(self.format, r.geturl(), ip_addr, r.code, None)
-                # except (URLError,InvalidURL),e:
-                #    self.write_to_report(self.format, url, '', '', str(e))
-                #=========================================================
-                          
-                #=============================================================
-                #--> this does not occur when b.open_novisit(url) is used!
-                # except mechanize._mechanize.BrowserStateError,e:
-                #    #this error occurs, when 'Error 118 (net::ERR_CONNECTION_TIMED_OUT): The operation timed out.'
-                #    #Page is not available. Eg. Open Inet page (eg.www.volvobuses.com), get all the links from that page
-                #    #among other, there is XNET link (https://vbos.volvo.com/)
-                #=============================================================
-                
+                                
 class Run_URL_Checks_Through_Proxy(Check_URLs):
     
     def __init__(self):
@@ -664,7 +661,7 @@ class Run_URL_Checks_Through_Proxy(Check_URLs):
             self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
             self.save_report()      
         
-class Run_URL_Checks_OnServers(Check_URLs):
+class Run_URL_Checks(Check_URLs):
     '''
     content of the /etc:
     >>>>
@@ -685,6 +682,8 @@ class Run_URL_Checks_OnServers(Check_URLs):
     def __init__(self):
         #list all the files from PATH_HOSTS (~/etc dir)
         self.all_files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
+        #get QA hosts file from PATH_HOSTS (~/etc dir)
+        self.qa_host = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f)) and f=='QA']
         self.end = False
         #create instance of the Check_URLs class
         Check_URLs.__init__(self)
@@ -709,46 +708,78 @@ class Run_URL_Checks_OnServers(Check_URLs):
     def setServerHostFile_and_RunUrlChecks(self):
         #search for Server-Oriented host files:
         #server_hosts_pattern defined in config_file.py
-        self.all_files = self.checklist
-        self._info("setServerHostFile_and_RunUrlChecks:self.all_files:",self.all_files)
+
+        self._info("setServerHostFile_and_RunUrlChecks:self.all_files:",self.checklist)
         t0 = time.clock()
-        for host_Server in self.all_files:
-            self.host_Server = host_Server
-            if re.search(server_hosts_pattern, host_Server):
-                self._info('using host_Server:',host_Server)
-                self.write_to_report(self.format,"Host_Server:",host_Server,"","")
-                try:
-                    #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
-                    os.rename(os.path.join(PATH_HOSTS,host_Server), os.path.join(PATH_HOSTS,host_original))
-                    #EXECUTE URL CHECKS
-                    t1 = time.clock()
-                    self.hit_server_with_urls()
-                    after_time = time.clock()-t1
-                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
-                    self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
-                except KeyboardInterrupt, ValueError:
-                    #ValueError occurs when there are too many values to write to XLS (>4096)
-                    print '\n'
-                    self._warn('Stopped by user! Reverting to the original hosts...')
-                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(time.clock()-t1),"","")
-                    self.write_to_report(self.format, 'Stopped by user!', '', '', 'Keyboard Interrupt')
-                    self.save_report()
-                    #revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
-                    os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
-                    self.end = True
-                    self.set_OriginalHost()
-                    sys.exit()
-                
-                #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
-                os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_Server))
-                self._info('-->next....')
+        
+        #Verify Production URLs:
+        for host_server in self.checklist:
+            self._info('using host_server:',host_server)
+            self.write_to_report(self.format,"Host_Server:",host_server,"","")
+            try:
+                #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
+                os.rename(os.path.join(PATH_HOSTS,host_server), os.path.join(PATH_HOSTS,host_original))
+                #EXECUTE URL CHECKS
+                t1 = time.clock()
+                self.hit_server_with_urls()
+                after_time = time.clock()-t1
+                self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
+                self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
+            except KeyboardInterrupt, ValueError:
+                #ValueError occurs when there are too many values to write to XLS (>4096)
+                print '\n'
+                self._warn('Stopped by user! Reverting to the original hosts...')
+                self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(time.clock()-t1),"","")
+                self.write_to_report(self.format, 'Stopped by user!', '', '', 'Keyboard Interrupt')
+                self.save_report()
+                #revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
+                os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_server))
+                self.end = True
+                self.set_OriginalHost()
+                sys.exit()
+            
+            #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
+            os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_server))
+            self._info('-->next....')
+        
+        #Verify QA URLs:
+        if self.qa_host:
+            qa_host=self.qa_host[0]
+            self._info('using host_server:',qa_host)
+            self.write_to_report(self.format,"Host_Server:",qa_host,"","")
+            try:
+                #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
+                os.rename(os.path.join(PATH_HOSTS,qa_host), os.path.join(PATH_HOSTS,host_original))
+                #EXECUTE URL CHECKS
+                t1 = time.clock()
+                self.hit_server_with_urls()
+                after_time = time.clock()-t1
+                self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
+                self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
+            except KeyboardInterrupt, ValueError:
+                #ValueError occurs when there are too many values to write to XLS (>4096)
+                print '\n'
+                self._warn('Stopped by user! Reverting to the original hosts...')
+                self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(time.clock()-t1),"","")
+                self.write_to_report(self.format, 'Stopped by user!', '', '', 'Keyboard Interrupt')
+                self.save_report()
+                #revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
+                os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,qa_host))
+                self.end = True
+                self.set_OriginalHost()
+                sys.exit()
+            
+            #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
+            os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,qa_host))
+            
+        
         #log overall time:
         overall_time = time.clock()-t0
         if overall_time>60:
             self.write_to_report(self.format,"","RUN_TIME_OVERALL: %d[m]%d[s]"%(overall_time/60,overall_time%60),"","")
         else:
             self.write_to_report(self.format,"","RUN_TIME_OVERALL: %.01f [s]"%(overall_time),"","")
-        #when all the host_Server's file used, revert to the original host file       
+        #when all the host_server's file used, revert to the original host file       
         self.end = True
         self.save_report()
         
@@ -790,11 +821,11 @@ class Run_URL_Checks_OnServers(Check_URLs):
             elif re.search(r'[Aa]ttachments',key):
                 newMail.Attachments.Add(kwargs[key])
             else:
-                print 'Send_mail: incorrect key! [%s]' % key
+                print '>>'+strftime("%H:%M:%S")+' Send_mail: incorrect key! [%s]' % key
         #newMail.display()
         newMail.Send()
         
-        print 'Email with the results sent to the recipients!'
+        print '>>'+strftime("%H:%M:%S")+'<< Email with the results sent to the recipients!'
             
 
 def main():
@@ -802,7 +833,7 @@ def main():
         obj = Run_URL_Checks_Through_Proxy()
         obj.hit_server_with_urls()
     else:
-        obj = Run_URL_Checks_OnServers()
+        obj = Run_URL_Checks()
         if obj.backUp_originalHost():
             obj.setServerHostFile_and_RunUrlChecks()
         obj.set_OriginalHost()
