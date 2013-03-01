@@ -69,25 +69,42 @@ class Crawler(Get_Browser):
             self._warn('Closing the script')
             sys.exit()
     
+    #===========================================================================
+    # def check_url_for_error_(self, url, error_queue):
+    #    response = self._opener.response()
+    #    the_page = response.read()
+    #    self._info("-->checking [%s] for errors... [page length: %d] " %(url,len(the_page)))
+    #    search = re.search(r'(\w+\sis not available)|(Value does not fall within the expected range)', the_page)
+    #    if search:
+    #        self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
+    #        self.error_list.append([url,search.group(1)])
+    #        error_queue.put((self.net_loc, url, search.group(1)))
+    #    else:
+    #        self._info('no errors noticed\n')
+    #===========================================================================
+    
     def check_url_for_error(self, url, error_queue):
         errorList = [r'(\w+\sis not available)',\
                      r'(Value does not fall within the expected range)',\
                      r'(Field type CWPRichText is not installed properly)',\
-                     r'(at Microsoft.SharePoint.\.*)',]
+                     r'(at Microsoft.SharePoint.\.*)',\
+                     r'(Request timeout)',\
+                     r'([O|o]bject reference not set)',\
+                     r'(key was not present)',]
         
-        response = self._opener.response()
-        the_page = response.read()
-        self._info("-->checking [%s] for errors... [page length: %d] " %(url,len(the_page)))
-        
-        if url not in self.error_list:   #to avoid appending the same url twice
+        if not any(sublist[1]==url for sublist in self.error_list): #to avoid appending the same url twice
+            response = self._opener.response()
+            the_page = response.read()
+            self._info("-->checking [%s] for errors... [page length: %d]" %(url, len(the_page)))
             for error in errorList:
                 search = re.search(error, the_page)
                 if search:
                     self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
                     self.error_list.append([url,search.group(1)])
-                    error_queue.put((self.net_loc, url, search.group(1)))
+                    error_queue.put ((self.net_loc , url, search.group(1)))
                 else:
                     self._info('no errors noticed\n')
+
                     
     def run_crawler(self, error_queue):
         try:    
@@ -260,7 +277,7 @@ def writer_q2f(queue):
         while True: 
             try:
                 host, url, error = queue.get(block=False)
-                s = '\n'+str(error)+' || '+str(host)+str(url)
+                s = str(error)+' || '+str(host)+str(url)
                 print s
                 f.write(s)
             except:
@@ -297,15 +314,6 @@ def send_mail(**kwargs):
 
             
 def main():
-    def _checkError_queue():
-        commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
-        commonLog_proc.start()
-        print '\n>>'+strftime("%H:%M:%S")+'<< Checking error_queue...'
-        time.sleep(5)
-        print '\n>>'+strftime("%H:%M:%S")+'<< Checking error_queue - Done'
-        print '\n>>'+strftime("%H:%M:%S")+'<< Script is running...\nKeep checking logs [%s]\n' % crawler_log_path
-        commonLog_proc.terminate()
-        commonLog_proc.join()
     try:
         welcome_page()
         to_email, cc_email = get_email_addresses()
@@ -372,18 +380,19 @@ def main():
                 <Process(Process-3, started)>: 'http://volvobuses-qa.volvo.com',}
                 """
             
+                #print 'checking error_queue...'
                 """
                 check error_queue in 5 minutes cycles and if not-empty, write to common_log
                 """
-                _checkError_queue()
+                commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
+                commonLog_proc.start()
+                print '\n>>'+strftime("%H:%M:%S")+'<< Checking error_queue...'
+                time.sleep(5)
+                print '\n>>'+strftime("%H:%M:%S")+'<< Checking error_queue - Done'
+                print '\n>>'+strftime("%H:%M:%S")+'<< Script is running...\nKeep checking logs [%s]\n' % crawler_log_path
+                commonLog_proc.terminate()
+                commonLog_proc.join()
                 time.sleep(300)
-            
-            """
-            when all the processes are done, check error_queue last time 
-            (in case script was finished before time.sleep() passes - then 
-            eventual items from error_queue would not be saved to the commonLog
-            """
-            _checkError_queue()
                    
             #when process is done, close gently:        
             for i in jobs:
@@ -404,7 +413,6 @@ def main():
     
     except KeyboardInterrupt:
         print '\n'
-        _checkError_queue()
         print ('>>'+strftime("%H:%M:%S")+'<< Terminated by user!')
         sys.exit()
         
