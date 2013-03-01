@@ -29,11 +29,9 @@ except ImportError,e:
     print "Install 'mechanize' - programatic webBrowser \n"\
     "http://pypi.python.org/pypi/mechanize/0.2.5 \n",e
 
-
 class Report(RootClass,object):
     """initializes Report object
     """
-    
     def __init__(self, format, report_file):
         self.format = format
         self.report_file = report_file
@@ -52,20 +50,16 @@ class Report(RootClass,object):
         #create xls object
         self.book = xlwt.Workbook(encoding="utf-8") 
         self.sheet1 = self.book.add_sheet("my_test_sheet")
-       
         #define styles
         style0 = xlwt.easyxf('font: name Times New Roman, color-index black, bold on')
-        
         #set columns' width (256 * no.of chars)
         self.sheet1.col(0).width = 256 * 110  #col with URL
         self.sheet1.col(1).width = 256 * 40  #col with IP_ADDRr
         self.sheet1.col(2).width = 256 * 8   #col with RETURN CODE
-        
         #sheet1.write(row_number, col_number, "WRITE HERE STH", set_style)
         self.sheet1.write(0,0,"URL",style0 )
         self.sheet1.write(0,1,"HOST / IP_ADDR",style0 )
         self.sheet1.write(0,2,"R_CODE",style0 )
-        
         #start rows/columns counters 
         self.row = 1 #row=0 is for column's names
         self.col = 0
@@ -128,7 +122,6 @@ class Report(RootClass,object):
         else:
             self.sheet1.write(self.row, self.col+1, args[1], style1)
             self.sheet1.write(self.row, self.col+2, args[2], ok_st)
-        
         #increase row counter - go to the next row
         self.row=self.row+1
                     
@@ -163,14 +156,14 @@ class Menu(RootClass,object):
     
     def welcome_page(self):
         self._info('>> CWP_URL_Checker << author: Maciej Balazy >>')
-        #time.sleep(2)
         print (INTRO)
         
     def _get_host_list(self):
-            self.host_list = []     
-            for host_server in self.all_files:
-                if re.search(server_hosts_pattern, host_server):
-                    self.host_list.append(host_server)
+        self.host_list = []     
+        for host_server in self.all_files:
+            if re.search(server_hosts_pattern, host_server):
+                self.host_list.append(host_server)
+        return self.host_list
     
     def _get_url_list(self):
         url_list = []
@@ -181,7 +174,6 @@ class Menu(RootClass,object):
                     url_list.append(line.strip())
                 if line.startswith('[X_QA]') or line.startswith('[I_QA]'):
                     url_QA_list.append(line.strip())
-                    
         #set global switchers for Prod/QA respectively:
         if url_list:            
             self._info("Production URLs:")    
@@ -236,7 +228,6 @@ class Menu(RootClass,object):
                 _menu_check_subPages(self)
                 
         def _menu_add_servers(self):
-
             def _for_host_server(self):
                 for host_server in self.host_list:
                     msg = ''.join(['Add [',host_server,'] to checklist? [y/n]: '])
@@ -288,10 +279,8 @@ class Menu(RootClass,object):
             self._info('Reading [%s]' % PATH_HOSTS,'...')
             #any time _menu_add_servers is called - create new list 
             #(avoid appending to already existing list)
-            self._get_host_list()
-            #create backUp list -> enables reverting to the original state
-            self.host_list_backUp = self.host_list[:]
-            if len(self.host_list) >0:
+            
+            if self._get_host_list():
                 self._info('Available server-host files: ',self.host_list,'\n')
                 resp = raw_input('Add all servers to checklist? [y/n] ')
                 if re.search(r'\b[yY]\b|\byes\b|\bYES\b',resp):
@@ -344,9 +333,7 @@ class Menu(RootClass,object):
             print '\n'
             self._warn('Stopped by user!')
             sys.exit()
-          
-        #run the script on the selected only servers
-
+        
 class Get_Browser(object):
     """
     creates browser's instance; feeds CheckURLs
@@ -366,7 +353,6 @@ class Get_Browser(object):
 class Check_URLs(Report,Get_Browser,Menu):
     """defines methods that create lists with valid URLs, also 'hitsServerWithURLS'
     """
-    
     def __init__(self):
         self.report = report_file
         self.file_with_urls = file_with_urls
@@ -378,9 +364,7 @@ class Check_URLs(Report,Get_Browser,Menu):
         self.skipped_list = []
         self.format = self._getFileExt()
         self.run_proxy = run_URL_checks_through_PROXY
-        #creates Report Object (dependently on given file format)
         Report.__init__(self, self.format, self.report)
-        #start simple menu
         if not self.run_proxy:    #TODO: add Proxy handling to Menu 
             Menu.__init__(self) 
                 
@@ -469,7 +453,6 @@ class Check_URLs(Report,Get_Browser,Menu):
                      r'(Request timeout)',\
                      r'([O|o]bject reference not set)',\
                      r'(key was not present)',]
-        
         response = self._opener.response()
         self._info("Parsing opened page...")
         the_page = response.read()
@@ -481,15 +464,11 @@ class Check_URLs(Report,Get_Browser,Menu):
                 self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
                 self.error_list.append([url,search.group(1)])
                 self.write_to_report(self.format, url, '', '', search.group(1))
+                return #to avoid appending the same url twice if more than one error is discovered on the page
             else:
                 self._info('No errors noticed\n')
-            
-    def hit_server_with_urls(self):
-        #get lists with urls:
-        self.get_listOf_URLs()
-        #create request (browser instance -> self._opener obj:
-        Get_Browser.__init__(self)
         
+    def hit_production_servers_with_urls(self):
         if self.production_run:
             #self.test_list defined, since __check_url is used for both inet & xnet
             if self.inet_list:
@@ -498,6 +477,16 @@ class Check_URLs(Report,Get_Browser,Menu):
             if self.xnet_list:
                 self.test_list = self.xnet_list
                 self.__check_url(self.check_all_subPages, xnet_login=True)
+            
+        #clear lists content:
+        self.inet_list = []
+        self.xnet_list = []
+        self._warn('Check these URLs: ')
+        pprint.pprint(self.error_list) 
+        self._warn('Skipped URLs: ')
+        pprint.pprint(self.skipped_list)   
+
+    def hit_qa_servers_with_urls(self):
         if self.qa_run:
             #self.test_list defined, since __check_url is used for both inet & xnet
             if self.qa_inet_list:
@@ -508,16 +497,13 @@ class Check_URLs(Report,Get_Browser,Menu):
                 self.__check_url(self.check_all_subPages, xnet_login=True)
             
         #clear lists content:
-        self.inet_list = []
-        self.xnet_list = []
         self.qa_inet_list = []
         self.qa_xnet_list = []
-        #close browser instance:
-        self._opener.close()   
         self._warn('Check these URLs: ')
         pprint.pprint(self.error_list) 
         self._warn('Skipped URLs: ')
-        pprint.pprint(self.skipped_list)   
+        pprint.pprint(self.skipped_list) 
+
             
     def __check_url(self, check_all_subPages, xnet_login):
         for url in self.test_list:
@@ -646,10 +632,8 @@ class Check_URLs(Report,Get_Browser,Menu):
                 
                                 
 class Run_URL_Checks_Through_Proxy(Check_URLs):
-    
     def __init__(self):
         Check_URLs.__init__(self)
-        
     def check_urls(self):
         if self.run_proxy:
             self._info('Checking URLs through PROXY')
@@ -678,7 +662,6 @@ class Run_URL_Checks(Check_URLs):
         4.rename-back host_original -> Server_hosts_X
     5.When all servers checked, rename host_backUp -> host_original 
     '''
-    
     def __init__(self):
         #list all the files from PATH_HOSTS (~/etc dir)
         self.all_files = [f for f in listdir(PATH_HOSTS) if isfile(join(PATH_HOSTS,f))]
@@ -706,44 +689,51 @@ class Run_URL_Checks(Check_URLs):
             return False
              
     def setServerHostFile_and_RunUrlChecks(self):
-        #search for Server-Oriented host files:
-        #server_hosts_pattern defined in config_file.py
-
+        #get lists with urls:
+        self.inet_list_bkp, self.xnet_list_bkp, self.qa_inet_list_bkp, self.qa_xnet_list_bkp = self.get_listOf_URLs()
+        #create request (browser instance -> self._opener obj:
+        Get_Browser.__init__(self)
+        
         self._info("setServerHostFile_and_RunUrlChecks:self.all_files:",self.checklist)
         t0 = time.clock()
-        
-        #Verify Production URLs:
-        for host_server in self.checklist:
-            self._info('using host_server:',host_server)
-            self.write_to_report(self.format,"Host_Server:",host_server,"","")
-            try:
-                #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
-                os.rename(os.path.join(PATH_HOSTS,host_server), os.path.join(PATH_HOSTS,host_original))
-                #EXECUTE URL CHECKS
-                t1 = time.clock()
-                self.hit_server_with_urls()
-                after_time = time.clock()-t1
-                self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
-                self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
-            except KeyboardInterrupt, ValueError:
-                #ValueError occurs when there are too many values to write to XLS (>4096)
-                print '\n'
-                self._warn('Stopped by user! Reverting to the original hosts...')
-                self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(time.clock()-t1),"","")
-                self.write_to_report(self.format, 'Stopped by user!', '', '', 'Keyboard Interrupt')
-                self.save_report()
-                #revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
+        if self.production_run:
+            #Verify Production URLs:
+            for host_server in self.checklist:
+                self.inet_list = self.inet_list_bkp[:]
+                self.xnet_list = self.xnet_list_bkp[:]
+
+                self._info('using host_server:',host_server)
+                self.write_to_report(self.format,"Host_Server:",host_server,"","")
+                try:
+                    #rename Server-Oriented host to Windows-Oriented host (SEGOTN2525 to host)
+                    os.rename(os.path.join(PATH_HOSTS,host_server), os.path.join(PATH_HOSTS,host_original))
+                    #EXECUTE URL CHECKS
+                    t1 = time.clock()
+                    self.hit_production_servers_with_urls()
+                    after_time = time.clock()-t1
+                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
+                    self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
+                except KeyboardInterrupt, ValueError:
+                    #ValueError occurs when there are too many values to write to XLS (>4096)
+                    print '\n'
+                    self._warn('Stopped by user! Reverting to the original hosts...')
+                    self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(time.clock()-t1),"","")
+                    self.write_to_report(self.format, 'Stopped by user!', '', '', 'Keyboard Interrupt')
+                    self.save_report()
+                    #revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
+                    os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_server))
+                    self.end = True
+                    self.set_OriginalHost()
+                    sys.exit()
+                
+                #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
                 os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_server))
-                self.end = True
-                self.set_OriginalHost()
-                sys.exit()
+                self._info('-->next....')
             
-            #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
-            os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,host_server))
-            self._info('-->next....')
-        
         #Verify QA URLs:
-        if self.qa_host:
+        if self.qa_run and self.qa_host:
+            self.qa_inet_list = self.qa_inet_list_bkp[:]
+            self.qa_xnet_list = self.qa_xnet_list_bkp[:]
             qa_host=self.qa_host[0]
             self._info('using host_server:',qa_host)
             self.write_to_report(self.format,"Host_Server:",qa_host,"","")
@@ -752,7 +742,7 @@ class Run_URL_Checks(Check_URLs):
                 os.rename(os.path.join(PATH_HOSTS,qa_host), os.path.join(PATH_HOSTS,host_original))
                 #EXECUTE URL CHECKS
                 t1 = time.clock()
-                self.hit_server_with_urls()
+                self.hit_qa_servers_with_urls()
                 after_time = time.clock()-t1
                 self.write_to_report(self.format,"","RUN_TIME: %.01f [s]"%(after_time),"","")
                 self.write_to_report(self.format,60*"*",20*"*",10*"*","") 
@@ -772,6 +762,8 @@ class Run_URL_Checks(Check_URLs):
             #when checking is done, revert Windows-Oriented host to Server-Oriented host (host to SEGOTN2525)
             os.rename(os.path.join(PATH_HOSTS,host_original), os.path.join(PATH_HOSTS,qa_host))
             
+        #close browser instance:
+        self._opener.close() 
         
         #log overall time:
         overall_time = time.clock()-t0
@@ -826,8 +818,7 @@ class Run_URL_Checks(Check_URLs):
         newMail.Send()
         
         print '>>'+strftime("%H:%M:%S")+'<< Email with the results sent to the recipients!'
-            
-
+     
 def main():
     if run_URL_checks_through_PROXY:
         obj = Run_URL_Checks_Through_Proxy()
@@ -850,4 +841,3 @@ def main():
     
 if __name__ == '__main__':
     main()
-
