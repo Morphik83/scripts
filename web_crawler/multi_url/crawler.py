@@ -89,7 +89,7 @@ class Crawler(Get_Browser):
                      r'(Field type CWPRichText is not installed properly)',\
                      r'(at Microsoft.SharePoint.\.*)',\
                      r'(Request timeout)',\
-                     r'([O|o]bject reference not set)',\
+                     r'(Object reference not set to an instance of an object)',\
                      r'(key was not present)',]
         
         if not any(sublist[1]==url for sublist in self.error_list): #to avoid appending the same url twice
@@ -133,14 +133,20 @@ class Crawler(Get_Browser):
                 self.check_url_for_error(self.start_url, error_queue)   #check for errors:
                 self._info('>>scraping...')
                 for link in self._opener.links():
-                    if not re.search(r'[?]', link.url):   #to exclude urls with query strings
-                        if link.url.startswith(self.host_url) or link.url.startswith('/') :
-                            if link.url not in self.links_to_follow:
-                                if link.url not in self.visited_urls:
-                                    self._info('-->links_to_follow.append: %s ' % link.url)
-                                    self.links_to_follow.append(link.url)
-                                else:
-                                    self._info('-->skipping: %s ' % link.url)
+                    #to exclude urls with query strings and /SiteCollectionDocs&Imgs
+                    if not re.search(r'[?]', link.url):   
+                        if not re.search(r'/SiteCollection', link.url):
+                            if link.url.startswith(self.host_url) or link.url.startswith('/') :
+                                if link.url not in self.links_to_follow:
+                                    if link.url not in self.visited_urls:
+                                        self._info('-->links_to_follow.append: %s ' % link.url)
+                                        self.links_to_follow.append(link.url)
+                                    else:
+                                        self._info('-->skipping: %s ' % link.url)
+                            else:
+                                self._info('-->skipping (notStartWith hostname or /: %s ' % link.url)
+                        else:
+                            self._info('-->skipping(/SiteCollectionLink): %s ' % link.url)
                     else:
                         self._info('-->skipping(urlsWithQueryStr>"?"): %s ' % link.url)           
                 self.visited_urls.append(self.start_url)
@@ -158,15 +164,18 @@ class Crawler(Get_Browser):
                     self._info('>>scraping...')
                     for link in self._opener.links():
                         if not re.search(r'[?]', link.url):   #to exclude urls with query strings
-                            if link.url.startswith(self.host_url) or link.url.startswith('/'):
-                                if link.url not in self.links_to_follow:
-                                    if link.url not in self.visited_urls:
-                                        self._info('-->links_to_follow.append: %s ' % link.url)
-                                        self.links_to_follow.append(link.url)
-                                    else:
-                                        self._info('-->skipping(alreadyVisited|addedToFollow: %s ' % link.url)
+                            if not re.search(r'/SiteCollection', link.url):
+                                if link.url.startswith(self.host_url) or link.url.startswith('/'):
+                                    if link.url not in self.links_to_follow:
+                                        if link.url not in self.visited_urls:
+                                            self._info('-->links_to_follow.append: %s ' % link.url)
+                                            self.links_to_follow.append(link.url)
+                                        else:
+                                            self._info('-->skipping(alreadyVisited|addedToFollow: %s ' % link.url)
+                                else:
+                                    self._info('-->skipping (notStartWith hostname or /: %s ' % link.url)
                             else:
-                                self._info('-->skipping (notStartWith hostname or /: %s ' % link.url)
+                                self._info('-->skipping(/SiteCollectionLink): %s ' % link.url)
                         else:
                             self._info('-->skipping(urlsWithQueryStr): %s ' % link.url)
                 
@@ -277,7 +286,7 @@ def writer_q2f(queue):
         while True: 
             try:
                 host, url, error = queue.get(block=False)
-                s = str(error)+' || '+str(host)+str(url)
+                s = str(error)+' || '+str(host)+str(url)+'\n'
                 print s
                 f.write(s)
             except:
