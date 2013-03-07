@@ -84,17 +84,23 @@ class Crawler(Get_Browser):
     #===========================================================================
     
     def check_url_for_error(self, url, error_queue):
+        self.time_out = False
         errorList = [r'(\w+\sis not available)',\
                      r'(Value does not fall within the expected range)',\
                      r'(Field type CWPRichText is not installed properly)',\
                      r'(at Microsoft.SharePoint.\.*)',\
-                     r'(Request timeout)',\
                      r'(Object reference not set to an instance of an object)',\
                      r'(key was not present)',]
         
-        if not any(sublist[1]==url for sublist in self.error_list): #to avoid appending the same url twice
+        if not any(sublist[0]==url for sublist in self.error_list): #to avoid appending the same url twice
             response = self._opener.response()
             the_page = response.read()
+            
+            'check if time-out'
+            if re.search(r'(Request timed out)', the_page):
+                self.time_out = True
+                return self.time_out
+             
             self._info("-->checking [%s] for errors... [page length: %d]" %(url, len(the_page)))
             for error in errorList:
                 search = re.search(error, the_page)
@@ -161,6 +167,12 @@ class Crawler(Get_Browser):
                     
                     self._opener.open(url)
                     self.check_url_for_error(url, error_queue)  #check for error:
+                    
+                    if self.time_out:           #check_url returns self.time_out=True if time_out 
+                        self._info('>>Request timed out - trying again [%s]'%url)
+                        self._opener.open(url)
+                        self.check_url_for_error(url, error_queue)
+                    
                     self._info('>>scraping...')
                     for link in self._opener.links():
                         if not re.search(r'[?]', link.url):   #to exclude urls with query strings
