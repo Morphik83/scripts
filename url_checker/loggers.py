@@ -5,12 +5,12 @@ import sys
 class Logger(object):
     def __init__(self, filename):
         self.log = open(filename, 'a+') 
-        #self.terminal = sys.stdout          #all the data form sys.stdout printed to terminal 
+        self.terminal = sys.stdout          #all the data form sys.stdout printed to terminal 
         
     def write(self, text):
         self.log.write(text)
-        #self.terminal.write(text)
+        self.terminal.write(text)
         
     def close(self):
         self.log.close()
-        #self.terminal.close()
+        self.terminal.close()

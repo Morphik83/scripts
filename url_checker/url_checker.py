@@ -680,6 +680,7 @@ class Run_URL_Checks(Check_URLs):
         self.end = False
         #create instance of the Check_URLs class
         Check_URLs.__init__(self)
+        sys.stdout = loggers.Logger(detailed_log)
         
     def backUp_originalHost(self):
         #backup original host file
