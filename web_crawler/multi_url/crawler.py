@@ -11,7 +11,7 @@ from multiprocessing import Process, Queue
 from _root import *
 from config_file import * 
 from urllib2 import URLError
-from httplib import InvalidURL
+from httplib import InvalidURL, BadStatusLine
 
 class Get_Browser(RootClass):
     """creates browser's instance; feeds CheckURLs
@@ -197,7 +197,7 @@ class Crawler(Get_Browser):
                     else:
                         self._warn("is this URL: [",str(url),"] valid?\n",str(e))
                         self.error_list.append([url,str(e)])
-                except (URLError,InvalidURL,IndexError),e:
+                except (URLError,InvalidURL,IndexError,BadStatusLine),e:
                     self._warn("is this URL:",str(url)," valid?\n",str(e))
                     self.error_list.append([url,str(e)])
                 finally:
