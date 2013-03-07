@@ -8,6 +8,7 @@ import pprint
 import shutil
 import time
 import win32com.client
+import loggers
 from _root import RootClass                       
 from urllib2 import URLError
 from httplib import InvalidURL
@@ -397,8 +398,8 @@ class Check_URLs(Report,Get_Browser,Menu):
     
     def get_listOf_URLs(self):
         """Valid input file must have following format:
-        [X]url_1
-        [I] url_1
+        [X]url_1, [X_QA] url_2
+        [I] url_1, [I_QA] url_2
         #[X]url_1   #if line starts with '#' -> skip
         """   
         #Production regexp patterns:
@@ -445,17 +446,23 @@ class Check_URLs(Report,Get_Browser,Menu):
         return self.inet_list, self.xnet_list, self.qa_inet_list, self.qa_xnet_list       #when parsing is done, return 4 lists
     
     def _check_url_for_error(self, url):
+        self.time_out = False
         print '\n'
         errorList = [r'(\w+\sis not available)',\
                      r'(Value does not fall within the expected range)',\
                      r'(Field type CWPRichText is not installed properly)',\
                      r'(at Microsoft.SharePoint.\.*)',\
-                     r'(Request timeout)',\
                      r'([O|o]bject reference not set)',\
                      r'(key was not present)',]
         response = self._opener.response()
         self._info("Parsing opened page...")
         the_page = response.read()
+        
+        'check if time-out'
+        if re.search(r'(Request timed out)', the_page):
+            self.time_out = True
+            return self.time_out
+     
         #print 'chars_onPage:',len(the_page)
         self._info("-->checking [%s] for errors... [page length: %d] " %(url,len(the_page)))
         for error in errorList:
@@ -470,7 +477,7 @@ class Check_URLs(Report,Get_Browser,Menu):
         
     def hit_production_servers_with_urls(self):
         if self.production_run:
-            #self.test_list defined, since __check_url is used for both inet & xnet
+            #self.test_list defined, since _check_url is used for both inet & xnet
             if self.inet_list:
                 self.test_list = self.inet_list      
                 self.__check_url(self.check_all_subPages, xnet_login=False)
@@ -529,7 +536,6 @@ class Check_URLs(Report,Get_Browser,Menu):
                 self._check_url_for_error(url)
                 #get status:
                 r_code = response.code
-                #ip_addr = socket.gethostbyname(urlparse.urlparse(response.geturl()).netloc)
                 if self.run_proxy:
                     ip_addr = proxies['http']
                     self._info("(proxy):",proxies['http'])
@@ -611,6 +617,12 @@ class Check_URLs(Report,Get_Browser,Menu):
                 if url.startswith('/') or self.url_host == self.main_url_host:
                     #response = self._opener.open_novisit(url) 
                     response = self._opener.open(url)
+                    #check for the errors:
+                    self._check_url_for_error(url)
+                    if self.time_out:           #check_url returns self.time_out=True if time_out 
+                        self._info('>>Request timed out - trying again [%s]'%url)
+                        response = self._opener.open(url)
+                        self._check_url_for_error(url)
                     url = response.geturl()
                     r_code = response.code
                     ip_addr = socket.gethostbyaddr(urlparse.urlparse(response.geturl()).netloc)
@@ -618,9 +630,7 @@ class Check_URLs(Report,Get_Browser,Menu):
                     ip_addr = str(ip_addr[0])+" / "+str(ip_addr[2][0])
                     error = None
                     self.write_to_report(self.format, url, ip_addr, r_code, error)
-                    #check for the errors:
-                    self._check_url_for_error(url)
-                    #===============================================================
+                    
                 else:
                     print '\n'
                     self._info('Skipping [%s] due to diff domain'%url)
