@@ -90,7 +90,9 @@ class Crawler(Get_Browser):
                      r'(Field type CWPRichText is not installed properly)',\
                      r'(at Microsoft.SharePoint.\.*)',\
                      r'(Object reference not set to an instance of an object)',\
-                     r'(key was not present)',]
+                     r'(key was not present)',\
+                     r'(Invalid URI: The format of the URI could not be determined)',\
+                     r'(Custom404Module)']
         
         if not any(sublist[0]==url for sublist in self.error_list): #to avoid appending the same url twice
             response = self._opener.response()
@@ -108,6 +110,7 @@ class Crawler(Get_Browser):
                     self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
                     self.error_list.append([url,search.group(1)])
                     error_queue.put ((self.net_loc , url, search.group(1)))
+                    return  #to break error checking after the first error is detected
                 else:
                     self._info('no errors noticed\n')
 
@@ -405,6 +408,8 @@ def main():
                 """
                 check error_queue in 5 minutes cycles and if not-empty, write to common_log
                 """
+                time.sleep(5)       #when one URL is checked only - errors were omitted in the common_log
+                                    #writer started/done before check_error started!
                 commonLog_proc = Process(target=writer_q2f, args=(error_queue,))
                 commonLog_proc.start()
                 print '\n>>'+strftime("%H:%M:%S")+'<< Checking error_queue...'

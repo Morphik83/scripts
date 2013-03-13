@@ -452,8 +452,11 @@ class Check_URLs(Report,Get_Browser,Menu):
                      r'(Value does not fall within the expected range)',\
                      r'(Field type CWPRichText is not installed properly)',\
                      r'(at Microsoft.SharePoint.\.*)',\
-                     r'([O|o]bject reference not set)',\
-                     r'(key was not present)',]
+                     r'(Object reference not set to an instance of an object)',\
+                     r'(key was not present)',\
+                     r'(Invalid URI: The format of the URI could not be determined)',\
+                     r'(Custom404Module)']
+        
         response = self._opener.response()
         self._info("Parsing opened page...")
         the_page = response.read()
@@ -844,7 +847,7 @@ def main():
         """
         if obj.to and not obj.cc:
             obj.send_mail(To=obj.to, Subject='URL_Checker has finished!'\
-                  ,Body='Log attached', Attachments=report_file)
+                  ,Body='Log attached\n\nDetailed Log: [%s]'%detailed_log, Attachments=report_file)
         if obj.to and obj.cc:
             obj.send_mail(To=obj.to, Cc=obj.cc, Subject='URL_Checker has finished!'\
                   ,Body='Log attached', Attachments=report_file)
