@@ -74,13 +74,16 @@ class Output_Parser(loggers.Logger):
                       _status = pttrn_reply.search(line).group(1)[:-5]
                       print '|\n|STATUS: ', _status
                       http_response = [r'407 Proxy Authentication Required',\
-                                       r'404 Not Found',
+                                       r'404 Not Found',\
+                                       r'503 Service Unavailable',
                                        r'200 OK']
                       #cannot add to http_response r'401 Unauthorized'-usually it's correct redirect  
                       for item in http_response:
-                          if re.search(item, _status):
-                              out_dict[_origin_url.group(1)]=_status
+                          if not out_list:                          #add status if out_list is empty
+                              if re.search(item, _status):
+                                  out_dict[_origin_url.group(1)]=_status
                           
+                                      
                   elif re.search(pttrn_location, line):
                       _target = pttrn_location.search(line).group(1)
                       _target = re.sub(r'\b\s\b','%20',_target)                  #replace in url: /Home page.aspx' with /Home%20page.aspx'
@@ -168,7 +171,7 @@ class Output_Parser(loggers.Logger):
         #set column's width (256 * no.of chars)
         sheet1.col(0).width = 256 * 40
         sheet1.col(1).width = 256 * 100
-        sheet1.col(2).width = 256 * 8
+        sheet1.col(2).width = 256 * 16
         
         #sheet1.write(row_number, col_number, "WRITE HERE STH", set_style)
         sheet1.write(0,0,"FROM",style0 )
@@ -185,20 +188,22 @@ class Output_Parser(loggers.Logger):
             if out_dict.has_key(url_key):
                 """
                 redirects_list[2][url_key] => value (TARGET url from input_file)           
-                out_dict[url_key] => out_dict[key] returns list of all the urls that target_url was redirected to
+                out_dict[url_key] => out_dict[key] returns list of all the urls that start_url was redirected to
                 Below lines check if: out_dict[key] list HAS target_url from input file
                 """
                 n="HYPERLINK"   #log url(FROM) as active link
                 sheet1.write_merge(row, row, col, col, xlwt.Formula(n + '("'+url_key+'";"'+url_key+'")'), style2)
                 sheet1.write(row, col+1, redirects_list[2][url_key], style1 )
                 #strip() added - sometimes there is extra whitespace char at the end
+                
                 par = redirects_list[2][url_key].strip() in out_dict[url_key] or out_dict[url_key]=='200 OK' #FIX: http://www.volvotrucks.com http://www.volvotrucks.com OK
                 if par:
-                    #if OK, use GREEN background in xls report
-                    sheet1.write(row, col+2, par, ok_st)
+                   #if OK, use GREEN background in xls report
+                   sheet1.write(row, col+2, par, ok_st)
                 else:
-                    #if NOT OK, use RED background
-                    sheet1.write(row, col+2, par, err_st)
+                   #if NOT OK, use RED background
+                   sheet1.write(row, col+2, par, err_st)
+                
                 #go to the next row
                 row=row+1
         book.save(xls_report)
