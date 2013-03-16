@@ -217,6 +217,7 @@ if __name__ == '__main__':
     #===========================================================================
     # rm = ['fileno','fp','headers','next','read','readlines',\
     #         'readline','__iter__']
+    #>>>>>
     # new_dict = {}
     # for key in f.__dict__.iterkeys():
     #   if key not in rm:
