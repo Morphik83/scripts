@@ -1,4 +1,4 @@
-from fetchURL_byProxy import fetchurl,isproxyalive
+#from fetchURL_byProxy import fetchurl,isproxyalive
 from output_parser import *
 from config_file import *
 import win32com.client
@@ -27,15 +27,15 @@ also does not work, since there is no redirection (missing 'TO' header, so there
 def input_data(input_file):
     """
     Valid input file must have following format:
-    url_1<space>url_2    #url_1 ORIGIN URL, url_2 TARGET URL
-    #url_1<space>url_2   #if line starts with '#' -> skip
+    url_1<spaces>url_2    #url_1 ORIGIN URL, url_2 TARGET URL
+    #url_1<spaces>url_2   #if line starts with '#' -> skip
     """    
     redirects_input_file = open(input_file, 'r+')
     in_list = [] #list for INPUT urls
     out_list = [] #list for target urls
     redirect_dict = {}
     
-    searchPattern = re.compile(r'(^[^\/#].*?)\s(.*$)')  # in reg_exp ? is used for non-greedy search pattern - without ?, first match will cover whole line (up to $) due to .*
+    searchPattern = re.compile(r'(^[^\/#].*?)\s+(.*$)')  # in reg_exp ? is used for non-greedy search pattern - without ?, first match will cover whole line (up to $) due to .*
     for line in redirects_input_file:
         search = re.search(searchPattern, line)
         if search:
@@ -62,6 +62,8 @@ def input_data(input_file):
             #===================================================================
             
             redirect_dict[url_in] = url_out
+        pprint.pprint(redirect_dict)
+        time.sleep( 2)
             
     return in_list,out_list,redirect_dict
 
@@ -80,28 +82,28 @@ def fetch_url(redirects_list):
             print ">>>>ORIGIN_URL:"+url         #needed for proper output parsing (marker of the request beginning)
                                                 #+ -> to keep everything in one line in sys.stdout
             #>>>====AT HOME ONLY - NO PROXY!===================================
-            #handler = urllib2.HTTPHandler()
-            #handler.set_http_debuglevel(1)
-            #cookie = urllib2.HTTPCookieProcessor()
-            #opener = urllib2.build_opener(handler)
-            #urllib2.install_opener(opener)
-            #request = urllib2.Request(url, None, headers)
+            handler = urllib2.HTTPHandler()
+            handler.set_http_debuglevel(1)
+            cookie = urllib2.HTTPCookieProcessor()
+            opener = urllib2.build_opener(handler)
+            urllib2.install_opener(opener)
+            request = urllib2.Request(url, None, headers)
             #<<<===============================================================
             
             try:
-                fetchurl(pacfile, url, headers)
+                #fetchurl(pacfile, url, headers)
                 #>>>====AT HOME ONLY - NO PROXY!================================
-                #opener.open(request)
+                opener.open(request)
                 #<<<============================================================
             except URLError, e:                     #invalid URL
                 print "ERROR: "+url+" This URL does not exist! " + str(e)
             except ValueError, e:                   #url without 'http://'
                 if re.search(r'unknown url type', str(e)):
                     try:
-                        fetchurl(pacfile, 'http://'+url)
+                        #fetchurl(pacfile, 'http://'+url)
                         #>>>====AT HOME ONLY - NO PROXY!========================
-                        #request = urllib2.Request('http://'+url, None, headers)
-                        #opener.open(request)
+                        request = urllib2.Request('http://'+url, None, headers)
+                        opener.open(request)
                         #<<<====================================================
                     except Exception, e:                     #still might be invalid URL, eg.'ww.volvo.com'
                         print "ERROR: "+url+" This URL does not exist! " + str(e)
@@ -156,7 +158,7 @@ def get_email_addresses():
             cc=addr_cc
         else:
             cc=None
-            print 'Ohh come on! Is this really correct e-mail[cc] ? :)'
+            print 'No [cc] given'
         return to,cc 
 
 def run():

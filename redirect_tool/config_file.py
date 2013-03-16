@@ -29,21 +29,19 @@ final_log = os.path.join(log_path,cur_date+'FINAL_Redirect.log')                
 xls_report = os.path.join(log_path,cur_date+'Redirects_Report_file.xls')           #xls_report: PASS/FAIL info in xls format 
 
 INTRO = '''
->> Redirect_Tool v.1.0 << author: Maciej Balazy >>
+>> Redirect_Tool v.2.0 << author: Maciej Balazy >>
 
 KNOWN ISSUES
 1. if there are two (or more) the same origin_urls, only second one will be logged to xls report 
 (dict cannot have two the same keys...)
  eg. www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspx
      www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspxa
-2. http://www.volvotrucks.com http://www.volvotrucks.com
-also does not work, since there is no redirection (missing 'TO' header, so there is no dict to compare results with)
 
 NOTES: 
 >Remember to add 'http://' to at least target_url!
 >Valid input file must have following format:
-    url_1<space>url_2    #url_1 ORIGIN URL, url_2 TARGET URL
-    #url_1<space>url_2   #if line starts with '#' -> skip
+    url_1<spaces>url_2    #url_1 ORIGIN URL, url_2 TARGET URL
+    #url_1<spaces>url_2   #if line starts with '#' -> skip
     
 INFO:
 Redirects from [%s] will be verified 

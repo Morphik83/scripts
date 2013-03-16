@@ -99,8 +99,10 @@ class Output_Parser(loggers.Logger):
                       """
                   elif re.search(pttrn_error, line):
                       print '\n|', line, '\n\n'
-                      out_dict[_origin_url.group(1)]='ERROR!'
+                      if not out_list:                          #add error if out_list is empty
+                          out_dict[_origin_url.group(1)]='ERROR!'
                       
+                                                
               except AttributeError,e:                                           #AttributeError is thrown, when no MATCH for 
                   pass                                                           #re.search - it means there are no redirection!
         finally:

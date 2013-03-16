@@ -461,7 +461,7 @@ class Check_URLs(Report,Get_Browser,Menu):
         self._info("Parsing opened page...")
         the_page = response.read()
         
-        'check if time-out'
+        'check if request timed-out'
         if re.search(r'(Request timed out)', the_page):
             self.time_out = True
             return self.time_out
