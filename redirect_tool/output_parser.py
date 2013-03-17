@@ -184,30 +184,35 @@ class Output_Parser(loggers.Logger):
         row = 1
         col = 0  
     
-        #iterate over dict.keys() (origin URLs from input_file)
-        for url_key in redirects_list[2].keys():        #loop over dict (redirects_list[2], see in redirect_Runner
-            #if out_dict has the same key (=the same ORIGIN url):
-            if out_dict.has_key(url_key):
-                """
-                redirects_list[2][url_key] => value (TARGET url from input_file)           
-                out_dict[url_key] => out_dict[key] returns list of all the urls that start_url was redirected to
-                Below lines check if: out_dict[key] list HAS target_url from input file
-                """
-                n="HYPERLINK"   #log url(FROM) as active link
-                sheet1.write_merge(row, row, col, col, xlwt.Formula(n + '("'+url_key+'";"'+url_key+'")'), style2)
-                sheet1.write(row, col+1, redirects_list[2][url_key], style1 )
-                #strip() added - sometimes there is extra whitespace char at the end
-                
-                par = redirects_list[2][url_key].strip() in out_dict[url_key] or out_dict[url_key]=='200 OK' #FIX: http://www.volvotrucks.com http://www.volvotrucks.com OK
-                if par:
-                   #if OK, use GREEN background in xls report
-                   sheet1.write(row, col+2, par, ok_st)
+        for x in xrange(len(redirects_list)):        #loop over redirects_list[2], see in redirect_Runner
+            """example output:
+            redirects_list[0] =>['comment_1', ('url_1', 'url_2')]
+            redirects_list[1] =>['comment_2', ('url_3', 'url_4'), ('url_5', 'url_6')]
+            """
+            for y in xrange(len(redirects_list[x])):
+                if y==0:
+                    #print 'COMMENTS:',redirects_list[x][y]
+                    sheet1.write(row,col,redirects_list[x][y],style0)
+                    #go to the next row
+                    row=row+1
                 else:
-                   #if NOT OK, use RED background
-                   sheet1.write(row, col+2, par, err_st)
-                
-                #go to the next row
-                row=row+1
+                    #print 'FROM:',redirects_list[x][y][0]
+                    url_from = redirects_list[x][y][0]  #url_1,url_3,url_5
+                    #print 'TO:',redirects_list[x][y][1]
+                    url_to = redirects_list[x][y][1]    #url_2,url_4,url_6
+                    if out_dict.has_key(url_from):
+                        n="HYPERLINK"   #log url(FROM) as active link
+                        sheet1.write_merge(row, row, col, col, xlwt.Formula(n + '("'+url_from+'";"'+url_from+'")'), style2)
+                        sheet1.write(row, col+1, url_to, style1 )
+                        par = url_to.strip() in out_dict[url_from] or out_dict[url_from]=='200 OK' #FIX: http://www.volvotrucks.com http://www.volvotrucks.com OK
+                        if par:
+                           #if OK, use GREEN background in xls report
+                           sheet1.write(row, col+2, par, ok_st)
+                        else:
+                           #if NOT OK, use RED background
+                           sheet1.write(row, col+2, par, err_st)
+                        #go to the next row
+                        row=row+1
         book.save(xls_report)
         print xls_report," saved"
 
@@ -217,7 +222,6 @@ if __name__ == '__main__':
     #===========================================================================
     # rm = ['fileno','fp','headers','next','read','readlines',\
     #         'readline','__iter__']
-    #>>>>>
     # new_dict = {}
     # for key in f.__dict__.iterkeys():
     #   if key not in rm:

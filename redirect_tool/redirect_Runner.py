@@ -24,7 +24,7 @@ also does not work, since there is no redirection (missing 'TO' header, so there
 """
 
 
-def input_data(input_file):
+def _input_data(input_file):
     """
     Valid input file must have following format:
     url_1<spaces>url_2    #url_1 ORIGIN URL, url_2 TARGET URL
@@ -62,10 +62,37 @@ def input_data(input_file):
             #===================================================================
             
             redirect_dict[url_in] = url_out
-        pprint.pprint(redirect_dict)
-        time.sleep( 2)
-            
+        #pprint.pprint(redirect_dict)
+        #time.sleep( 2)
+    pprint.pprint(redirect_dict)
+    time.sleep(5)
     return in_list,out_list,redirect_dict
+
+def input_data(input_file):
+    redirects_input_file = open(input_file, 'r+')
+    input_list = []
+    in_list = [] #list for INPUT urls
+    
+    searchComment = re.compile(r'^\s*#(.*)')
+    searchURLS = re.compile(r'^([^#].*?)\s+(.*$)')  # in reg_exp ? is used for non-greedy search pattern - without ?, first match will cover whole line (up to $) due to .*
+    
+    for line in redirects_input_file:
+        urls = re.search(searchURLS, line)
+        comment = re.search(searchComment, line)
+        if comment:
+            test_comment =  comment.group(1)
+            input_list.append([comment.group(1)])
+        if urls:
+            url_in = urls.group(1)
+            if not re.match(r'^http[s]?://',urls.group(1)):
+                url_in = 'http://'+urls.group(1)
+            in_list.append(url_in)
+            url_out = urls.group(2)
+            for x in xrange(len(input_list)):
+                if input_list[x][0] == test_comment:
+                    input_list[x].append((url_in,url_out))
+            
+    return in_list,input_list
 
 def fetch_url(redirects_list):
     """
@@ -175,7 +202,7 @@ def run():
     out_dict = parser.generate_output()
     
     #Finally, lets check if all redirects are correct and generate final_log (LOG or XLS)
-    parser.verify_redirects(redirects_list, out_dict, 'xls')
+    parser.verify_redirects(redirects_list[1], out_dict, 'xls')
     
     
 
