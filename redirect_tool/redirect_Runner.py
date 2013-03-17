@@ -12,63 +12,28 @@ but only final/xls logs give the info about PASS/FAIL !!
 graphic/detailed presents only formatted sys.stdout !!
 """
 
-
 """
 KNOWN ISSUES
 1. if there are two (or more) the same origin_urls, only second one will be logged to xls report 
 (dict cannot have two the same keys...)
  eg. www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspx
      www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspxa
-2. http://www.volvotrucks.com http://www.volvotrucks.com
-also does not work, since there is no redirection (missing 'TO' header, so there is no dict to compare results with)
 """
 
 
-def _input_data(input_file):
+def input_data(input_file):
     """
     Valid input file must have following format:
     url_1<spaces>url_2    #url_1 ORIGIN URL, url_2 TARGET URL
     #url_1<spaces>url_2   #if line starts with '#' -> skip
-    """    
-    redirects_input_file = open(input_file, 'r+')
-    in_list = [] #list for INPUT urls
-    out_list = [] #list for target urls
-    redirect_dict = {}
     
-    searchPattern = re.compile(r'(^[^\/#].*?)\s+(.*$)')  # in reg_exp ? is used for non-greedy search pattern - without ?, first match will cover whole line (up to $) due to .*
-    for line in redirects_input_file:
-        search = re.search(searchPattern, line)
-        if search:
-            #print "1: ",search.group(1)
-            url_in = search.group(1)
-            if not re.match(r'^http[s]?://',search.group(1)):
-                url_in = 'http://'+search.group(1)
-            in_list.append(url_in)
-            
-            #print "2: ",search.group(2)
-            url_out = search.group(2)
-            '''
-            I had to turn-off adding 'http' to the target_url(below) 
-            in order to allow proper checking of the Xnet Login pages
-            eg. current behavior: http://www.trucksdealerportal.com -> /_layouts/login.aspx?ReturnUrl=%2f
-            but with enabled 'http' append it was like below:
-            http://www.trucksdealerportal.com -> http:///_layouts/login.aspx?ReturnUrl=%2f
-            As the side-effect, it is now required to manually add 'http' to the target_ur where needed
-            '''
-            #===================================================================
-            # if not re.match(r'^http[s]?://',search.group(2)):
-            #   url_out = 'http://'+search.group(2)
-            # out_list.append(url_out)
-            #===================================================================
-            
-            redirect_dict[url_in] = url_out
-        #pprint.pprint(redirect_dict)
-        #time.sleep( 2)
-    pprint.pprint(redirect_dict)
-    time.sleep(5)
-    return in_list,out_list,redirect_dict
-
-def input_data(input_file):
+    I had to turn-off adding 'http' to the target_url(below) 
+    in order to allow proper checking of the Xnet Login pages
+    eg. current behavior: http://www.trucksdealerportal.com -> /_layouts/login.aspx?ReturnUrl=%2f
+    but with enabled 'http' append it was like below:
+    http://www.trucksdealerportal.com -> http:///_layouts/login.aspx?ReturnUrl=%2f
+    As the side-effect, it is now required to manually add 'http' to the target_ur where needed
+    """
     redirects_input_file = open(input_file, 'r+')
     input_list = []
     in_list = [] #list for INPUT urls
