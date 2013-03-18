@@ -204,13 +204,16 @@ class Output_Parser(loggers.Logger):
                         n="HYPERLINK"   #log url(FROM) as active link
                         sheet1.write_merge(row, row, col, col, xlwt.Formula(n + '("'+url_from+'";"'+url_from+'")'), style2)
                         sheet1.write(row, col+1, url_to, style1 )
-                        par = url_to.strip() in out_dict[url_from] or out_dict[url_from]=='200 OK' #FIX: http://www.volvotrucks.com http://www.volvotrucks.com OK
+                        par = url_to.strip() in out_dict[url_from] #or out_dict[url_from]=='200 OK' #FIX: http://www.volvotrucks.com http://www.volvotrucks.com OK
                         if par:
                            #if OK, use GREEN background in xls report
                            sheet1.write(row, col+2, par, ok_st)
                         else:
-                           #if NOT OK, use RED background
-                           sheet1.write(row, col+2, par, err_st)
+                            if not isinstance(out_dict[url_from],basestring): #if out_dict[url_from] not string (so is list with redirects)
+                                #if NOT OK, use RED background
+                                sheet1.write(row, col+2, par, err_st)
+                            else:
+                                sheet1.write(row, col+2, out_dict[url_from], err_st) #if out_dict[url_from] is str (so is _status)
                         #go to the next row
                         row=row+1
         book.save(xls_report)
