@@ -1,25 +1,9 @@
-#from fetchURL_byProxy import fetchurl,isproxyalive
+from fetchURL_byProxy import fetchurl,isproxyalive
 from output_parser import *
 from config_file import *
 import win32com.client
-
-"""
-For detailed config, see config_file.py!
-
-NOTE:
-There are four logs created (graphic AND detailed,  final OR xls), 
-but only final/xls logs give the info about PASS/FAIL !!
-graphic/detailed presents only formatted sys.stdout !!
-"""
-
-"""
-KNOWN ISSUES
-1. if there are two (or more) the same origin_urls, only second one will be logged to xls report 
-(dict cannot have two the same keys...)
- eg. www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspx
-     www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspxa
-"""
-
+import mechanize
+import os
 
 def input_data(input_file):
     """
@@ -74,28 +58,28 @@ def fetch_url(redirects_list):
             print ">>>>ORIGIN_URL:"+url         #needed for proper output parsing (marker of the request beginning)
                                                 #+ -> to keep everything in one line in sys.stdout
             #>>>====AT HOME ONLY - NO PROXY!===================================
-            handler = urllib2.HTTPHandler()
-            handler.set_http_debuglevel(1)
-            cookie = urllib2.HTTPCookieProcessor()
-            opener = urllib2.build_opener(handler)
-            urllib2.install_opener(opener)
-            request = urllib2.Request(url, None, headers)
+            #handler = urllib2.HTTPHandler()
+            #handler.set_http_debuglevel(1)
+            #cookie = urllib2.HTTPCookieProcessor()
+            #opener = urllib2.build_opener(handler)
+            #urllib2.install_opener(opener)
+            #request = urllib2.Request(url, None, headers)
             #<<<===============================================================
             
             try:
-                #fetchurl(pacfile, url, headers)
+                fetchurl(pacfile, url, headers)
                 #>>>====AT HOME ONLY - NO PROXY!================================
-                opener.open(request)
+                #opener.open(request)
                 #<<<============================================================
             except URLError, e:                     #invalid URL
                 print "ERROR: "+url+" This URL does not exist! " + str(e)
             except ValueError, e:                   #url without 'http://'
                 if re.search(r'unknown url type', str(e)):
                     try:
-                        #fetchurl(pacfile, 'http://'+url)
+                        fetchurl(pacfile, 'http://'+url)
                         #>>>====AT HOME ONLY - NO PROXY!========================
-                        request = urllib2.Request('http://'+url, None, headers)
-                        opener.open(request)
+                        #request = urllib2.Request('http://'+url, None, headers)
+                        #opener.open(request)
                         #<<<====================================================
                     except Exception, e:                     #still might be invalid URL, eg.'ww.volvo.com'
                         print "ERROR: "+url+" This URL does not exist! " + str(e)
@@ -153,7 +137,28 @@ def get_email_addresses():
             print 'No [cc] given'
         return to,cc 
 
+def download_proxy(url):
+    b = mechanize.Browser()
+    b.set_debug_http(True)
+    b.set_handle_robots(False)
+    b.addheaders=[mechanize_headers]
+    
+    print '\nDownloading proxy_pac_file ... \n'    
+    try:
+        r = b.open(url)
+        content = r.read()
+        with open(proxy,'w+') as f:
+            f.write(content)
+        print '\nProxy Updated! [%s] \n\n\n' % proxy
+        time.sleep(2)
+    except URLError, e:
+        print 'Cannot download proxy PAC file!\n Program terminated...'
+        sys.exit()
+    
+
 def run():
+    #download proxy_pac_file
+    download_proxy(proxy_url)
     
     #get list of URLs to check redirects (from input_file)
     redirects_list = input_data(input_file)
@@ -197,7 +202,7 @@ def main():
 
 if __name__ == '__main__':
     main()
-
+    
     #===========================================================================
     # import os
     # path = 'C:\\testing\\redirects\\cmd_redirect_tool\\'

@@ -10,9 +10,12 @@ cur_date = strftime( "%y-%m-%d_%H_%M_%S_")
 log_path = os.path.join(cwd, 'logs')
 input_path = os.path.join(cwd, 'input')
 proxy_path = os.path.join(cwd, 'proxy_conf')
-headers = { 'User-Agent' : 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 2.0.50727; .NET CLR 1.1.4322; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET4.0C; .NET4.0E; MS-RTC LM 8; InfoPath.3)'}
+proxy_url = 'http://<your_path_here>/'
+proxy = os.path.join(proxy_path,'<proxy_pac_filename>')
+headers = { 'User-Agent' : 'Mozilla/4.0'}
+mechanize_headers = ('User-Agent','Mozilla/4.0')
 
-pacfile = os.path.join(proxy_path,'proxyconf')              #PAC proxy file
+pacfile = os.path.join(proxy_path,'proxy_pac_filename')              #PAC proxy file
 input_file = os.path.join(input_path,'Redirects.input')                   #file with target/origin urls 
 
 """
@@ -23,25 +26,19 @@ graphic_log = os.path.join(log_path,cur_date+'Graphic_Redirect.log')            
 detailed_log = os.path.join(log_path,cur_date+'Detailed_Redirect.log')             #detailed_log: sys.stdout > detailed_log
 
 """
-final/xls reports give the info about PASS/FAIL !
+xls reports give the info about PASS/FAIL !
 """
-final_log = os.path.join(log_path,cur_date+'FINAL_Redirect.log')                   #final_log: PASS/FAIL info about each url
 xls_report = os.path.join(log_path,cur_date+'Redirects_Report_file.xls')           #xls_report: PASS/FAIL info in xls format 
 
 INTRO = '''
->> Redirect_Tool v.2.0 << author: Maciej Balazy >>
-
-KNOWN ISSUES
-1. if there are two (or more) the same origin_urls, only second one will be logged to xls report 
-(dict cannot have two the same keys...)
- eg. www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspx
-     www.volvoaero.com http://www.gkn.com/aerospace/pages/default.aspxa
+>> Redirect_Tool v.1.0 << author: Maciej Balazy >>
 
 NOTES: 
 >Remember to add 'http://' to at least target_url!
 >Valid input file must have following format:
-    url_1<spaces>url_2    #url_1 ORIGIN URL, url_2 TARGET URL
-    #url_1<spaces>url_2   #if line starts with '#' -> skip
+    #comment (MANDATORY!)
+    url_1<space>url_2    #url_1 ORIGIN URL, url_2 TARGET URL
+    #url_1<space>url_2   #if line starts with '#' -> skip
     
 INFO:
 Redirects from [%s] will be verified 

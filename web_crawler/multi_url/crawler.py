@@ -93,6 +93,11 @@ class Crawler(Get_Browser):
                      r'(key was not present)',\
                      r'(Invalid URI: The format of the URI could not be determined)',\
                      r'(Custom404Module)']
+
+        #to exclude from logging 'errors' like:
+        #alarm is not available || vppn-qa.volvo.com/vppn/eu/sv/service_warranty/service_tools/Pages/FrequentlyAskedQuestions_GL.aspx
+        #require is not available || volvogroup-qa.volvo.com/suppliers/global/en-gb/supplierapplication/standardsaccess/Pages/information_and_faq.aspx
+        exclude_list = ['alarm', 'that', 'Ordernumber', 'require']
         
         if not any(sublist[0]==url for sublist in self.error_list): #to avoid appending the same url twice
             response = self._opener.response()
@@ -105,17 +110,46 @@ class Crawler(Get_Browser):
              
             self._info("-->checking [%s] for errors... [page length: %d]" %(url, len(the_page)))
             for error in errorList:
+                tmp_lst=[]
                 search = re.search(error, the_page)
                 if search:
-                    self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
-                    self.error_list.append([url,search.group(1)])
-                    error_queue.put ((self.net_loc , url, search.group(1)))
-                    return  #to break error checking after the first error is detected
+                    for exclude_item in exclude_list:   #check if detected error is not in exclude_list
+                        #regex negative look-behind
+                        #do not match (return False) if before "\sis not available" there is item from exclude_list 
+                        tmp_lst.append(bool(re.search(r'(?<!'+exclude_item+')\sis not available',search.group(1))))
+                        #if False was appended to the tmp_list-> search.group(1) is not an error-> skip
+                    if False in tmp_lst:
+                        self._info('not an error-skipping: [%s,%s]' % (url,search.group(1)))
+                    #if no False in tmp_lst, search.group(1) needs to be checked
+                    else:
+                        self._warn('CHECK THIS URL:\n[%s]\n[%s]!\n' %(url, search.group(1)))
+                        self.error_list.append([url,search.group(1)])
+                        error_queue.put ((self.net_loc , url, search.group(1)))
+                        return  #to break error checking after the first error is detected
                 else:
                     self._info('no errors noticed\n')
-
-                    
+    
     def run_crawler(self, error_queue):
+        
+        def _checkIfURL_added(link):
+            if not re.search(r'[?]', link.url):   #to exclude urls with query strings and /SiteCollectionDocs&Imgs
+                if not re.search(r'/SiteCollection', link.url):
+                    if link.url.startswith(self.host_url) or link.url.startswith('/'):
+                        if link.url not in self.links_to_follow:
+                            if link.url not in self.visited_urls:
+                                self._info('-->links_to_follow.append: %s ' % link.url)
+                                self.links_to_follow.append(link.url)
+                            else:
+                                self._info('-->skipping(alreadyVisited: %s ' % link.url)
+                        else:
+                            self._info('-->skipping(alreadyAddedToFollow: %s ' % link.url)
+                    else:
+                        self._info('-->skipping(notStartWith hostname or /: %s ' % link.url)
+                else:
+                    self._info('-->skipping(/SiteCollectionLink): %s ' % link.url)
+            else:
+                self._info('-->skipping(urlsWithQueryStr): %s ' % link.url)
+                
         try:    
             self._info('Starting CWP_Web_Crawler ...\n\n')
             time.sleep(1)
@@ -142,22 +176,7 @@ class Crawler(Get_Browser):
                 self.check_url_for_error(self.start_url, error_queue)   #check for errors:
                 self._info('>>scraping...')
                 for link in self._opener.links():
-                    #to exclude urls with query strings and /SiteCollectionDocs&Imgs
-                    if not re.search(r'[?]', link.url):   
-                        if not re.search(r'/SiteCollection', link.url):
-                            if link.url.startswith(self.host_url) or link.url.startswith('/') :
-                                if link.url not in self.links_to_follow:
-                                    if link.url not in self.visited_urls:
-                                        self._info('-->links_to_follow.append: %s ' % link.url)
-                                        self.links_to_follow.append(link.url)
-                                    else:
-                                        self._info('-->skipping: %s ' % link.url)
-                            else:
-                                self._info('-->skipping (notStartWith hostname or /: %s ' % link.url)
-                        else:
-                            self._info('-->skipping(/SiteCollectionLink): %s ' % link.url)
-                    else:
-                        self._info('-->skipping(urlsWithQueryStr>"?"): %s ' % link.url)           
+                    _checkIfURL_added(link)
                 self.visited_urls.append(self.start_url)
                 self._info('-->link_to_follow.length: [%d]' % len(self.links_to_follow))
                 print '\n'
@@ -178,31 +197,43 @@ class Crawler(Get_Browser):
                     
                     self._info('>>scraping...')
                     for link in self._opener.links():
-                        if not re.search(r'[?]', link.url):   #to exclude urls with query strings
-                            if not re.search(r'/SiteCollection', link.url):
-                                if link.url.startswith(self.host_url) or link.url.startswith('/'):
-                                    if link.url not in self.links_to_follow:
-                                        if link.url not in self.visited_urls:
-                                            self._info('-->links_to_follow.append: %s ' % link.url)
-                                            self.links_to_follow.append(link.url)
-                                        else:
-                                            self._info('-->skipping(alreadyVisited|addedToFollow: %s ' % link.url)
-                                else:
-                                    self._info('-->skipping (notStartWith hostname or /: %s ' % link.url)
-                            else:
-                                self._info('-->skipping(/SiteCollectionLink): %s ' % link.url)
-                        else:
-                            self._info('-->skipping(urlsWithQueryStr): %s ' % link.url)
-                
+                        _checkIfURL_added(link)
+                        
                 except mechanize.BrowserStateError,e:
                     if str(e)== 'not viewing HTML':
                         self._info('URL points to document! [',url,']')
-                    else:
-                        self._warn("is this URL: [",str(url),"] valid?\n",str(e))
-                        self.error_list.append([url,str(e)])
+                    elif str(e)=='' or re.search(r'\[Errno',e):
+                        '''to handle:
+                        1) <urlopen error [Errno 10060] A connection attempt failed because the connected party
+                        did not properly respond after a period of time>
+                        2)reply '' (e=='' means that relpy in HTTP headers is empty ->trying to re-send request) 
+                        '''
+                        try:
+                            self._info(">>Reply was empty! re-sending the request...")
+                            self._opener.open(url)
+                            self.check_url_for_error(url, error_queue)  #check for error:
+                            
+                            if self.time_out:           #check_url returns self.time_out=True if time_out 
+                                self._info('>>Request timed out - trying again [%s]'%url)
+                                self._opener.open(url)
+                                self.check_url_for_error(url, error_queue)
+                            
+                            self._info('>>scraping...')
+                            for link in self._opener.links():
+                                _checkIfURL_added(link)
+                            else:
+                                self._warn("is this URL: [",str(url),"] valid?\n",str(e))
+                                self.error_list.append([url,str(e)])
+                        except (mechanize.BrowserStateError,URLError,InvalidURL,IndexError,BadStatusLine),e:
+                            if str(e)== 'not viewing HTML':
+                                self._info('URL points to document! [',url,']')
+                            self._warn("is this URL:",str(url)," valid?\n",str(e))
+                            self.error_list.append([url,str(e)])
+                            
                 except (URLError,InvalidURL,IndexError,BadStatusLine),e:
                     self._warn("is this URL:",str(url)," valid?\n",str(e))
                     self.error_list.append([url,str(e)])
+                    
                 finally:
                     #before getting next url from list, update:
                     self.visited_urls.append(url)
