@@ -97,7 +97,7 @@ class Crawler(Get_Browser):
         #to exclude from logging 'errors' like:
         #alarm is not available || vppn-qa.volvo.com/vppn/eu/sv/service_warranty/service_tools/Pages/FrequentlyAskedQuestions_GL.aspx
         #require is not available || volvogroup-qa.volvo.com/suppliers/global/en-gb/supplierapplication/standardsaccess/Pages/information_and_faq.aspx
-        exclude_list = ['alarm', 'that', 'Ordernumber', 'require']
+        exclude_list = ['alarm', 'that', 'Ordernumber', 'require', 'information', 'program', 'online']
         
         if not any(sublist[0]==url for sublist in self.error_list): #to avoid appending the same url twice
             response = self._opener.response()
@@ -199,14 +199,15 @@ class Crawler(Get_Browser):
                     for link in self._opener.links():
                         _checkIfURL_added(link)
                         
-                except mechanize.BrowserStateError,e:
+                except (URLError,InvalidURL,IndexError,BadStatusLine,mechanize.BrowserStateError),e:
                     if str(e)== 'not viewing HTML':
                         self._info('URL points to document! [',url,']')
-                    elif str(e)=='' or re.search(r'\[Errno',e):
+                    elif len(str(e))==0 or re.search(r'\[Errno',str(e)):
                         '''to handle:
                         1) <urlopen error [Errno 10060] A connection attempt failed because the connected party
                         did not properly respond after a period of time>
-                        2)reply '' (e=='' means that relpy in HTTP headers is empty ->trying to re-send request) 
+                        2)<urlopen error [Errno 10054] An existing connection was forcibly closed by the remote host>
+                        3)reply '' (e=='' means that relpy in HTTP headers is empty ->trying to re-send request) 
                         '''
                         try:
                             self._info(">>Reply was empty! re-sending the request...")
@@ -229,10 +230,15 @@ class Crawler(Get_Browser):
                                 self._info('URL points to document! [',url,']')
                             self._warn("is this URL:",str(url)," valid?\n",str(e))
                             self.error_list.append([url,str(e)])
-                            
-                except (URLError,InvalidURL,IndexError,BadStatusLine),e:
-                    self._warn("is this URL:",str(url)," valid?\n",str(e))
-                    self.error_list.append([url,str(e)])
+                    else:
+                        self._warn("is this URL:",str(url)," valid?\n",str(e))
+                        self.error_list.append([url,str(e)])
+                                
+                #===============================================================
+                # except (URLError,InvalidURL,IndexError,BadStatusLine),e:
+                #    self._warn("is this URL:",str(url)," valid?\n",str(e))
+                #    self.error_list.append([url,str(e)])
+                #===============================================================
                     
                 finally:
                     #before getting next url from list, update:
@@ -333,7 +339,7 @@ def writer_q2f(queue):
             try:
                 host, url, error = queue.get(block=False)
                 s = str(error)+' || '+str(host)+str(url)+'\n'
-                print s
+                print '>>'+strftime("%H:%M:%S")+'<< '+s
                 f.write(s)
             except:
                 break
