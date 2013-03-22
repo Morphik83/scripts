@@ -6,6 +6,7 @@ import os
 import urlparse
 import loggers
 import time
+import socket
 import win32com.client
 from multiprocessing import Process, Queue
 from _root import *
@@ -304,7 +305,7 @@ def get_email_addresses():
         cc=addr_cc
     else:
         cc=None
-        print 'Ohh come on! Is this really correct e-mail[cc] ? :)'
+        print 'Skipping [cc]'
     
     return to,cc
     
@@ -343,6 +344,8 @@ def writer_q2f(queue):
                 f.write(s)
             except:
                 break
+def get_machine_info():
+    return socket.getfqdn(),socket.gethostbyname (socket.getfqdn())
 
 def send_mail(**kwargs):
     """available args:
@@ -416,13 +419,17 @@ def main():
            
                         print str('\n\n>>'+strftime("%H:%M:%S")+'<< '+monitor[job_process]+'>>Crawler has finished!')
                         print '>>'+strftime("%H:%M:%S")+'<< Check common_log for error [%s]\n\n' %common_log
-           
+                        
+                        now = time.ctime(time.time())
+                        domain_name, host_ip = get_machine_info()
+                        Body='[...]CommonLog attached\n\nSent from: [%s,%s]\nTimestamp: [%s]' % (domain_name,host_ip,now)
+                         
                         if to_email and not cc_email:        #send_mail only if to_mail given
                             send_mail(To=to_email, Subject=str(monitor[job_process]+' >>Crawler has finished!')\
-                                      ,Body='[1]CommonLog attached', Attachments=common_log)
+                                      ,Body=Body, Attachments=common_log)
                         if to_email and cc_email:
                             send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+' >>Crawler has finished!')\
-                                      ,Body='[1]CommonLog attached', Attachments=common_log)
+                                      ,Body=Body, Attachments=common_log)
                         
                         job_process.terminate()
                         job_process.join()
@@ -465,12 +472,16 @@ def main():
             """
             send_mail only when all the jobs are done with truly common_log ;)
             """
+            now = time.ctime(time.time())
+            domain_name, host_ip = get_machine_info()
+            Body='[end]CommonLog attached\n\nSent from: [%s,%s]\nTimestamp: [%s]' % (domain_name,host_ip,now)
+                        
             if to_email and not cc_email:    #send_mail only if to_mail given
                 send_mail(To=to_email, Subject=str(monitor[job_process]+' >>Crawler has finished!')\
-                          ,Body='[2]CommonLog attached', Attachments=common_log) 
+                          ,Body=Body) 
             if to_email and cc_email:    #send_mail only if to_mail given
                 send_mail(To=to_email, Cc=cc_email, Subject=str(monitor[job_process]+' >>Crawler has finished!')\
-                          ,Body='[2]CommonLog attached', Attachments=common_log)
+                          ,Body=Body)
             print '>>'+strftime("%H:%M:%S")+'<< Crawler has finished!<<'
             print '>>'+strftime("%H:%M:%S")+'<< Check common_log for error [%s]\n' %common_log
     
