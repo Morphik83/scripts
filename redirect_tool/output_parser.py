@@ -73,14 +73,29 @@ class Output_Parser(loggers.Logger):
                   elif re.search(pttrn_reply, line):
                       _status = pttrn_reply.search(line).group(1)[:-5]
                       print '|\n|STATUS: ', _status
-                      http_response = [r'407 Proxy Authentication Required',\
-                                       r'404 Not Found',\
-                                       r'503 Service Unavailable',
-                                       r'400 Bad Request',\
+                      http_response = [r'400 Bad Request',r'403 Forbidden',\
+                                       r'404 Not Found',r'405 Method Not Allowed',\
+                                       r'406 Method Not Allowed',\
+                                       r'407 Proxy Authentication Required',\
+                                       r'408 Request Timeout',\
+                                       r'409 Conflict',r'410 Gone',\
+                                       r'411 Length Required',\
+                                       r'412 Precondition Failed',\
+                                       r'413 Request Entity Too Large',\
+                                       r'414 Request-URI Too Long',\
+                                       r'415 Unsupported Media Type',\
+                                       r'416 Requested Range Not Satisfiable',\
+                                       r'417 Expectation Failed',\
+                                       r'500 Internal Server Error',\
+                                       r'501 Not Implemented',\
+                                       r'502 Bad Gateway',\
+                                       r'503 Service Unavailable',\
+                                       r'504 Gateway Timeout',\
+                                       r'505 HTTP Version Not Supported',\
                                        r'200 OK']
                       #cannot add to http_response r'401 Unauthorized'-usually it's correct redirect  
                       for item in http_response:
-                          if not out_list:                  #add status if out_list is empty
+                          if not out_list:                          #add status if out_list is empty
                               if re.search(item, _status):
                                   out_dict[_origin_url.group(1)]=_status
                           
