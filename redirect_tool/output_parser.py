@@ -95,7 +95,7 @@ class Output_Parser(loggers.Logger):
                                        r'200 OK']
                       #cannot add to http_response r'401 Unauthorized'-usually it's correct redirect  
                       for item in http_response:
-                          if not out_list:                  #add status if out_list is empty
+                          if not out_list:                          #add status if out_list is empty
                               if re.search(item, _status):
                                   out_dict[_origin_url.group(1)]=_status
                           
