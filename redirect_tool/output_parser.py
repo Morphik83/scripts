@@ -76,6 +76,7 @@ class Output_Parser(loggers.Logger):
                       http_response = [r'407 Proxy Authentication Required',\
                                        r'404 Not Found',\
                                        r'503 Service Unavailable',
+                                       r'400 Bad Request',\
                                        r'200 OK']
                       #cannot add to http_response r'401 Unauthorized'-usually it's correct redirect  
                       for item in http_response:
