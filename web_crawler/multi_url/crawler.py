@@ -89,11 +89,12 @@ class Crawler(Get_Browser):
         errorList = [r'(\w+\sis not available)',\
                      r'(Value does not fall within the expected range)',\
                      r'(Field type CWPRichText is not installed properly)',\
-                     r'(at Microsoft.SharePoint.\.*)',\
+                     r'(at Microsoft.SharePoint.*)',\
                      r'(Object reference not set to an instance of an object)',\
                      r'(key was not present)',\
                      r'(Invalid URI: The format of the URI could not be determined)',\
-                     r'(Custom404Module)']
+                     r'(Custom404Module)',\
+                     r'(System.Web.*\s?)']
 
         #to exclude from logging 'errors' like:
         #alarm is not available || vppn-qa.volvo.com/vppn/eu/sv/service_warranty/service_tools/Pages/FrequentlyAskedQuestions_GL.aspx
@@ -104,10 +105,12 @@ class Crawler(Get_Browser):
             response = self._opener.response()
             the_page = response.read()
             
-            'check if time-out'
-            if re.search(r'(Request timed out)', the_page):
-                self.time_out = True
-                return self.time_out
+            #===================================================================
+            # 'check if time-out'
+            # if re.search(r'(Request timed out)', the_page):
+            #    self.time_out = True
+            #    return self.time_out
+            #===================================================================
              
             self._info("-->checking [%s] for errors... [page length: %d]" %(url, len(the_page)))
             for error in errorList:
@@ -116,10 +119,9 @@ class Crawler(Get_Browser):
                 if search:
                     for exclude_item in exclude_list:   #check if detected error is not in exclude_list
                         #regex negative look-behind
-                        #do not match (return False) if before "\sis not available" there is item from exclude_list 
-                        tmp_lst.append(bool(re.search(r'(?<!'+exclude_item+')\sis not available',search.group(1))))
+                        tmp_lst.append(bool(re.search(r'('+exclude_item+')\sis not available',search.group(1))))
                         #if False was appended to the tmp_list-> search.group(1) is not an error-> skip
-                    if False in tmp_lst:
+                    if True in tmp_lst:
                         self._info('not an error-skipping: [%s,%s]' % (url,search.group(1)))
                     #if no False in tmp_lst, search.group(1) needs to be checked
                     else:
@@ -189,12 +191,22 @@ class Crawler(Get_Browser):
                     self._info('>>opening: [%s] \n' % url)
                     
                     self._opener.open(url)
-                    self.check_url_for_error(url, error_queue)  #check for error:
                     
-                    if self.time_out:           #check_url returns self.time_out=True if time_out 
-                        self._info('>>Request timed out - trying again [%s]'%url)
-                        self._opener.open(url)
-                        self.check_url_for_error(url, error_queue)
+                    #check if request timed-out. If True - try open URL again
+                    response = self._opener.response()
+                    the_page = response.read()
+                    if re.search(r'(Request timed out)', the_page):
+                       self._info('>>Request timed out - trying again [%s]'%url)
+                       self._opener.open(url)
+                    
+                    self.check_url_for_error(url, error_queue)  #check for error
+                    
+                    #===========================================================
+                    # if self.time_out:           #check_url returns self.time_out=True if time_out 
+                    #    self._info('>>Request timed out - trying again [%s]'%url)
+                    #    self._opener.open(url)
+                    #    self.check_url_for_error(url, error_queue)
+                    #===========================================================
                     
                     self._info('>>scraping...')
                     for link in self._opener.links():
@@ -223,9 +235,9 @@ class Crawler(Get_Browser):
                             self._info('>>scraping...')
                             for link in self._opener.links():
                                 _checkIfURL_added(link)
-                            else:
-                                self._warn("is this URL: [",str(url),"] valid?\n",str(e))
-                                self.error_list.append([url,str(e)])
+                            #else:
+                            #   self._warn("is this URL: [",str(url),"] valid?\n",str(e))
+                            #   self.error_list.append([url,str(e)])
                         except (mechanize.BrowserStateError,URLError,InvalidURL,IndexError,BadStatusLine),e:
                             if str(e)== 'not viewing HTML':
                                 self._info('URL points to document! [',url,']')
