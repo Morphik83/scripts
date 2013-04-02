@@ -1,4 +1,4 @@
-from fetchURL_byProxy import fetchurl,isproxyalive
+#from fetchURL_byProxy import fetchurl,isproxyalive
 from output_parser import *
 from config_file import *
 import win32com.client
@@ -23,8 +23,8 @@ def input_data(input_file):
     in_list = [] #list for INPUT urls
     
     searchComment = re.compile(r'^\s*#(.*)')
-    searchURLS = re.compile(r'^([^#].*?)\s+(.*$)')  # in reg_exp ? is used for non-greedy search pattern - without ?, first match will cover whole line (up to $) due to .*
-    
+    searchURLS = re.compile(r'^([^#].*?)\s+(.*$)')  # in reg_exp ? is used for non-greedy search pattern - without ?, 
+                                                    # first match will cover whole line (up to $) due to .*
     for line in redirects_input_file:
         urls = re.search(searchURLS, line)
         comment = re.search(searchComment, line)
@@ -40,7 +40,10 @@ def input_data(input_file):
             for x in xrange(len(input_list)):
                 if input_list[x][0] == test_comment:
                     input_list[x].append((url_in,url_out))
-            
+    '''
+    input_list = [['comment_1', ('url_1', 'url_2')],\
+                  ['comment_2', ('url_3', 'url_4'), ('url_5', 'url_6')],]
+    '''
     return in_list,input_list
 
 def fetch_url(redirects_list):
@@ -58,28 +61,28 @@ def fetch_url(redirects_list):
             print ">>>>ORIGIN_URL:"+url         #needed for proper output parsing (marker of the request beginning)
                                                 #+ -> to keep everything in one line in sys.stdout
             #>>>====AT HOME ONLY - NO PROXY!===================================
-            #handler = urllib2.HTTPHandler()
-            #handler.set_http_debuglevel(1)
-            #cookie = urllib2.HTTPCookieProcessor()
-            #opener = urllib2.build_opener(handler)
-            #urllib2.install_opener(opener)
-            #request = urllib2.Request(url, None, headers)
+            handler = urllib2.HTTPHandler()
+            handler.set_http_debuglevel(1)
+            cookie = urllib2.HTTPCookieProcessor()
+            opener = urllib2.build_opener(handler)
+            urllib2.install_opener(opener)
+            request = urllib2.Request(url, None, headers)
             #<<<===============================================================
             
             try:
-                fetchurl(pacfile, url, headers)
+                #fetchurl(pacfile, url, headers)
                 #>>>====AT HOME ONLY - NO PROXY!================================
-                #opener.open(request)
+                opener.open(request)
                 #<<<============================================================
             except URLError, e:                     #invalid URL
                 print "ERROR: "+url+" This URL does not exist! " + str(e)
             except ValueError, e:                   #url without 'http://'
                 if re.search(r'unknown url type', str(e)):
                     try:
-                        fetchurl(pacfile, 'http://'+url)
+                        #fetchurl(pacfile, 'http://'+url)
                         #>>>====AT HOME ONLY - NO PROXY!========================
-                        #request = urllib2.Request('http://'+url, None, headers)
-                        #opener.open(request)
+                        request = urllib2.Request('http://'+url, None, headers)
+                        opener.open(request)
                         #<<<====================================================
                     except Exception, e:                     #still might be invalid URL, eg.'ww.volvo.com'
                         print "ERROR: "+url+" This URL does not exist! " + str(e)
@@ -138,22 +141,26 @@ def get_email_addresses():
         return to,cc 
 
 def download_proxy(url):
-    b = mechanize.Browser()
-    b.set_debug_http(True)
-    b.set_handle_robots(False)
-    b.addheaders=[mechanize_headers]
-    
-    print '\nDownloading proxy_pac_file ... \n'    
-    try:
-        r = b.open(url)
-        content = r.read()
-        with open(proxy,'w+') as f:
-            f.write(content)
-        print '\nProxy Updated! [%s] \n\n\n' % proxy
-        time.sleep(2)
-    except URLError, e:
-        print 'Cannot download proxy PAC file!\n Program terminated...'
-        sys.exit()
+    question = raw_input('Update Proxy? [y/n]: ')
+    if question == 'y':
+        b = mechanize.Browser()
+        b.set_debug_http(True)
+        b.set_handle_robots(False)
+        b.addheaders=[mechanize_headers]
+        
+        print '\nDownloading proxy_pac_file ... \n'    
+        try:
+            r = b.open(url)
+            content = r.read()
+            with open(proxy,'w+') as f:
+                f.write(content)
+            print '\nProxy Updated! [%s] \n\n\n' % proxy
+            time.sleep(2)
+        except URLError, e:
+            print 'Cannot download proxy PAC file!\n Program terminated...'
+            sys.exit()
+    else:
+        pass
     
 
 def run():
