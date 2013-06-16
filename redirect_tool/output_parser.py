@@ -67,8 +67,8 @@ class Output_Parser(loggers.Logger):
                       _host = pttrn_send.search(line).group(2)[:-4]            #[:-4] to del \n\r
                       _rest = pttrn_send.search(line).group(1)
                       #print >>f, '\nGET: ', _host, _rest                        #if NO LOGGER, this print "trick" can be used to write to file ;)
-                      #print '\nGET: ', ''.join(_host+_rest)                      #www.volvopenta.com / --> www.volvopenta.com/
-                      print '\nGET: ', ''.join(_rest)                      #www.volvopenta.com / --> www.volvopenta.com/
+                      print '\nGET: ', ''.join(_host+_rest)                      #www.volvopenta.com / --> www.volvopenta.com/
+                      #print '\nGET: ', ''.join(_rest)                      #www.volvopenta.com / --> www.volvopenta.com/
                                             
                   elif re.search(pttrn_reply, line):
                       _status = pttrn_reply.search(line).group(1)[:-5]

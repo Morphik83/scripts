@@ -1,4 +1,4 @@
-from fetchURL_byProxy import fetchurl,isproxyalive
+# from fetchURL_byProxy import fetchurl,isproxyalive
 from output_parser import *
 from config_file import *
 import win32com.client
@@ -66,28 +66,28 @@ def fetch_url(redirects_list):
             print ">>>>ORIGIN_URL:"+url         #needed for proper output parsing (marker of the request beginning)
                                                 #+ -> to keep everything in one line in sys.stdout
             #>>>====AT HOME ONLY - NO PROXY!===================================
-            #handler = urllib2.HTTPHandler()
-            #handler.set_http_debuglevel(1)
-            #cookie = urllib2.HTTPCookieProcessor()
-            #opener = urllib2.build_opener(handler)
-            #urllib2.install_opener(opener)
-            #request = urllib2.Request(url, None, headers)
+            handler = urllib2.HTTPHandler()
+            handler.set_http_debuglevel(1)
+            cookie = urllib2.HTTPCookieProcessor()
+            opener = urllib2.build_opener(handler)
+            urllib2.install_opener(opener)
+            request = urllib2.Request(url, None, headers)
             #<<<===============================================================
             
             try:
-                fetchurl(pacfile, url, headers)
+                #fetchurl(pacfile, url, headers)
                 #>>>====AT HOME ONLY - NO PROXY!================================
-                #opener.open(request)
+                opener.open(request)
                 #<<<============================================================
             except URLError, e:                     #invalid URL
                 print "ERROR: "+url+" This URL does not exist! " + str(e)
             except ValueError, e:                   #url without 'http://'
                 if re.search(r'unknown url type', str(e)):
                     try:
-                        fetchurl(pacfile, 'http://'+url)
+                        #fetchurl(pacfile, 'http://'+url)
                         #>>>====AT HOME ONLY - NO PROXY!========================
-                        #request = urllib2.Request('http://'+url, None, headers)
-                        #opener.open(request)
+                        request = urllib2.Request('http://'+url, None, headers)
+                        opener.open(request)
                         #<<<====================================================
                     except Exception, e:                     #still might be invalid URL, eg.'ww.volvo.com'
                         print "ERROR: "+url+" This URL does not exist! " + str(e)
@@ -166,7 +166,7 @@ def download_proxy(url):
 
 def run():
     #download http://proxyconf.srv.volvo.com/
-    download_proxy(proxy_url)
+    #download_proxy(proxy_url)
     
     #get list of URLs to check redirects (from input_file)
     redirects_list = input_data(input_file)
