@@ -23,10 +23,3 @@ sorted_counts = sorted(counts.items(), key=lambda (k,v):(v,k))
 sorted_counts.reverse()
 
 print sorted_counts[0][0], 'wins with', sorted_counts[0][1]
-
-#test
-#test2
-#test3
-#edited online test4
-#test5 [bug_fix_789]
-#test 6 [online edit]
